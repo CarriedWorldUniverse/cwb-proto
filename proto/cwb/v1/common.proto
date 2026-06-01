@@ -1,5 +1,6 @@
 syntax = "proto3";
 package cwb.v1;
+
 option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
 
 // Identity metadata keys (typed successor to X-CWB-* headers):

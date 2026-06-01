@@ -21,14 +21,10 @@ service KnowledgeService {
     };
   }
   rpc Search(SearchRequest) returns (SearchResponse) {
-    option (google.api.http) = {
-      get: "/api/knowledge/search"
-    };
+    option (google.api.http) = {get: "/api/knowledge/search"};
   }
   rpc List(ListRequest) returns (ListResponse) {
-    option (google.api.http) = {
-      get: "/api/knowledge"
-    };
+    option (google.api.http) = {get: "/api/knowledge"};
   }
   // Get is gRPC-only (no HTTP binding): GET /api/knowledge/{id} would shadow
   // the /api/knowledge/search literal route in grpc-gateway. Re-expose at a
@@ -42,25 +38,21 @@ service KnowledgeService {
     };
   }
   rpc Delete(DeleteRequest) returns (DeleteResponse) {
-    option (google.api.http) = {
-      delete: "/api/knowledge/{id}"
-    };
+    option (google.api.http) = {delete: "/api/knowledge/{id}"};
   }
   rpc PurgeOrg(PurgeOrgRequest) returns (PurgeOrgResponse) {
-    option (google.api.http) = {
-      delete: "/api/org"
-    };
+    option (google.api.http) = {delete: "/api/org"};
   }
 }
 
 // Entry is a stored knowledge entry. Field names are the canonical JSON keys
 // (snake_case, matching commonplace/store.go Entry struct json tags).
 message Entry {
-  string id         = 1;
-  string org        = 2;
-  string owner      = 3;
-  string topic      = 4;
-  string content    = 5;
+  string id = 1;
+  string org = 2;
+  string owner = 3;
+  string topic = 4;
+  string content = 5;
   string visibility = 6; // "private" | "org"
   repeated string tags = 7;
   string created_at = 8; // RFC3339
@@ -70,8 +62,8 @@ message Entry {
 // StoreRequest mirrors storeBody in commonplace/handlers.go.
 // org + owner come from gateway identity (cwb-org / cwb-subject metadata).
 message StoreRequest {
-  string topic      = 1;
-  string content    = 2;
+  string topic = 1;
+  string content = 2;
   string visibility = 3;
   repeated string tags = 4;
 }
@@ -84,14 +76,14 @@ message StoreResponse {
 // SearchRequest mirrors the query params accepted by handleSearch.
 // q and top_k match the URL query parameter names.
 message SearchRequest {
-  string q     = 1;
-  int32  top_k = 2;
+  string q = 1;
+  int32 top_k = 2;
 }
 
 // Hit is one ranked search result, matching commonplace/search.go Hit struct.
 // JSON: {"entry": {...}, "score": <float>}
 message Hit {
-  Entry  entry = 1;
+  Entry entry = 1;
   double score = 2; // fused RRF score; higher = better
 }
 
@@ -120,9 +112,9 @@ message GetResponse {
 // id binds from the URL path; body carries the optional patch fields.
 // All string fields are optional (empty string = not patched server-side).
 message UpdateRequest {
-  string id         = 1;
-  string topic      = 2;
-  string content    = 3;
+  string id = 1;
+  string topic = 2;
+  string content = 3;
   string visibility = 4;
   repeated string tags = 5;
 }
@@ -145,6 +137,6 @@ message PurgeOrgRequest {}
 // {"purged": "<org>", "entries": <n>}
 // org comes from gateway identity (cwb-org metadata).
 message PurgeOrgResponse {
-  string purged  = 1; // the org that was purged
-  int32  entries = 2; // number of entries deleted
+  string purged = 1; // the org that was purged
+  int32 entries = 2; // number of entries deleted
 }

@@ -51,9 +51,7 @@ service IssueService {
   }
 
   rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/{key}/comments"
-    };
+    option (google.api.http) = {get: "/api/issues/{key}/comments"};
   }
 
   rpc ClaimIssue(ClaimIssueRequest) returns (ClaimIssueResponse) {
@@ -72,15 +70,11 @@ service IssueService {
   }
 
   rpc ListWatchers(ListWatchersRequest) returns (ListWatchersResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/{key}/watchers"
-    };
+    option (google.api.http) = {get: "/api/issues/{key}/watchers"};
   }
 
   rpc RemoveWatcher(RemoveWatcherRequest) returns (RemoveWatcherResponse) {
-    option (google.api.http) = {
-      delete: "/api/issues/{key}/watchers"
-    };
+    option (google.api.http) = {delete: "/api/issues/{key}/watchers"};
   }
 
   rpc AddLink(AddLinkRequest) returns (AddLinkResponse) {
@@ -91,15 +85,11 @@ service IssueService {
   }
 
   rpc ListLinks(ListLinksRequest) returns (ListLinksResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/{key}/links"
-    };
+    option (google.api.http) = {get: "/api/issues/{key}/links"};
   }
 
   rpc RemoveLink(RemoveLinkRequest) returns (RemoveLinkResponse) {
-    option (google.api.http) = {
-      delete: "/api/issues/{key}/links"
-    };
+    option (google.api.http) = {delete: "/api/issues/{key}/links"};
   }
 
   // --- literal-collection RPCs (declare LAST so they win over /{key}) ---
@@ -113,15 +103,11 @@ service IssueService {
   }
 
   rpc ListMyIssues(ListMyIssuesRequest) returns (ListMyIssuesResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/my"
-    };
+    option (google.api.http) = {get: "/api/issues/my"};
   }
 
   rpc ListReadyIssues(ListReadyIssuesRequest) returns (ListReadyIssuesResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/ready"
-    };
+    option (google.api.http) = {get: "/api/issues/ready"};
   }
 
   rpc SearchIssues(SearchIssuesRequest) returns (SearchIssuesResponse) {
@@ -134,15 +120,11 @@ service IssueService {
   // SearchIssuesText must come after SearchIssues so /search/text wins over
   // any /{key}/{action} shadow — also declared last here.
   rpc SearchIssuesText(SearchIssuesTextRequest) returns (SearchIssuesTextResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/search/text"
-    };
+    option (google.api.http) = {get: "/api/issues/search/text"};
   }
 
   rpc ListUpdates(ListUpdatesRequest) returns (ListUpdatesResponse) {
-    option (google.api.http) = {
-      get: "/api/issues/updates"
-    };
+    option (google.api.http) = {get: "/api/issues/updates"};
   }
 }
 
@@ -156,18 +138,14 @@ service ProjectService {
   }
 
   rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
-    option (google.api.http) = {
-      get: "/api/projects"
-    };
+    option (google.api.http) = {get: "/api/projects"};
   }
 }
 
 // OrgService covers the tenant-scoped DELETE /api/org (purge caller's own org).
 service OrgService {
   rpc PurgeOrg(OrgServicePurgeOrgRequest) returns (OrgServicePurgeOrgResponse) {
-    option (google.api.http) = {
-      delete: "/api/org"
-    };
+    option (google.api.http) = {delete: "/api/org"};
   }
 }
 
@@ -181,15 +159,11 @@ service AdminService {
   }
 
   rpc ListOrgs(ListOrgsRequest) returns (ListOrgsResponse) {
-    option (google.api.http) = {
-      get: "/api/admin/orgs"
-    };
+    option (google.api.http) = {get: "/api/admin/orgs"};
   }
 
   rpc GetOrg(GetOrgRequest) returns (GetOrgResponse) {
-    option (google.api.http) = {
-      get: "/api/admin/orgs/{slug}"
-    };
+    option (google.api.http) = {get: "/api/admin/orgs/{slug}"};
   }
 
   rpc UpdateOrg(UpdateOrgRequest) returns (UpdateOrgResponse) {
@@ -200,9 +174,7 @@ service AdminService {
   }
 
   rpc DeleteOrg(DeleteOrgRequest) returns (DeleteOrgResponse) {
-    option (google.api.http) = {
-      delete: "/api/admin/orgs/{slug}"
-    };
+    option (google.api.http) = {delete: "/api/admin/orgs/{slug}"};
   }
 
   rpc AddMember(AddMemberRequest) returns (AddMemberResponse) {
@@ -213,15 +185,11 @@ service AdminService {
   }
 
   rpc ListMembers(ListMembersRequest) returns (ListMembersResponse) {
-    option (google.api.http) = {
-      get: "/api/admin/orgs/{slug}/members"
-    };
+    option (google.api.http) = {get: "/api/admin/orgs/{slug}/members"};
   }
 
   rpc RemoveMember(RemoveMemberRequest) returns (RemoveMemberResponse) {
-    option (google.api.http) = {
-      delete: "/api/admin/orgs/{slug}/members"
-    };
+    option (google.api.http) = {delete: "/api/admin/orgs/{slug}/members"};
   }
 
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
@@ -232,15 +200,11 @@ service AdminService {
   }
 
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
-    option (google.api.http) = {
-      get: "/api/admin/users"
-    };
+    option (google.api.http) = {get: "/api/admin/users"};
   }
 
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
-    option (google.api.http) = {
-      get: "/api/admin/users/{id}"
-    };
+    option (google.api.http) = {get: "/api/admin/users/{id}"};
   }
 
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
@@ -251,9 +215,7 @@ service AdminService {
   }
 
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
-    option (google.api.http) = {
-      delete: "/api/admin/users/{id}"
-    };
+    option (google.api.http) = {delete: "/api/admin/users/{id}"};
   }
 }
 
@@ -265,55 +227,55 @@ service AdminService {
 // (snake_case proto names, UseProtoNames=true). The REST server currently
 // marshals Go struct fields (PascalCase); the gRPC server will use these names.
 message Issue {
-  string key               = 1;
-  string project           = 2;
-  int32  seq               = 3;
-  string type              = 4;
-  string status            = 5;
-  string summary           = 6;
-  string description       = 7;
+  string key = 1;
+  string project = 2;
+  int32 seq = 3;
+  string type = 4;
+  string status = 5;
+  string summary = 6;
+  string description = 7;
   string definition_of_done = 8;
-  string priority          = 9;
-  bool   priority_locked   = 10;
-  string assignee_aspect   = 11;
-  string assignee_team     = 12;
-  string reporter          = 13;
-  string parent_key        = 14;
+  string priority = 9;
+  bool priority_locked = 10;
+  string assignee_aspect = 11;
+  string assignee_team = 12;
+  string reporter = 13;
+  string parent_key = 14;
   repeated ExternalRef external_refs = 15;
-  string created_at        = 16;
-  string updated_at        = 17;
+  string created_at = 16;
+  string updated_at = 17;
 }
 
 // ExternalRef points at a ticket in an external tracker.
 // JSON keys match ExternalRef struct json tags in issues.go.
 message ExternalRef {
-  string tracker     = 1;
-  string key         = 2;
-  string url         = 3;
+  string tracker = 1;
+  string key = 2;
+  string url = 3;
   string description = 4;
 }
 
 // IssueRef is the lightweight projection returned by search / list RPCs.
 message IssueRef {
-  string key             = 1;
-  string project         = 2;
-  string type            = 3;
-  string status          = 4;
-  string summary         = 5;
-  string priority        = 6;
+  string key = 1;
+  string project = 2;
+  string type = 3;
+  string status = 4;
+  string summary = 5;
+  string priority = 6;
   string assignee_aspect = 7;
-  string assignee_team   = 8;
-  string updated_at      = 9;
+  string assignee_team = 8;
+  string updated_at = 9;
 }
 
 // Project is a top-level issue container.
 message Project {
-  string key          = 1;
+  string key = 1;
   string organisation = 2;
-  string name         = 3;
-  string description  = 4;
+  string name = 3;
+  string description = 4;
   string default_team = 5;
-  bool   archived     = 6;
+  bool archived = 6;
 }
 
 // Organisation owns projects.
@@ -324,53 +286,53 @@ message Organisation {
 
 // User is a ledger-authenticated identity.
 message User {
-  string id   = 1;
+  string id = 1;
   string kind = 2; // "human" | "ai"
 }
 
 // OrgMember links a User to an Organisation with a role.
 message OrgMember {
-  string org     = 1;
+  string org = 1;
   string user_id = 2;
-  string role    = 3; // owner | admin | member | viewer
+  string role = 3; // owner | admin | member | viewer
 }
 
 // Event is a timeline entry (issue history).
 // Payload is encoded as a JSON string to accommodate arbitrary map[string]any.
 message Event {
-  int64  id        = 1;
+  int64 id = 1;
   string issue_key = 2;
-  int32  seq       = 3;
-  string kind      = 4;
-  string actor     = 5;
-  string at        = 6;
-  string payload   = 7; // JSON-encoded map[string]any
+  int32 seq = 3;
+  string kind = 4;
+  string actor = 5;
+  string at = 6;
+  string payload = 7; // JSON-encoded map[string]any
 }
 
 // LinkRow is the flattened wire shape returned by ListLinks.
 // Mirrors linkRESTRow in links_rest.go.
 message LinkRow {
-  string from_key   = 1;
-  string to_key     = 2;
-  string type       = 3;
+  string from_key = 1;
+  string to_key = 2;
+  string type = 3;
   string created_at = 4;
   string created_by = 5;
-  string direction  = 6; // "outgoing" | "incoming"
+  string direction = 6; // "outgoing" | "incoming"
 }
 
 // SearchFilter is the structured query shape for SearchIssues.
 message SearchFilter {
-  repeated string projects        = 1;
-  repeated string types           = 2;
-  repeated string statuses        = 3;
-  repeated string priorities      = 4;
-  string          assignee_aspect = 5;
-  string          assignee_team   = 6;
-  string          reporter        = 7;
-  string          parent_key      = 8;
-  string          order_by        = 9;  // "priority" | "created" | "updated"
-  string          order_dir       = 10; // "asc" | "desc"
-  int32           limit           = 11;
+  repeated string projects = 1;
+  repeated string types = 2;
+  repeated string statuses = 3;
+  repeated string priorities = 4;
+  string assignee_aspect = 5;
+  string assignee_team = 6;
+  string reporter = 7;
+  string parent_key = 8;
+  string order_by = 9; // "priority" | "created" | "updated"
+  string order_dir = 10; // "asc" | "desc"
+  int32 limit = 11;
 }
 
 // =============================================================================
@@ -378,16 +340,16 @@ message SearchFilter {
 // =============================================================================
 
 message CreateIssueRequest {
-  string project           = 1;
-  string type              = 2;
-  string summary           = 3;
-  string description       = 4;
+  string project = 1;
+  string type = 2;
+  string summary = 3;
+  string description = 4;
   string definition_of_done = 5;
-  string priority          = 6;
-  string reporter          = 7;
-  string parent_key        = 8;
-  string assignee_aspect   = 9;
-  string assignee_team     = 10;
+  string priority = 6;
+  string reporter = 7;
+  string parent_key = 8;
+  string assignee_aspect = 9;
+  string assignee_team = 10;
   repeated ExternalRef external_refs = 11;
 }
 
@@ -399,7 +361,7 @@ message CreateIssueResponse {
 }
 
 message GetIssueRequest {
-  string key    = 1;
+  string key = 1;
   string format = 2; // "raw" | "" (markdown); maps to ?format= query param
 }
 
@@ -409,43 +371,43 @@ message GetIssueResponse {
 }
 
 message UpdateIssueRequest {
-  string key               = 1;
+  string key = 1;
   // Optional patch fields — empty string = no change (mirrors *string pointer semantics).
-  string summary           = 2;
-  string description       = 3;
+  string summary = 2;
+  string description = 3;
   string definition_of_done = 4;
-  string priority          = 5;
-  string parent_key        = 6;
+  string priority = 5;
+  string parent_key = 6;
   repeated ExternalRef external_refs = 7;
-  string actor             = 8;
+  string actor = 8;
 }
 
 // UpdateIssue returns HTTP 200 with no body; empty response mirrors live handler.
 message UpdateIssueResponse {}
 
 message TransitionIssueRequest {
-  string key    = 1;
+  string key = 1;
   string status = 2;
-  string actor  = 3;
+  string actor = 3;
 }
 
 // TransitionIssue returns HTTP 200 with no body.
 message TransitionIssueResponse {}
 
 message AssignIssueRequest {
-  string key    = 1;
+  string key = 1;
   string aspect = 2;
-  string team   = 3;
-  string actor  = 4;
+  string team = 3;
+  string actor = 4;
 }
 
 // AssignIssue returns HTTP 200 with no body.
 message AssignIssueResponse {}
 
 message CommentIssueRequest {
-  string key   = 1;
+  string key = 1;
   string actor = 2;
-  string body  = 3;
+  string body = 3;
 }
 
 // CommentIssue returns HTTP 201 with no body.
@@ -463,7 +425,7 @@ message ListCommentsResponse {
 }
 
 message ClaimIssueRequest {
-  string key   = 1;
+  string key = 1;
   string actor = 2;
 }
 
@@ -474,9 +436,9 @@ message ClaimIssueResponse {
 }
 
 message AddWatcherRequest {
-  string key    = 1;
+  string key = 1;
   string aspect = 2;
-  string actor  = 3;
+  string actor = 3;
 }
 
 // AddWatcher returns HTTP 201 with no body.
@@ -493,26 +455,26 @@ message ListWatchersResponse {
 }
 
 message RemoveWatcherRequest {
-  string key    = 1;
+  string key = 1;
   string aspect = 2;
-  string actor  = 3;
+  string actor = 3;
 }
 
 // RemoveWatcher returns HTTP 200 with no body.
 message RemoveWatcherResponse {}
 
 message AddLinkRequest {
-  string key    = 1; // from_key (this issue)
+  string key = 1; // from_key (this issue)
   string to_key = 2;
-  string type   = 3; // "blocks" | "relates-to"
-  string actor  = 4;
+  string type = 3; // "blocks" | "relates-to"
+  string actor = 4;
 }
 
 // AddLinkResponse mirrors the link creation response: {"from_key","to_key","type"}.
 message AddLinkResponse {
   string from_key = 1;
-  string to_key   = 2;
-  string type     = 3;
+  string to_key = 2;
+  string type = 3;
 }
 
 message ListLinksRequest {
@@ -525,18 +487,18 @@ message ListLinksResponse {
 }
 
 message RemoveLinkRequest {
-  string key    = 1; // from_key
+  string key = 1; // from_key
   string to_key = 2;
-  string type   = 3;
-  string actor  = 4;
+  string type = 3;
+  string actor = 4;
 }
 
 // RemoveLinkResponse mirrors the removal response: {"from_key","to_key","type","removed":true}.
 message RemoveLinkResponse {
   string from_key = 1;
-  string to_key   = 2;
-  string type     = 3;
-  bool   removed  = 4;
+  string to_key = 2;
+  string type = 3;
+  bool removed = 4;
 }
 
 message ListMyIssuesRequest {
@@ -567,8 +529,8 @@ message SearchIssuesResponse {
 }
 
 message SearchIssuesTextRequest {
-  string q     = 1;
-  int32  limit = 2;
+  string q = 1;
+  int32 limit = 2;
 }
 
 // SearchIssuesTextResponse: handler emits a bare array; grpc-gateway wraps as {"refs": [...]}.
@@ -577,9 +539,9 @@ message SearchIssuesTextResponse {
 }
 
 message ListUpdatesRequest {
-  string aspect   = 1;
-  int64  since_id = 2;
-  int32  limit    = 3;
+  string aspect = 1;
+  int64 since_id = 2;
+  int32 limit = 3;
 }
 
 // ListUpdatesResponse: handler emits a bare array; grpc-gateway wraps as {"events": [...]}.
@@ -592,18 +554,18 @@ message ListUpdatesResponse {
 // =============================================================================
 
 message CreateProjectRequest {
-  string key          = 1;
-  string name         = 2;
-  string description  = 3;
+  string key = 1;
+  string name = 2;
+  string description = 3;
   string default_team = 4;
   // organisation is taken from auth context (X-CWB-Org), not the body
 }
 
 // CreateProjectResponse mirrors the live handler: {"key","organisation","name"}.
 message CreateProjectResponse {
-  string key          = 1;
+  string key = 1;
   string organisation = 2;
-  string name         = 3;
+  string name = 3;
 }
 
 message ListProjectsRequest {
@@ -672,9 +634,9 @@ message DeleteOrgRequest {
 message DeleteOrgResponse {}
 
 message AddMemberRequest {
-  string slug    = 1;
+  string slug = 1;
   string user_id = 2;
-  string role    = 3;
+  string role = 3;
 }
 
 // AddMember returns HTTP 201 with no body.
@@ -690,7 +652,7 @@ message ListMembersResponse {
 }
 
 message RemoveMemberRequest {
-  string slug    = 1;
+  string slug = 1;
   string user_id = 2;
 }
 
@@ -698,7 +660,7 @@ message RemoveMemberRequest {
 message RemoveMemberResponse {}
 
 message CreateUserRequest {
-  string id   = 1;
+  string id = 1;
   string kind = 2;
 }
 
@@ -724,7 +686,7 @@ message GetUserResponse {
 }
 
 message UpdateUserRequest {
-  string id   = 1;
+  string id = 1;
   string kind = 2;
 }
 
