@@ -926,12 +926,12 @@ const file_cwb_v1_commonplace_proto_rawDesc = "" +
 	"\x0fPurgeOrgRequest\"D\n" +
 	"\x10PurgeOrgResponse\x12\x16\n" +
 	"\x06purged\x18\x01 \x01(\tR\x06purged\x12\x18\n" +
-	"\aentries\x18\x02 \x01(\x05R\aentries2\xe8\x04\n" +
+	"\aentries\x18\x02 \x01(\x05R\aentries2\xc6\x04\n" +
 	"\x10KnowledgeService\x12V\n" +
 	"\x05Store\x12\x14.cwb.v1.StoreRequest\x1a\x15.cwb.v1.StoreResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*b\x05entry\"\x0e/api/knowledge\x12V\n" +
 	"\x06Search\x12\x15.cwb.v1.SearchRequest\x1a\x16.cwb.v1.SearchResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/knowledge/search\x12I\n" +
-	"\x04List\x12\x13.cwb.v1.ListRequest\x1a\x14.cwb.v1.ListResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/knowledge\x12R\n" +
-	"\x03Get\x12\x12.cwb.v1.GetRequest\x1a\x13.cwb.v1.GetResponse\"\"\x82\xd3\xe4\x93\x02\x1cb\x05entry\x12\x13/api/knowledge/{id}\x12^\n" +
+	"\x04List\x12\x13.cwb.v1.ListRequest\x1a\x14.cwb.v1.ListResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/knowledge\x120\n" +
+	"\x03Get\x12\x12.cwb.v1.GetRequest\x1a\x13.cwb.v1.GetResponse\"\x00\x12^\n" +
 	"\x06Update\x12\x15.cwb.v1.UpdateRequest\x1a\x16.cwb.v1.UpdateResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*b\x05entry2\x13/api/knowledge/{id}\x12T\n" +
 	"\x06Delete\x12\x15.cwb.v1.DeleteRequest\x1a\x16.cwb.v1.DeleteResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/api/knowledge/{id}\x12O\n" +
 	"\bPurgeOrg\x12\x17.cwb.v1.PurgeOrgRequest\x1a\x18.cwb.v1.PurgeOrgResponse\"\x10\x82\xd3\xe4\x93\x02\n" +

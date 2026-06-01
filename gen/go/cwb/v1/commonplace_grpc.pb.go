@@ -43,6 +43,9 @@ type KnowledgeServiceClient interface {
 	Store(ctx context.Context, in *StoreRequest, opts ...grpc.CallOption) (*StoreResponse, error)
 	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
+	// Get is gRPC-only (no HTTP binding): GET /api/knowledge/{id} would shadow
+	// the /api/knowledge/search literal route in grpc-gateway. Re-expose at a
+	// non-colliding REST path if needed.
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
@@ -142,6 +145,9 @@ type KnowledgeServiceServer interface {
 	Store(context.Context, *StoreRequest) (*StoreResponse, error)
 	Search(context.Context, *SearchRequest) (*SearchResponse, error)
 	List(context.Context, *ListRequest) (*ListResponse, error)
+	// Get is gRPC-only (no HTTP binding): GET /api/knowledge/{id} would shadow
+	// the /api/knowledge/search literal route in grpc-gateway. Re-expose at a
+	// non-colliding REST path if needed.
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
