@@ -1,0 +1,149 @@
+syntax = "proto3";
+package cwb.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// KnowledgeService is the commonplace service: store, search, list, get,
+// update, delete, and org-purge operations on knowledge entries.
+//
+// Identity (org, subject) flows via gRPC metadata keys: cwb-org,
+// cwb-subject, cwb-scopes (space-joined). The grpc-gateway renders JSON
+// with UseProtoNames=true so proto snake_case field names are the JSON keys —
+// these MUST match the live REST contract in commonplace/handlers.go.
+service KnowledgeService {
+  rpc Store(StoreRequest) returns (StoreResponse) {
+    option (google.api.http) = {
+      post: "/api/knowledge"
+      body: "*"
+    };
+  }
+  rpc Search(SearchRequest) returns (SearchResponse) {
+    option (google.api.http) = {
+      get: "/api/knowledge/search"
+    };
+  }
+  rpc List(ListRequest) returns (ListResponse) {
+    option (google.api.http) = {
+      get: "/api/knowledge"
+    };
+  }
+  rpc Get(GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      get: "/api/knowledge/{id}"
+    };
+  }
+  rpc Update(UpdateRequest) returns (UpdateResponse) {
+    option (google.api.http) = {
+      patch: "/api/knowledge/{id}"
+      body: "*"
+    };
+  }
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      delete: "/api/knowledge/{id}"
+    };
+  }
+  rpc PurgeOrg(PurgeOrgRequest) returns (PurgeOrgResponse) {
+    option (google.api.http) = {
+      delete: "/api/org"
+    };
+  }
+}
+
+// Entry is a stored knowledge entry. Field names are the canonical JSON keys
+// (snake_case, matching commonplace/store.go Entry struct json tags).
+message Entry {
+  string id         = 1;
+  string org        = 2;
+  string owner      = 3;
+  string topic      = 4;
+  string content    = 5;
+  string visibility = 6; // "private" | "org"
+  repeated string tags = 7;
+  string created_at = 8; // RFC3339
+  string updated_at = 9; // RFC3339
+}
+
+// StoreRequest mirrors storeBody in commonplace/handlers.go.
+// org + owner come from gateway identity (cwb-org / cwb-subject metadata).
+message StoreRequest {
+  string topic      = 1;
+  string content    = 2;
+  string visibility = 3;
+  repeated string tags = 4;
+}
+
+// StoreResponse wraps the created Entry. REST returns it as the top-level object.
+message StoreResponse {
+  Entry entry = 1;
+}
+
+// SearchRequest mirrors the query params accepted by handleSearch.
+// q and top_k match the URL query parameter names.
+message SearchRequest {
+  string q     = 1;
+  int32  top_k = 2;
+}
+
+// Hit is one ranked search result, matching commonplace/search.go Hit struct.
+// JSON: {"entry": {...}, "score": <float>}
+message Hit {
+  Entry  entry = 1;
+  double score = 2; // fused RRF score; higher = better
+}
+
+// SearchResponse wraps hits matching the REST envelope: {"hits": [...]}
+message SearchResponse {
+  repeated Hit hits = 1;
+}
+
+message ListRequest {}
+
+// ListResponse wraps entries matching the REST envelope: {"entries": [...]}
+message ListResponse {
+  repeated Entry entries = 1;
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+// GetResponse wraps the fetched Entry. REST returns it as the top-level object.
+message GetResponse {
+  Entry entry = 1;
+}
+
+// UpdateRequest mirrors updateBody in commonplace/handlers.go.
+// id binds from the URL path; body carries the optional patch fields.
+// All string fields are optional (empty string = not patched server-side).
+message UpdateRequest {
+  string id         = 1;
+  string topic      = 2;
+  string content    = 3;
+  string visibility = 4;
+  repeated string tags = 5;
+}
+
+// UpdateResponse wraps the updated Entry. REST returns it as the top-level object.
+message UpdateResponse {
+  Entry entry = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+// DeleteResponse is empty: the REST endpoint returns HTTP 204 No Content.
+message DeleteResponse {}
+
+message PurgeOrgRequest {}
+
+// PurgeOrgResponse matches the REST envelope:
+// {"purged": "<org>", "entries": <n>}
+// org comes from gateway identity (cwb-org metadata).
+message PurgeOrgResponse {
+  string purged  = 1; // the org that was purged
+  int32  entries = 2; // number of entries deleted
+}
