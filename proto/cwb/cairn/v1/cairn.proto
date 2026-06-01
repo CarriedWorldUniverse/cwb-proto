@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+// Package cwb.cairn.v1 is cairn's JSON API surface (repos, pull requests, and
+// the cross-pillar org purge), migrated to gRPC behind interchange (Phase 3).
+// It lives in its OWN package — not the shared cwb.v1 used by ledger and
+// commonplace — because cairn needs its own OrgService (PurgeOrg), which would
+// hard-clash with ledger's OrgService in a single package. cairn's git wire
+// protocol (Smart-HTTP + SSH) is NOT here: git can't be gRPC and stays on its
+// existing transports; only the JSON API moves.
+package cwb.cairn.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/cairn/v1;cairnv1";
+
+// RepoService — repository administration. (The Smart-HTTP git byte protocol
+// is served by cairn's retained HTTP server, not by this service.)
+service RepoService {
+  // CreateRepo mirrors POST /api/orgs/{org}/repos (scope repo:write; the path
+  // {org} must equal the caller's verified org). response_body:"repo" keeps the
+  // REST shape flat: {id, org, slug, default_branch}.
+  rpc CreateRepo(CreateRepoRequest) returns (CreateRepoResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/repos"
+      body: "*"
+      response_body: "repo"
+    };
+  }
+}
+
+// PullService — pull requests: open (creates the linked ledger issue), get, and
+// fast-forward-only merge (best-effort comments the ledger issue).
+service PullService {
+  // OpenPull mirrors POST /api/orgs/{org}/repos/{slug}/pulls (scope repo:write).
+  // Idempotent per (repo, source, target) while open. response_body:"pull".
+  rpc OpenPull(OpenPullRequest) returns (OpenPullResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/repos/{slug}/pulls"
+      body: "*"
+      response_body: "pull"
+    };
+  }
+  // GetPull mirrors GET /api/orgs/{org}/repos/{slug}/pulls/{id} (scope repo:read).
+  rpc GetPull(GetPullRequest) returns (GetPullResponse) {
+    option (google.api.http) = {
+      get: "/api/orgs/{org}/repos/{slug}/pulls/{id}"
+      response_body: "pull"
+    };
+  }
+  // MergePull mirrors POST /api/orgs/{org}/repos/{slug}/pulls/{id}/merge (scope
+  // repo:write). No request body — path params only. response_body:"result".
+  rpc MergePull(MergePullRequest) returns (MergePullResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/repos/{slug}/pulls/{id}/merge"
+      response_body: "result"
+    };
+  }
+}
+
+// OrgService — cross-pillar org purge (NEX-402). Org-bound by construction: the
+// target org is the caller's verified org (cwb-org metadata), never a path or
+// body field, so a caller can only ever purge its own org.
+service OrgService {
+  // PurgeOrg mirrors DELETE /api/org (scope org:purge). Deletes all repos for
+  // the caller's org. Idempotent: zero repos -> still succeeds.
+  rpc PurgeOrg(PurgeOrgRequest) returns (PurgeOrgResponse) {
+    option (google.api.http) = {delete: "/api/org"};
+  }
+}
+
+// ---- messages ----
+
+// Repo is a repository as returned by CreateRepo.
+message Repo {
+  string id = 1;
+  string org = 2;
+  string slug = 3;
+  string default_branch = 4;
+}
+
+message CreateRepoRequest {
+  string org = 1; // path param; must equal the caller's verified org
+  string slug = 2; // body
+}
+message CreateRepoResponse {
+  Repo repo = 1;
+}
+
+// Pull is a pull request. `repo` is the repo slug (mirrors the REST field).
+message Pull {
+  string id = 1;
+  string repo = 2;
+  string source = 3;
+  string target = 4;
+  string title = 5;
+  string state = 6;
+  string ledger_issue_key = 7;
+  string url = 8;
+}
+
+message OpenPullRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string source = 3;
+  string target = 4;
+  string title = 5;
+  string description = 6;
+  string project = 7;
+  string definition_of_done = 8;
+}
+message OpenPullResponse {
+  Pull pull = 1;
+}
+
+message GetPullRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string id = 3; // path
+}
+message GetPullResponse {
+  Pull pull = 1;
+}
+
+message MergePullRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string id = 3; // path
+}
+
+// MergeResult mirrors the REST merge response; ledger_comment_error is set only
+// when the best-effort ledger comment failed (the merge itself still stands).
+message MergeResult {
+  string id = 1;
+  string state = 2;
+  string target = 3;
+  string merged_sha = 4;
+  string ledger_comment_error = 5;
+}
+message MergePullResponse {
+  MergeResult result = 1;
+}
+
+message PurgeOrgRequest {}
+
+// PurgeOrgResponse mirrors the REST shape {"purged": "<org>", "repos": <n>}.
+message PurgeOrgResponse {
+  string purged = 1;
+  int32 repos = 2;
+}
