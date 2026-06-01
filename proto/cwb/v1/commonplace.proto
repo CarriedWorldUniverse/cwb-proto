@@ -17,6 +17,7 @@ service KnowledgeService {
     option (google.api.http) = {
       post: "/api/knowledge"
       body: "*"
+      response_body: "entry"
     };
   }
   rpc Search(SearchRequest) returns (SearchResponse) {
@@ -32,12 +33,14 @@ service KnowledgeService {
   rpc Get(GetRequest) returns (GetResponse) {
     option (google.api.http) = {
       get: "/api/knowledge/{id}"
+      response_body: "entry"
     };
   }
   rpc Update(UpdateRequest) returns (UpdateResponse) {
     option (google.api.http) = {
       patch: "/api/knowledge/{id}"
       body: "*"
+      response_body: "entry"
     };
   }
   rpc Delete(DeleteRequest) returns (DeleteResponse) {

@@ -286,7 +286,7 @@ func RegisterKnowledgeServiceHandlerServer(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Store_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Store_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Store_0{resp.(*StoreResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodGet, pattern_KnowledgeService_Search_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -346,7 +346,7 @@ func RegisterKnowledgeServiceHandlerServer(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Get_0{resp.(*GetResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPatch, pattern_KnowledgeService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -366,7 +366,7 @@ func RegisterKnowledgeServiceHandlerServer(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Update_0{resp.(*UpdateResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodDelete, pattern_KnowledgeService_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -463,7 +463,7 @@ func RegisterKnowledgeServiceHandlerClient(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Store_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Store_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Store_0{resp.(*StoreResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodGet, pattern_KnowledgeService_Search_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -514,7 +514,7 @@ func RegisterKnowledgeServiceHandlerClient(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Get_0{resp.(*GetResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPatch, pattern_KnowledgeService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -531,7 +531,7 @@ func RegisterKnowledgeServiceHandlerClient(ctx context.Context, mux *runtime.Ser
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_KnowledgeService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_KnowledgeService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, response_KnowledgeService_Update_0{resp.(*UpdateResponse)}, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodDelete, pattern_KnowledgeService_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -568,6 +568,33 @@ func RegisterKnowledgeServiceHandlerClient(ctx context.Context, mux *runtime.Ser
 		forward_KnowledgeService_PurgeOrg_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
+}
+
+type response_KnowledgeService_Store_0 struct {
+	*StoreResponse
+}
+
+func (m response_KnowledgeService_Store_0) XXX_ResponseBody() interface{} {
+	response := m.StoreResponse
+	return response.Entry
+}
+
+type response_KnowledgeService_Get_0 struct {
+	*GetResponse
+}
+
+func (m response_KnowledgeService_Get_0) XXX_ResponseBody() interface{} {
+	response := m.GetResponse
+	return response.Entry
+}
+
+type response_KnowledgeService_Update_0 struct {
+	*UpdateResponse
+}
+
+func (m response_KnowledgeService_Update_0) XXX_ResponseBody() interface{} {
+	response := m.UpdateResponse
+	return response.Entry
 }
 
 var (
