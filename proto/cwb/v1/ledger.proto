@@ -1,0 +1,739 @@
+syntax = "proto3";
+package cwb.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// IssueService covers every /api/issues/* route.
+//
+// REGISTRATION ORDER NOTE: wildcard RPCs (/{key}…) are declared first, then
+// literal-collection RPCs last. grpc-gateway registers patterns in declaration
+// order and the LAST matching pattern wins, so literals (/my, /ready, /search,
+// /search/text, /updates) must register after the /{key} variants to take
+// precedence over GetIssue({key}).
+service IssueService {
+  // --- {key}-scoped RPCs (declare FIRST so literal routes win below) ---
+
+  rpc GetIssue(GetIssueRequest) returns (GetIssueResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/{key}"
+      response_body: "issue"
+    };
+  }
+
+  rpc UpdateIssue(UpdateIssueRequest) returns (UpdateIssueResponse) {
+    option (google.api.http) = {
+      patch: "/api/issues/{key}"
+      body: "*"
+    };
+  }
+
+  rpc TransitionIssue(TransitionIssueRequest) returns (TransitionIssueResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/transition"
+      body: "*"
+    };
+  }
+
+  rpc AssignIssue(AssignIssueRequest) returns (AssignIssueResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/assign"
+      body: "*"
+    };
+  }
+
+  rpc CommentIssue(CommentIssueRequest) returns (CommentIssueResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/comments"
+      body: "*"
+    };
+  }
+
+  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/{key}/comments"
+    };
+  }
+
+  rpc ClaimIssue(ClaimIssueRequest) returns (ClaimIssueResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/claim"
+      body: "*"
+      response_body: "issue"
+    };
+  }
+
+  rpc AddWatcher(AddWatcherRequest) returns (AddWatcherResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/watchers"
+      body: "*"
+    };
+  }
+
+  rpc ListWatchers(ListWatchersRequest) returns (ListWatchersResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/{key}/watchers"
+    };
+  }
+
+  rpc RemoveWatcher(RemoveWatcherRequest) returns (RemoveWatcherResponse) {
+    option (google.api.http) = {
+      delete: "/api/issues/{key}/watchers"
+    };
+  }
+
+  rpc AddLink(AddLinkRequest) returns (AddLinkResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{key}/links"
+      body: "*"
+    };
+  }
+
+  rpc ListLinks(ListLinksRequest) returns (ListLinksResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/{key}/links"
+    };
+  }
+
+  rpc RemoveLink(RemoveLinkRequest) returns (RemoveLinkResponse) {
+    option (google.api.http) = {
+      delete: "/api/issues/{key}/links"
+    };
+  }
+
+  // --- literal-collection RPCs (declare LAST so they win over /{key}) ---
+
+  rpc CreateIssue(CreateIssueRequest) returns (CreateIssueResponse) {
+    option (google.api.http) = {
+      post: "/api/issues"
+      body: "*"
+      response_body: "issue"
+    };
+  }
+
+  rpc ListMyIssues(ListMyIssuesRequest) returns (ListMyIssuesResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/my"
+    };
+  }
+
+  rpc ListReadyIssues(ListReadyIssuesRequest) returns (ListReadyIssuesResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/ready"
+    };
+  }
+
+  rpc SearchIssues(SearchIssuesRequest) returns (SearchIssuesResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/search"
+      body: "*"
+    };
+  }
+
+  // SearchIssuesText must come after SearchIssues so /search/text wins over
+  // any /{key}/{action} shadow — also declared last here.
+  rpc SearchIssuesText(SearchIssuesTextRequest) returns (SearchIssuesTextResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/search/text"
+    };
+  }
+
+  rpc ListUpdates(ListUpdatesRequest) returns (ListUpdatesResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/updates"
+    };
+  }
+}
+
+// ProjectService covers /api/projects.
+service ProjectService {
+  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse) {
+    option (google.api.http) = {
+      post: "/api/projects"
+      body: "*"
+    };
+  }
+
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
+    option (google.api.http) = {
+      get: "/api/projects"
+    };
+  }
+}
+
+// OrgService covers the tenant-scoped DELETE /api/org (purge caller's own org).
+service OrgService {
+  rpc PurgeOrg(OrgServicePurgeOrgRequest) returns (OrgServicePurgeOrgResponse) {
+    option (google.api.http) = {
+      delete: "/api/org"
+    };
+  }
+}
+
+// AdminService covers /api/admin/* (orgs, members, users).
+service AdminService {
+  rpc CreateOrg(CreateOrgRequest) returns (CreateOrgResponse) {
+    option (google.api.http) = {
+      post: "/api/admin/orgs"
+      body: "*"
+    };
+  }
+
+  rpc ListOrgs(ListOrgsRequest) returns (ListOrgsResponse) {
+    option (google.api.http) = {
+      get: "/api/admin/orgs"
+    };
+  }
+
+  rpc GetOrg(GetOrgRequest) returns (GetOrgResponse) {
+    option (google.api.http) = {
+      get: "/api/admin/orgs/{slug}"
+    };
+  }
+
+  rpc UpdateOrg(UpdateOrgRequest) returns (UpdateOrgResponse) {
+    option (google.api.http) = {
+      patch: "/api/admin/orgs/{slug}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteOrg(DeleteOrgRequest) returns (DeleteOrgResponse) {
+    option (google.api.http) = {
+      delete: "/api/admin/orgs/{slug}"
+    };
+  }
+
+  rpc AddMember(AddMemberRequest) returns (AddMemberResponse) {
+    option (google.api.http) = {
+      post: "/api/admin/orgs/{slug}/members"
+      body: "*"
+    };
+  }
+
+  rpc ListMembers(ListMembersRequest) returns (ListMembersResponse) {
+    option (google.api.http) = {
+      get: "/api/admin/orgs/{slug}/members"
+    };
+  }
+
+  rpc RemoveMember(RemoveMemberRequest) returns (RemoveMemberResponse) {
+    option (google.api.http) = {
+      delete: "/api/admin/orgs/{slug}/members"
+    };
+  }
+
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/api/admin/users"
+      body: "*"
+    };
+  }
+
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/api/admin/users"
+    };
+  }
+
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/api/admin/users/{id}"
+    };
+  }
+
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      patch: "/api/admin/users/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/api/admin/users/{id}"
+    };
+  }
+}
+
+// =============================================================================
+// Shared domain messages
+// =============================================================================
+
+// Issue is the full issue row. Field names match the grpc-gateway JSON output
+// (snake_case proto names, UseProtoNames=true). The REST server currently
+// marshals Go struct fields (PascalCase); the gRPC server will use these names.
+message Issue {
+  string key               = 1;
+  string project           = 2;
+  int32  seq               = 3;
+  string type              = 4;
+  string status            = 5;
+  string summary           = 6;
+  string description       = 7;
+  string definition_of_done = 8;
+  string priority          = 9;
+  bool   priority_locked   = 10;
+  string assignee_aspect   = 11;
+  string assignee_team     = 12;
+  string reporter          = 13;
+  string parent_key        = 14;
+  repeated ExternalRef external_refs = 15;
+  string created_at        = 16;
+  string updated_at        = 17;
+}
+
+// ExternalRef points at a ticket in an external tracker.
+// JSON keys match ExternalRef struct json tags in issues.go.
+message ExternalRef {
+  string tracker     = 1;
+  string key         = 2;
+  string url         = 3;
+  string description = 4;
+}
+
+// IssueRef is the lightweight projection returned by search / list RPCs.
+message IssueRef {
+  string key             = 1;
+  string project         = 2;
+  string type            = 3;
+  string status          = 4;
+  string summary         = 5;
+  string priority        = 6;
+  string assignee_aspect = 7;
+  string assignee_team   = 8;
+  string updated_at      = 9;
+}
+
+// Project is a top-level issue container.
+message Project {
+  string key          = 1;
+  string organisation = 2;
+  string name         = 3;
+  string description  = 4;
+  string default_team = 5;
+  bool   archived     = 6;
+}
+
+// Organisation owns projects.
+message Organisation {
+  string slug = 1;
+  string name = 2;
+}
+
+// User is a ledger-authenticated identity.
+message User {
+  string id   = 1;
+  string kind = 2; // "human" | "ai"
+}
+
+// OrgMember links a User to an Organisation with a role.
+message OrgMember {
+  string org     = 1;
+  string user_id = 2;
+  string role    = 3; // owner | admin | member | viewer
+}
+
+// Event is a timeline entry (issue history).
+// Payload is encoded as a JSON string to accommodate arbitrary map[string]any.
+message Event {
+  int64  id        = 1;
+  string issue_key = 2;
+  int32  seq       = 3;
+  string kind      = 4;
+  string actor     = 5;
+  string at        = 6;
+  string payload   = 7; // JSON-encoded map[string]any
+}
+
+// LinkRow is the flattened wire shape returned by ListLinks.
+// Mirrors linkRESTRow in links_rest.go.
+message LinkRow {
+  string from_key   = 1;
+  string to_key     = 2;
+  string type       = 3;
+  string created_at = 4;
+  string created_by = 5;
+  string direction  = 6; // "outgoing" | "incoming"
+}
+
+// SearchFilter is the structured query shape for SearchIssues.
+message SearchFilter {
+  repeated string projects        = 1;
+  repeated string types           = 2;
+  repeated string statuses        = 3;
+  repeated string priorities      = 4;
+  string          assignee_aspect = 5;
+  string          assignee_team   = 6;
+  string          reporter        = 7;
+  string          parent_key      = 8;
+  string          order_by        = 9;  // "priority" | "created" | "updated"
+  string          order_dir       = 10; // "asc" | "desc"
+  int32           limit           = 11;
+}
+
+// =============================================================================
+// IssueService request/response messages
+// =============================================================================
+
+message CreateIssueRequest {
+  string project           = 1;
+  string type              = 2;
+  string summary           = 3;
+  string description       = 4;
+  string definition_of_done = 5;
+  string priority          = 6;
+  string reporter          = 7;
+  string parent_key        = 8;
+  string assignee_aspect   = 9;
+  string assignee_team     = 10;
+  repeated ExternalRef external_refs = 11;
+}
+
+// CreateIssueResponse wraps the bare Issue the handler returns.
+// response_body: "issue" ensures grpc-gateway emits the Issue fields at
+// the top level (matching the live handler's json.Encode(issue)).
+message CreateIssueResponse {
+  Issue issue = 1;
+}
+
+message GetIssueRequest {
+  string key    = 1;
+  string format = 2; // "raw" | "" (markdown); maps to ?format= query param
+}
+
+// GetIssueResponse wraps the bare Issue the handler returns.
+message GetIssueResponse {
+  Issue issue = 1;
+}
+
+message UpdateIssueRequest {
+  string key               = 1;
+  // Optional patch fields — empty string = no change (mirrors *string pointer semantics).
+  string summary           = 2;
+  string description       = 3;
+  string definition_of_done = 4;
+  string priority          = 5;
+  string parent_key        = 6;
+  repeated ExternalRef external_refs = 7;
+  string actor             = 8;
+}
+
+// UpdateIssue returns HTTP 200 with no body; empty response mirrors live handler.
+message UpdateIssueResponse {}
+
+message TransitionIssueRequest {
+  string key    = 1;
+  string status = 2;
+  string actor  = 3;
+}
+
+// TransitionIssue returns HTTP 200 with no body.
+message TransitionIssueResponse {}
+
+message AssignIssueRequest {
+  string key    = 1;
+  string aspect = 2;
+  string team   = 3;
+  string actor  = 4;
+}
+
+// AssignIssue returns HTTP 200 with no body.
+message AssignIssueResponse {}
+
+message CommentIssueRequest {
+  string key   = 1;
+  string actor = 2;
+  string body  = 3;
+}
+
+// CommentIssue returns HTTP 201 with no body.
+message CommentIssueResponse {}
+
+// ListCommentsRequest fetches the comment events on an issue's timeline.
+// Comments are events with kind="comment" from the Timeline.
+message ListCommentsRequest {
+  string key = 1;
+}
+
+// ListCommentsResponse wraps comment events. {"comments": [...]}
+message ListCommentsResponse {
+  repeated Event comments = 1;
+}
+
+message ClaimIssueRequest {
+  string key   = 1;
+  string actor = 2;
+}
+
+// ClaimIssueResponse wraps the updated Issue the handler returns.
+// response_body: "issue" makes grpc-gateway emit bare Issue (matching live handler).
+message ClaimIssueResponse {
+  Issue issue = 1;
+}
+
+message AddWatcherRequest {
+  string key    = 1;
+  string aspect = 2;
+  string actor  = 3;
+}
+
+// AddWatcher returns HTTP 201 with no body.
+message AddWatcherResponse {}
+
+message ListWatchersRequest {
+  string key = 1;
+}
+
+// ListWatchersResponse returns the raw string array the handler emits.
+// Wire: bare JSON array (not an object). grpc-gateway wraps in {"watchers": [...]}.
+message ListWatchersResponse {
+  repeated string watchers = 1;
+}
+
+message RemoveWatcherRequest {
+  string key    = 1;
+  string aspect = 2;
+  string actor  = 3;
+}
+
+// RemoveWatcher returns HTTP 200 with no body.
+message RemoveWatcherResponse {}
+
+message AddLinkRequest {
+  string key    = 1; // from_key (this issue)
+  string to_key = 2;
+  string type   = 3; // "blocks" | "relates-to"
+  string actor  = 4;
+}
+
+// AddLinkResponse mirrors the link creation response: {"from_key","to_key","type"}.
+message AddLinkResponse {
+  string from_key = 1;
+  string to_key   = 2;
+  string type     = 3;
+}
+
+message ListLinksRequest {
+  string key = 1;
+}
+
+// ListLinksResponse mirrors the REST envelope: {"links": [...]}.
+message ListLinksResponse {
+  repeated LinkRow links = 1;
+}
+
+message RemoveLinkRequest {
+  string key    = 1; // from_key
+  string to_key = 2;
+  string type   = 3;
+  string actor  = 4;
+}
+
+// RemoveLinkResponse mirrors the removal response: {"from_key","to_key","type","removed":true}.
+message RemoveLinkResponse {
+  string from_key = 1;
+  string to_key   = 2;
+  string type     = 3;
+  bool   removed  = 4;
+}
+
+message ListMyIssuesRequest {
+  string aspect = 1; // used when no auth context (embedded path)
+}
+
+// ListMyIssuesResponse: handler emits a bare array; grpc-gateway wraps as {"issues": [...]}.
+message ListMyIssuesResponse {
+  repeated IssueRef issues = 1;
+}
+
+message ListReadyIssuesRequest {
+  string aspect = 1;
+}
+
+// ListReadyIssuesResponse: handler emits a bare array; grpc-gateway wraps as {"issues": [...]}.
+message ListReadyIssuesResponse {
+  repeated IssueRef issues = 1;
+}
+
+message SearchIssuesRequest {
+  SearchFilter filter = 1;
+}
+
+// SearchIssuesResponse: handler emits a bare array (refs); grpc-gateway wraps as {"refs": [...]}.
+message SearchIssuesResponse {
+  repeated IssueRef refs = 1;
+}
+
+message SearchIssuesTextRequest {
+  string q     = 1;
+  int32  limit = 2;
+}
+
+// SearchIssuesTextResponse: handler emits a bare array; grpc-gateway wraps as {"refs": [...]}.
+message SearchIssuesTextResponse {
+  repeated IssueRef refs = 1;
+}
+
+message ListUpdatesRequest {
+  string aspect   = 1;
+  int64  since_id = 2;
+  int32  limit    = 3;
+}
+
+// ListUpdatesResponse: handler emits a bare array; grpc-gateway wraps as {"events": [...]}.
+message ListUpdatesResponse {
+  repeated Event events = 1;
+}
+
+// =============================================================================
+// ProjectService request/response messages
+// =============================================================================
+
+message CreateProjectRequest {
+  string key          = 1;
+  string name         = 2;
+  string description  = 3;
+  string default_team = 4;
+  // organisation is taken from auth context (X-CWB-Org), not the body
+}
+
+// CreateProjectResponse mirrors the live handler: {"key","organisation","name"}.
+message CreateProjectResponse {
+  string key          = 1;
+  string organisation = 2;
+  string name         = 3;
+}
+
+message ListProjectsRequest {
+  bool include_archived = 1;
+}
+
+// ListProjectsResponse: handler emits a bare array; grpc-gateway wraps as {"projects": [...]}.
+message ListProjectsResponse {
+  repeated Project projects = 1;
+}
+
+// =============================================================================
+// OrgService request/response messages
+// =============================================================================
+
+message OrgServicePurgeOrgRequest {}
+
+// OrgServicePurgeOrgResponse mirrors the live handler: {"purged": "<org>"}.
+message OrgServicePurgeOrgResponse {
+  string purged = 1;
+}
+
+// =============================================================================
+// AdminService request/response messages
+// =============================================================================
+
+message CreateOrgRequest {
+  string slug = 1;
+  string name = 2;
+}
+
+// CreateOrgResponse wraps the created Organisation.
+message CreateOrgResponse {
+  Organisation org = 1;
+}
+
+message ListOrgsRequest {}
+
+// ListOrgsResponse: handler emits a bare array; grpc-gateway wraps as {"orgs": [...]}.
+message ListOrgsResponse {
+  repeated Organisation orgs = 1;
+}
+
+message GetOrgRequest {
+  string slug = 1;
+}
+
+// GetOrgResponse wraps the fetched Organisation.
+message GetOrgResponse {
+  Organisation org = 1;
+}
+
+message UpdateOrgRequest {
+  string slug = 1;
+  string name = 2;
+}
+
+// UpdateOrg (PUT in REST) returns HTTP 200 with no body.
+message UpdateOrgResponse {}
+
+message DeleteOrgRequest {
+  string slug = 1;
+}
+
+// DeleteOrg returns HTTP 200 with no body.
+message DeleteOrgResponse {}
+
+message AddMemberRequest {
+  string slug    = 1;
+  string user_id = 2;
+  string role    = 3;
+}
+
+// AddMember returns HTTP 201 with no body.
+message AddMemberResponse {}
+
+message ListMembersRequest {
+  string slug = 1;
+}
+
+// ListMembersResponse: handler emits a bare array; grpc-gateway wraps as {"members": [...]}.
+message ListMembersResponse {
+  repeated OrgMember members = 1;
+}
+
+message RemoveMemberRequest {
+  string slug    = 1;
+  string user_id = 2;
+}
+
+// RemoveMember returns HTTP 200 with no body.
+message RemoveMemberResponse {}
+
+message CreateUserRequest {
+  string id   = 1;
+  string kind = 2;
+}
+
+// CreateUserResponse wraps the created User.
+message CreateUserResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {}
+
+// ListUsersResponse: handler emits a bare array; grpc-gateway wraps as {"users": [...]}.
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+// GetUserResponse wraps the fetched User.
+message GetUserResponse {
+  User user = 1;
+}
+
+message UpdateUserRequest {
+  string id   = 1;
+  string kind = 2;
+}
+
+// UpdateUser (PUT in REST) returns HTTP 200 with no body.
+message UpdateUserResponse {}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+// DeleteUser returns HTTP 200 with no body.
+message DeleteUserResponse {}
