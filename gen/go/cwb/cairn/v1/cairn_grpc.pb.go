@@ -28,6 +28,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	RepoService_CreateRepo_FullMethodName = "/cwb.cairn.v1.RepoService/CreateRepo"
+	RepoService_ListRepos_FullMethodName  = "/cwb.cairn.v1.RepoService/ListRepos"
 )
 
 // RepoServiceClient is the client API for RepoService service.
@@ -41,6 +42,8 @@ type RepoServiceClient interface {
 	// {org} must equal the caller's verified org). response_body:"repo" keeps the
 	// REST shape flat: {id, org, slug, default_branch}.
 	CreateRepo(ctx context.Context, in *CreateRepoRequest, opts ...grpc.CallOption) (*CreateRepoResponse, error)
+	// ListRepos lists the caller-org's repos (scope repo:read). response_body:"repos".
+	ListRepos(ctx context.Context, in *ListReposRequest, opts ...grpc.CallOption) (*ListReposResponse, error)
 }
 
 type repoServiceClient struct {
@@ -61,6 +64,16 @@ func (c *repoServiceClient) CreateRepo(ctx context.Context, in *CreateRepoReques
 	return out, nil
 }
 
+func (c *repoServiceClient) ListRepos(ctx context.Context, in *ListReposRequest, opts ...grpc.CallOption) (*ListReposResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListReposResponse)
+	err := c.cc.Invoke(ctx, RepoService_ListRepos_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RepoServiceServer is the server API for RepoService service.
 // All implementations must embed UnimplementedRepoServiceServer
 // for forward compatibility.
@@ -72,6 +85,8 @@ type RepoServiceServer interface {
 	// {org} must equal the caller's verified org). response_body:"repo" keeps the
 	// REST shape flat: {id, org, slug, default_branch}.
 	CreateRepo(context.Context, *CreateRepoRequest) (*CreateRepoResponse, error)
+	// ListRepos lists the caller-org's repos (scope repo:read). response_body:"repos".
+	ListRepos(context.Context, *ListReposRequest) (*ListReposResponse, error)
 	mustEmbedUnimplementedRepoServiceServer()
 }
 
@@ -84,6 +99,9 @@ type UnimplementedRepoServiceServer struct{}
 
 func (UnimplementedRepoServiceServer) CreateRepo(context.Context, *CreateRepoRequest) (*CreateRepoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateRepo not implemented")
+}
+func (UnimplementedRepoServiceServer) ListRepos(context.Context, *ListReposRequest) (*ListReposResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRepos not implemented")
 }
 func (UnimplementedRepoServiceServer) mustEmbedUnimplementedRepoServiceServer() {}
 func (UnimplementedRepoServiceServer) testEmbeddedByValue()                     {}
@@ -124,6 +142,24 @@ func _RepoService_CreateRepo_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RepoService_ListRepos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReposRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RepoServiceServer).ListRepos(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RepoService_ListRepos_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RepoServiceServer).ListRepos(ctx, req.(*ListReposRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RepoService_ServiceDesc is the grpc.ServiceDesc for RepoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -135,6 +171,10 @@ var RepoService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "CreateRepo",
 			Handler:    _RepoService_CreateRepo_Handler,
 		},
+		{
+			MethodName: "ListRepos",
+			Handler:    _RepoService_ListRepos_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "cwb/cairn/v1/cairn.proto",
@@ -144,6 +184,7 @@ const (
 	PullService_OpenPull_FullMethodName  = "/cwb.cairn.v1.PullService/OpenPull"
 	PullService_GetPull_FullMethodName   = "/cwb.cairn.v1.PullService/GetPull"
 	PullService_MergePull_FullMethodName = "/cwb.cairn.v1.PullService/MergePull"
+	PullService_ListPulls_FullMethodName = "/cwb.cairn.v1.PullService/ListPulls"
 )
 
 // PullServiceClient is the client API for PullService service.
@@ -161,6 +202,9 @@ type PullServiceClient interface {
 	// MergePull mirrors POST /api/orgs/{org}/repos/{slug}/pulls/{id}/merge (scope
 	// repo:write). No request body — path params only. response_body:"result".
 	MergePull(ctx context.Context, in *MergePullRequest, opts ...grpc.CallOption) (*MergePullResponse, error)
+	// ListPulls lists a repo's pulls (scope repo:read); optional ?state= filter
+	// ("open"|"merged"|"all"; default all). response_body:"pulls".
+	ListPulls(ctx context.Context, in *ListPullsRequest, opts ...grpc.CallOption) (*ListPullsResponse, error)
 }
 
 type pullServiceClient struct {
@@ -201,6 +245,16 @@ func (c *pullServiceClient) MergePull(ctx context.Context, in *MergePullRequest,
 	return out, nil
 }
 
+func (c *pullServiceClient) ListPulls(ctx context.Context, in *ListPullsRequest, opts ...grpc.CallOption) (*ListPullsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPullsResponse)
+	err := c.cc.Invoke(ctx, PullService_ListPulls_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PullServiceServer is the server API for PullService service.
 // All implementations must embed UnimplementedPullServiceServer
 // for forward compatibility.
@@ -216,6 +270,9 @@ type PullServiceServer interface {
 	// MergePull mirrors POST /api/orgs/{org}/repos/{slug}/pulls/{id}/merge (scope
 	// repo:write). No request body — path params only. response_body:"result".
 	MergePull(context.Context, *MergePullRequest) (*MergePullResponse, error)
+	// ListPulls lists a repo's pulls (scope repo:read); optional ?state= filter
+	// ("open"|"merged"|"all"; default all). response_body:"pulls".
+	ListPulls(context.Context, *ListPullsRequest) (*ListPullsResponse, error)
 	mustEmbedUnimplementedPullServiceServer()
 }
 
@@ -234,6 +291,9 @@ func (UnimplementedPullServiceServer) GetPull(context.Context, *GetPullRequest) 
 }
 func (UnimplementedPullServiceServer) MergePull(context.Context, *MergePullRequest) (*MergePullResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MergePull not implemented")
+}
+func (UnimplementedPullServiceServer) ListPulls(context.Context, *ListPullsRequest) (*ListPullsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPulls not implemented")
 }
 func (UnimplementedPullServiceServer) mustEmbedUnimplementedPullServiceServer() {}
 func (UnimplementedPullServiceServer) testEmbeddedByValue()                     {}
@@ -310,6 +370,24 @@ func _PullService_MergePull_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PullService_ListPulls_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPullsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PullServiceServer).ListPulls(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PullService_ListPulls_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PullServiceServer).ListPulls(ctx, req.(*ListPullsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PullService_ServiceDesc is the grpc.ServiceDesc for PullService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -328,6 +406,10 @@ var PullService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MergePull",
 			Handler:    _PullService_MergePull_Handler,
+		},
+		{
+			MethodName: "ListPulls",
+			Handler:    _PullService_ListPulls_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
