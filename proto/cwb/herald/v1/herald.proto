@@ -1,0 +1,213 @@
+syntax = "proto3";
+
+// Package cwb.herald.v1 is herald's admin/internal API, migrated to gRPC behind
+// interchange (Phase 4). It lives in its OWN package (like cairn.v1) to avoid
+// name clashes with the shared cwb.v1.
+//
+// herald is dual-faced and this proto models ONLY the gRPC face:
+//   - OIDC (discovery, JWKS, /token incl. password grant) stays HTTP — NOT here
+//     (interchange itself fetches JWKS over HTTP to verify every token).
+//   - agent-bootstrap (self-provision via casket assertion, validate) stays HTTP
+//     — NOT here (casket-assertion-authed, predates a gateway-routable JWT).
+//
+// Authorization is identity-derived (no static admin token): the verified
+// caller identity arrives as cwb-* gRPC metadata (injected by interchange after
+// JWT verify). herald:platform-admin (the admin org) may act on any org;
+// herald:org-admin may act only on its own org (target == cwb-org). CreateOrg is
+// the exception — any authenticated principal may create an org and becomes its
+// org-admin.
+package cwb.herald.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/herald/v1;heraldv1";
+
+// AdminService is herald's org/identity administration, fronted by interchange
+// (JWT-authed, identity-derived authz). Annotations mirror the live /api routes.
+service AdminService {
+  // CreateOrg — any authenticated principal; caller becomes the new org's
+  // org-admin. (The public-signup + invite-code flow that drives this is NEX-413.)
+  rpc CreateOrg(CreateOrgRequest) returns (CreateOrgResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs"
+      body: "*"
+      response_body: "org"
+    };
+  }
+  // ListOrgs — platform-admin only.
+  rpc ListOrgs(ListOrgsRequest) returns (ListOrgsResponse) {
+    option (google.api.http) = {get: "/api/orgs"};
+  }
+  // DeleteOrg — platform-admin only; confirm-by-name (NEX-402 purge orchestrator).
+  rpc DeleteOrg(DeleteOrgRequest) returns (DeleteOrgResponse) {
+    option (google.api.http) = {
+      delete: "/api/orgs/{id}"
+      body: "*"
+    };
+  }
+  // GetProducts — org-admin (own org) or platform-admin.
+  rpc GetProducts(GetProductsRequest) returns (GetProductsResponse) {
+    option (google.api.http) = {
+      get: "/api/orgs/{org}/products"
+      response_body: "products"
+    };
+  }
+  rpc EnableProduct(EnableProductRequest) returns (EnableProductResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/products/{product}/enable"
+      response_body: "products"
+    };
+  }
+  rpc DisableProduct(DisableProductRequest) returns (DisableProductResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/products/{product}/disable"
+      response_body: "products"
+    };
+  }
+  // CreateHuman — org-admin (own org) or platform-admin.
+  rpc CreateHuman(CreateHumanRequest) returns (CreateHumanResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/humans"
+      body: "*"
+      response_body: "human"
+    };
+  }
+  // CreateAgent — org-admin (own org) or platform-admin; bootstrap agent under a
+  // responsible human.
+  rpc CreateAgent(CreateAgentRequest) returns (CreateAgentResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/agents"
+      body: "*"
+      response_body: "agent"
+    };
+  }
+  // SetHumanPassword — org-admin of the human's org (path-A login credential).
+  rpc SetHumanPassword(SetHumanPasswordRequest) returns (SetHumanPasswordResponse) {
+    option (google.api.http) = {
+      post: "/api/humans/{id}/password"
+      body: "*"
+    };
+  }
+  // IssueHumanToken — org-admin; mints a kind=human token (MVP login stand-in).
+  rpc IssueHumanToken(IssueHumanTokenRequest) returns (IssueHumanTokenResponse) {
+    option (google.api.http) = {post: "/api/humans/{id}/token"};
+  }
+}
+
+// AgentService is herald's INTERNAL lookup. GetAgentByFingerprint has NO http
+// annotation on purpose — it is gRPC-only, dialed DIRECTLY in-cluster over mTLS
+// by cairn's SSH path (which has a pubkey, not a token), never exposed on the
+// public edge.
+service AgentService {
+  rpc GetAgentByFingerprint(GetAgentByFingerprintRequest) returns (GetAgentByFingerprintResponse);
+}
+
+// ---- messages ----
+
+message Org {
+  string id = 1;
+  string name = 2;
+}
+
+message CreateOrgRequest {
+  string name = 1;
+  repeated string products = 2; // optional initial product enablement
+}
+message CreateOrgResponse {
+  Org org = 1;
+}
+
+message ListOrgsRequest {}
+message ListOrgsResponse {
+  repeated Org orgs = 1;
+}
+
+message DeleteOrgRequest {
+  string id = 1; // path
+  string name = 2; // confirm-by-name; must match the org's name
+}
+message DeleteOrgResponse {
+  string deleted = 1;
+  repeated string pillars = 2; // pillars the purge fanned out to
+}
+
+// Each products RPC has its own request/response (STANDARD lint: no shared
+// message across RPCs). `products` is the {product: enabled} map (bare REST body).
+message GetProductsRequest {
+  string org = 1; // path
+}
+message GetProductsResponse {
+  map<string, bool> products = 1;
+}
+message EnableProductRequest {
+  string org = 1; // path
+  string product = 2; // path
+}
+message EnableProductResponse {
+  map<string, bool> products = 1;
+}
+message DisableProductRequest {
+  string org = 1; // path
+  string product = 2; // path
+}
+message DisableProductResponse {
+  map<string, bool> products = 1;
+}
+
+message Human {
+  string id = 1;
+  string display_name = 2;
+  string org = 3;
+}
+message CreateHumanRequest {
+  string org = 1; // path
+  string display_name = 2;
+  repeated string scopes = 3;
+}
+message CreateHumanResponse {
+  Human human = 1;
+}
+
+// Agent mirrors herald's agent view (by-fingerprint + create-agent responses).
+message Agent {
+  string id = 1;
+  string kind = 2;
+  string display_name = 3;
+  string org = 4;
+  string responsible_human = 5;
+  string fingerprint = 6;
+  string status = 7;
+  bool active = 8;
+  repeated string scopes = 9;
+}
+message CreateAgentRequest {
+  string org = 1; // path
+  string display_name = 2;
+  string responsible_human = 3; // human id this agent answers to
+  string casket_pubkey = 4; // base64(std) Ed25519 public key
+  repeated string scopes = 5;
+}
+message CreateAgentResponse {
+  Agent agent = 1;
+}
+
+message SetHumanPasswordRequest {
+  string id = 1; // path (human id)
+  string password = 2;
+}
+message SetHumanPasswordResponse {}
+
+message IssueHumanTokenRequest {
+  string id = 1; // path (human id)
+}
+message IssueHumanTokenResponse {
+  string access_token = 1;
+  string token_type = 2;
+}
+
+message GetAgentByFingerprintRequest {
+  string fingerprint = 1;
+}
+message GetAgentByFingerprintResponse {
+  Agent agent = 1;
+}
