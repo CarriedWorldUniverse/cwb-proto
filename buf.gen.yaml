@@ -14,4 +14,9 @@ plugins:
     opt: paths=source_relative
   - local: protoc-gen-grpc-gateway
     out: gen/go
-    opt: paths=source_relative
+    # allow_delete_body: herald's DeleteOrg is DELETE /api/orgs/{id} with a
+    # confirm-by-name body. No existing DELETE carries a body, so this only
+    # affects herald.v1's generated gateway.
+    opt:
+      - paths=source_relative
+      - allow_delete_body=true
