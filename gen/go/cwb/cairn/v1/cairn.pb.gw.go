@@ -80,6 +80,45 @@ func local_request_RepoService_CreateRepo_0(ctx context.Context, marshaler runti
 	return msg, metadata, err
 }
 
+func request_RepoService_ListRepos_0(ctx context.Context, marshaler runtime.Marshaler, client RepoServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListReposRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	val, ok := pathParams["org"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org")
+	}
+	protoReq.Org, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org", err)
+	}
+	msg, err := client.ListRepos(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RepoService_ListRepos_0(ctx context.Context, marshaler runtime.Marshaler, server RepoServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListReposRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["org"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org")
+	}
+	protoReq.Org, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org", err)
+	}
+	msg, err := server.ListRepos(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_PullService_OpenPull_0(ctx context.Context, marshaler runtime.Marshaler, client PullServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq OpenPullRequest
@@ -283,6 +322,75 @@ func local_request_PullService_MergePull_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
+var filter_PullService_ListPulls_0 = &utilities.DoubleArray{Encoding: map[string]int{"org": 0, "slug": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+
+func request_PullService_ListPulls_0(ctx context.Context, marshaler runtime.Marshaler, client PullServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPullsRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	val, ok := pathParams["org"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org")
+	}
+	protoReq.Org, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org", err)
+	}
+	val, ok = pathParams["slug"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+	}
+	protoReq.Slug, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PullService_ListPulls_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.ListPulls(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_PullService_ListPulls_0(ctx context.Context, marshaler runtime.Marshaler, server PullServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPullsRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["org"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "org")
+	}
+	protoReq.Org, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "org", err)
+	}
+	val, ok = pathParams["slug"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+	}
+	protoReq.Slug, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PullService_ListPulls_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ListPulls(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_OrgService_PurgeOrg_0(ctx context.Context, marshaler runtime.Marshaler, client OrgServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq PurgeOrgRequest
@@ -329,6 +437,26 @@ func RegisterRepoServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 		forward_RepoService_CreateRepo_0(annotatedContext, mux, outboundMarshaler, w, req, response_RepoService_CreateRepo_0{resp.(*CreateRepoResponse)}, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_RepoService_ListRepos_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cwb.cairn.v1.RepoService/ListRepos", runtime.WithHTTPPathPattern("/api/orgs/{org}/repos"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RepoService_ListRepos_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RepoService_ListRepos_0(annotatedContext, mux, outboundMarshaler, w, req, response_RepoService_ListRepos_0{resp.(*ListReposResponse)}, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -399,6 +527,26 @@ func RegisterPullServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 		forward_PullService_MergePull_0(annotatedContext, mux, outboundMarshaler, w, req, response_PullService_MergePull_0{resp.(*MergePullResponse)}, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_PullService_ListPulls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cwb.cairn.v1.PullService/ListPulls", runtime.WithHTTPPathPattern("/api/orgs/{org}/repos/{slug}/pulls"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PullService_ListPulls_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PullService_ListPulls_0(annotatedContext, mux, outboundMarshaler, w, req, response_PullService_ListPulls_0{resp.(*ListPullsResponse)}, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -487,6 +635,23 @@ func RegisterRepoServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		}
 		forward_RepoService_CreateRepo_0(annotatedContext, mux, outboundMarshaler, w, req, response_RepoService_CreateRepo_0{resp.(*CreateRepoResponse)}, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_RepoService_ListRepos_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cwb.cairn.v1.RepoService/ListRepos", runtime.WithHTTPPathPattern("/api/orgs/{org}/repos"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RepoService_ListRepos_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RepoService_ListRepos_0(annotatedContext, mux, outboundMarshaler, w, req, response_RepoService_ListRepos_0{resp.(*ListReposResponse)}, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
@@ -499,12 +664,23 @@ func (m response_RepoService_CreateRepo_0) XXX_ResponseBody() interface{} {
 	return response.Repo
 }
 
+type response_RepoService_ListRepos_0 struct {
+	*ListReposResponse
+}
+
+func (m response_RepoService_ListRepos_0) XXX_ResponseBody() interface{} {
+	response := m.ListReposResponse
+	return response.Repos
+}
+
 var (
 	pattern_RepoService_CreateRepo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "orgs", "org", "repos"}, ""))
+	pattern_RepoService_ListRepos_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "orgs", "org", "repos"}, ""))
 )
 
 var (
 	forward_RepoService_CreateRepo_0 = runtime.ForwardResponseMessage
+	forward_RepoService_ListRepos_0  = runtime.ForwardResponseMessage
 )
 
 // RegisterPullServiceHandlerFromEndpoint is same as RegisterPullServiceHandler but
@@ -594,6 +770,23 @@ func RegisterPullServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		}
 		forward_PullService_MergePull_0(annotatedContext, mux, outboundMarshaler, w, req, response_PullService_MergePull_0{resp.(*MergePullResponse)}, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_PullService_ListPulls_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cwb.cairn.v1.PullService/ListPulls", runtime.WithHTTPPathPattern("/api/orgs/{org}/repos/{slug}/pulls"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PullService_ListPulls_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PullService_ListPulls_0(annotatedContext, mux, outboundMarshaler, w, req, response_PullService_ListPulls_0{resp.(*ListPullsResponse)}, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
@@ -624,16 +817,27 @@ func (m response_PullService_MergePull_0) XXX_ResponseBody() interface{} {
 	return response.Result
 }
 
+type response_PullService_ListPulls_0 struct {
+	*ListPullsResponse
+}
+
+func (m response_PullService_ListPulls_0) XXX_ResponseBody() interface{} {
+	response := m.ListPullsResponse
+	return response.Pulls
+}
+
 var (
 	pattern_PullService_OpenPull_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "orgs", "org", "repos", "slug", "pulls"}, ""))
 	pattern_PullService_GetPull_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "orgs", "org", "repos", "slug", "pulls", "id"}, ""))
 	pattern_PullService_MergePull_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "orgs", "org", "repos", "slug", "pulls", "id", "merge"}, ""))
+	pattern_PullService_ListPulls_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "orgs", "org", "repos", "slug", "pulls"}, ""))
 )
 
 var (
 	forward_PullService_OpenPull_0  = runtime.ForwardResponseMessage
 	forward_PullService_GetPull_0   = runtime.ForwardResponseMessage
 	forward_PullService_MergePull_0 = runtime.ForwardResponseMessage
+	forward_PullService_ListPulls_0 = runtime.ForwardResponseMessage
 )
 
 // RegisterOrgServiceHandlerFromEndpoint is same as RegisterOrgServiceHandler but

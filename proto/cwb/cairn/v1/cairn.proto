@@ -26,6 +26,13 @@ service RepoService {
       response_body: "repo"
     };
   }
+  // ListRepos lists the caller-org's repos (scope repo:read). response_body:"repos".
+  rpc ListRepos(ListReposRequest) returns (ListReposResponse) {
+    option (google.api.http) = {
+      get: "/api/orgs/{org}/repos"
+      response_body: "repos"
+    };
+  }
 }
 
 // PullService — pull requests: open (creates the linked ledger issue), get, and
@@ -53,6 +60,14 @@ service PullService {
     option (google.api.http) = {
       post: "/api/orgs/{org}/repos/{slug}/pulls/{id}/merge"
       response_body: "result"
+    };
+  }
+  // ListPulls lists a repo's pulls (scope repo:read); optional ?state= filter
+  // ("open"|"merged"|"all"; default all). response_body:"pulls".
+  rpc ListPulls(ListPullsRequest) returns (ListPullsResponse) {
+    option (google.api.http) = {
+      get: "/api/orgs/{org}/repos/{slug}/pulls"
+      response_body: "pulls"
     };
   }
 }
@@ -86,6 +101,13 @@ message CreateRepoResponse {
   Repo repo = 1;
 }
 
+message ListReposRequest {
+  string org = 1; // path
+}
+message ListReposResponse {
+  repeated Repo repos = 1;
+}
+
 // Pull is a pull request. `repo` is the repo slug (mirrors the REST field).
 message Pull {
   string id = 1;
@@ -110,6 +132,15 @@ message OpenPullRequest {
 }
 message OpenPullResponse {
   Pull pull = 1;
+}
+
+message ListPullsRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string state = 3; // query ?state= ; "" or "all" => every state
+}
+message ListPullsResponse {
+  repeated Pull pulls = 1;
 }
 
 message GetPullRequest {
