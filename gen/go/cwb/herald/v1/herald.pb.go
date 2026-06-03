@@ -1318,6 +1318,195 @@ func (x *GetAgentByFingerprintResponse) GetAgent() *Agent {
 	return nil
 }
 
+type MeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MeRequest) Reset() {
+	*x = MeRequest{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MeRequest) ProtoMessage() {}
+
+func (x *MeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MeRequest.ProtoReflect.Descriptor instead.
+func (*MeRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{25}
+}
+
+type MeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *UserInfo              `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MeResponse) Reset() {
+	*x = MeResponse{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MeResponse) ProtoMessage() {}
+
+func (x *MeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MeResponse.ProtoReflect.Descriptor instead.
+func (*MeResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *MeResponse) GetUser() *UserInfo {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+// UserInfo is a caller's own authoritative identity (agent fields empty for humans).
+type UserInfo struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Kind             string                 `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"`
+	DisplayName      string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	Org              string                 `protobuf:"bytes,4,opt,name=org,proto3" json:"org,omitempty"`
+	OrgName          string                 `protobuf:"bytes,5,opt,name=org_name,json=orgName,proto3" json:"org_name,omitempty"`
+	Status           string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	Scopes           []string               `protobuf:"bytes,7,rep,name=scopes,proto3" json:"scopes,omitempty"`
+	ResponsibleHuman string                 `protobuf:"bytes,8,opt,name=responsible_human,json=responsibleHuman,proto3" json:"responsible_human,omitempty"`
+	Fingerprint      string                 `protobuf:"bytes,9,opt,name=fingerprint,proto3" json:"fingerprint,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *UserInfo) Reset() {
+	*x = UserInfo{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserInfo) ProtoMessage() {}
+
+func (x *UserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
+func (*UserInfo) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *UserInfo) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UserInfo) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *UserInfo) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *UserInfo) GetOrgName() string {
+	if x != nil {
+		return x.OrgName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *UserInfo) GetScopes() []string {
+	if x != nil {
+		return x.Scopes
+	}
+	return nil
+}
+
+func (x *UserInfo) GetResponsibleHuman() string {
+	if x != nil {
+		return x.ResponsibleHuman
+	}
+	return ""
+}
+
+func (x *UserInfo) GetFingerprint() string {
+	if x != nil {
+		return x.Fingerprint
+	}
+	return ""
+}
+
 var File_cwb_herald_v1_herald_proto protoreflect.FileDescriptor
 
 const file_cwb_herald_v1_herald_proto_rawDesc = "" +
@@ -1404,7 +1593,21 @@ const file_cwb_herald_v1_herald_proto_rawDesc = "" +
 	"\x1cGetAgentByFingerprintRequest\x12 \n" +
 	"\vfingerprint\x18\x01 \x01(\tR\vfingerprint\"K\n" +
 	"\x1dGetAgentByFingerprintResponse\x12*\n" +
-	"\x05agent\x18\x01 \x01(\v2\x14.cwb.herald.v1.AgentR\x05agent2\x8e\n" +
+	"\x05agent\x18\x01 \x01(\v2\x14.cwb.herald.v1.AgentR\x05agent\"\v\n" +
+	"\tMeRequest\"9\n" +
+	"\n" +
+	"MeResponse\x12+\n" +
+	"\x04user\x18\x01 \x01(\v2\x17.cwb.herald.v1.UserInfoR\x04user\"\xfd\x01\n" +
+	"\bUserInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04kind\x18\x02 \x01(\tR\x04kind\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x10\n" +
+	"\x03org\x18\x04 \x01(\tR\x03org\x12\x19\n" +
+	"\borg_name\x18\x05 \x01(\tR\aorgName\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\tR\x06status\x12\x16\n" +
+	"\x06scopes\x18\a \x03(\tR\x06scopes\x12+\n" +
+	"\x11responsible_human\x18\b \x01(\tR\x10responsibleHuman\x12 \n" +
+	"\vfingerprint\x18\t \x01(\tR\vfingerprint2\xe0\n" +
 	"\n" +
 	"\fAdminService\x12i\n" +
 	"\tCreateOrg\x12\x1f.cwb.herald.v1.CreateOrgRequest\x1a .cwb.herald.v1.CreateOrgResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*b\x03org\"\t/api/orgs\x12^\n" +
@@ -1416,7 +1619,8 @@ const file_cwb_herald_v1_herald_proto_rawDesc = "" +
 	"\vCreateHuman\x12!.cwb.herald.v1.CreateHumanRequest\x1a\".cwb.herald.v1.CreateHumanResponse\"(\x82\xd3\xe4\x93\x02\":\x01*b\x05human\"\x16/api/orgs/{org}/humans\x12~\n" +
 	"\vCreateAgent\x12!.cwb.herald.v1.CreateAgentRequest\x1a\".cwb.herald.v1.CreateAgentResponse\"(\x82\xd3\xe4\x93\x02\":\x01*b\x05agent\"\x16/api/orgs/{org}/agents\x12\x89\x01\n" +
 	"\x10SetHumanPassword\x12&.cwb.herald.v1.SetHumanPasswordRequest\x1a'.cwb.herald.v1.SetHumanPasswordResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/humans/{id}/password\x12\x80\x01\n" +
-	"\x0fIssueHumanToken\x12%.cwb.herald.v1.IssueHumanTokenRequest\x1a&.cwb.herald.v1.IssueHumanTokenResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x16/api/humans/{id}/token2\x82\x01\n" +
+	"\x0fIssueHumanToken\x12%.cwb.herald.v1.IssueHumanTokenRequest\x1a&.cwb.herald.v1.IssueHumanTokenResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x16/api/humans/{id}/token\x12P\n" +
+	"\x02Me\x12\x18.cwb.herald.v1.MeRequest\x1a\x19.cwb.herald.v1.MeResponse\"\x15\x82\xd3\xe4\x93\x02\x0fb\x04user\x12\a/api/me2\x82\x01\n" +
 	"\fAgentService\x12r\n" +
 	"\x15GetAgentByFingerprint\x12+.cwb.herald.v1.GetAgentByFingerprintRequest\x1a,.cwb.herald.v1.GetAgentByFingerprintResponseB\xbf\x01\n" +
 	"\x11com.cwb.herald.v1B\vHeraldProtoP\x01ZGgithub.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/herald/v1;heraldv1\xa2\x02\x03CHX\xaa\x02\rCwb.Herald.V1\xca\x02\rCwb\\Herald\\V1\xe2\x02\x19Cwb\\Herald\\V1\\GPBMetadata\xea\x02\x0fCwb::Herald::V1b\x06proto3"
@@ -1433,7 +1637,7 @@ func file_cwb_herald_v1_herald_proto_rawDescGZIP() []byte {
 	return file_cwb_herald_v1_herald_proto_rawDescData
 }
 
-var file_cwb_herald_v1_herald_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_cwb_herald_v1_herald_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
 var file_cwb_herald_v1_herald_proto_goTypes = []any{
 	(*Org)(nil),                           // 0: cwb.herald.v1.Org
 	(*CreateOrgRequest)(nil),              // 1: cwb.herald.v1.CreateOrgRequest
@@ -1460,46 +1664,52 @@ var file_cwb_herald_v1_herald_proto_goTypes = []any{
 	(*IssueHumanTokenResponse)(nil),       // 22: cwb.herald.v1.IssueHumanTokenResponse
 	(*GetAgentByFingerprintRequest)(nil),  // 23: cwb.herald.v1.GetAgentByFingerprintRequest
 	(*GetAgentByFingerprintResponse)(nil), // 24: cwb.herald.v1.GetAgentByFingerprintResponse
-	nil,                                   // 25: cwb.herald.v1.GetProductsResponse.ProductsEntry
-	nil,                                   // 26: cwb.herald.v1.EnableProductResponse.ProductsEntry
-	nil,                                   // 27: cwb.herald.v1.DisableProductResponse.ProductsEntry
+	(*MeRequest)(nil),                     // 25: cwb.herald.v1.MeRequest
+	(*MeResponse)(nil),                    // 26: cwb.herald.v1.MeResponse
+	(*UserInfo)(nil),                      // 27: cwb.herald.v1.UserInfo
+	nil,                                   // 28: cwb.herald.v1.GetProductsResponse.ProductsEntry
+	nil,                                   // 29: cwb.herald.v1.EnableProductResponse.ProductsEntry
+	nil,                                   // 30: cwb.herald.v1.DisableProductResponse.ProductsEntry
 }
 var file_cwb_herald_v1_herald_proto_depIdxs = []int32{
 	0,  // 0: cwb.herald.v1.CreateOrgResponse.org:type_name -> cwb.herald.v1.Org
 	0,  // 1: cwb.herald.v1.ListOrgsResponse.orgs:type_name -> cwb.herald.v1.Org
-	25, // 2: cwb.herald.v1.GetProductsResponse.products:type_name -> cwb.herald.v1.GetProductsResponse.ProductsEntry
-	26, // 3: cwb.herald.v1.EnableProductResponse.products:type_name -> cwb.herald.v1.EnableProductResponse.ProductsEntry
-	27, // 4: cwb.herald.v1.DisableProductResponse.products:type_name -> cwb.herald.v1.DisableProductResponse.ProductsEntry
+	28, // 2: cwb.herald.v1.GetProductsResponse.products:type_name -> cwb.herald.v1.GetProductsResponse.ProductsEntry
+	29, // 3: cwb.herald.v1.EnableProductResponse.products:type_name -> cwb.herald.v1.EnableProductResponse.ProductsEntry
+	30, // 4: cwb.herald.v1.DisableProductResponse.products:type_name -> cwb.herald.v1.DisableProductResponse.ProductsEntry
 	13, // 5: cwb.herald.v1.CreateHumanResponse.human:type_name -> cwb.herald.v1.Human
 	16, // 6: cwb.herald.v1.CreateAgentResponse.agent:type_name -> cwb.herald.v1.Agent
 	16, // 7: cwb.herald.v1.GetAgentByFingerprintResponse.agent:type_name -> cwb.herald.v1.Agent
-	1,  // 8: cwb.herald.v1.AdminService.CreateOrg:input_type -> cwb.herald.v1.CreateOrgRequest
-	3,  // 9: cwb.herald.v1.AdminService.ListOrgs:input_type -> cwb.herald.v1.ListOrgsRequest
-	5,  // 10: cwb.herald.v1.AdminService.DeleteOrg:input_type -> cwb.herald.v1.DeleteOrgRequest
-	7,  // 11: cwb.herald.v1.AdminService.GetProducts:input_type -> cwb.herald.v1.GetProductsRequest
-	9,  // 12: cwb.herald.v1.AdminService.EnableProduct:input_type -> cwb.herald.v1.EnableProductRequest
-	11, // 13: cwb.herald.v1.AdminService.DisableProduct:input_type -> cwb.herald.v1.DisableProductRequest
-	14, // 14: cwb.herald.v1.AdminService.CreateHuman:input_type -> cwb.herald.v1.CreateHumanRequest
-	17, // 15: cwb.herald.v1.AdminService.CreateAgent:input_type -> cwb.herald.v1.CreateAgentRequest
-	19, // 16: cwb.herald.v1.AdminService.SetHumanPassword:input_type -> cwb.herald.v1.SetHumanPasswordRequest
-	21, // 17: cwb.herald.v1.AdminService.IssueHumanToken:input_type -> cwb.herald.v1.IssueHumanTokenRequest
-	23, // 18: cwb.herald.v1.AgentService.GetAgentByFingerprint:input_type -> cwb.herald.v1.GetAgentByFingerprintRequest
-	2,  // 19: cwb.herald.v1.AdminService.CreateOrg:output_type -> cwb.herald.v1.CreateOrgResponse
-	4,  // 20: cwb.herald.v1.AdminService.ListOrgs:output_type -> cwb.herald.v1.ListOrgsResponse
-	6,  // 21: cwb.herald.v1.AdminService.DeleteOrg:output_type -> cwb.herald.v1.DeleteOrgResponse
-	8,  // 22: cwb.herald.v1.AdminService.GetProducts:output_type -> cwb.herald.v1.GetProductsResponse
-	10, // 23: cwb.herald.v1.AdminService.EnableProduct:output_type -> cwb.herald.v1.EnableProductResponse
-	12, // 24: cwb.herald.v1.AdminService.DisableProduct:output_type -> cwb.herald.v1.DisableProductResponse
-	15, // 25: cwb.herald.v1.AdminService.CreateHuman:output_type -> cwb.herald.v1.CreateHumanResponse
-	18, // 26: cwb.herald.v1.AdminService.CreateAgent:output_type -> cwb.herald.v1.CreateAgentResponse
-	20, // 27: cwb.herald.v1.AdminService.SetHumanPassword:output_type -> cwb.herald.v1.SetHumanPasswordResponse
-	22, // 28: cwb.herald.v1.AdminService.IssueHumanToken:output_type -> cwb.herald.v1.IssueHumanTokenResponse
-	24, // 29: cwb.herald.v1.AgentService.GetAgentByFingerprint:output_type -> cwb.herald.v1.GetAgentByFingerprintResponse
-	19, // [19:30] is the sub-list for method output_type
-	8,  // [8:19] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	27, // 8: cwb.herald.v1.MeResponse.user:type_name -> cwb.herald.v1.UserInfo
+	1,  // 9: cwb.herald.v1.AdminService.CreateOrg:input_type -> cwb.herald.v1.CreateOrgRequest
+	3,  // 10: cwb.herald.v1.AdminService.ListOrgs:input_type -> cwb.herald.v1.ListOrgsRequest
+	5,  // 11: cwb.herald.v1.AdminService.DeleteOrg:input_type -> cwb.herald.v1.DeleteOrgRequest
+	7,  // 12: cwb.herald.v1.AdminService.GetProducts:input_type -> cwb.herald.v1.GetProductsRequest
+	9,  // 13: cwb.herald.v1.AdminService.EnableProduct:input_type -> cwb.herald.v1.EnableProductRequest
+	11, // 14: cwb.herald.v1.AdminService.DisableProduct:input_type -> cwb.herald.v1.DisableProductRequest
+	14, // 15: cwb.herald.v1.AdminService.CreateHuman:input_type -> cwb.herald.v1.CreateHumanRequest
+	17, // 16: cwb.herald.v1.AdminService.CreateAgent:input_type -> cwb.herald.v1.CreateAgentRequest
+	19, // 17: cwb.herald.v1.AdminService.SetHumanPassword:input_type -> cwb.herald.v1.SetHumanPasswordRequest
+	21, // 18: cwb.herald.v1.AdminService.IssueHumanToken:input_type -> cwb.herald.v1.IssueHumanTokenRequest
+	25, // 19: cwb.herald.v1.AdminService.Me:input_type -> cwb.herald.v1.MeRequest
+	23, // 20: cwb.herald.v1.AgentService.GetAgentByFingerprint:input_type -> cwb.herald.v1.GetAgentByFingerprintRequest
+	2,  // 21: cwb.herald.v1.AdminService.CreateOrg:output_type -> cwb.herald.v1.CreateOrgResponse
+	4,  // 22: cwb.herald.v1.AdminService.ListOrgs:output_type -> cwb.herald.v1.ListOrgsResponse
+	6,  // 23: cwb.herald.v1.AdminService.DeleteOrg:output_type -> cwb.herald.v1.DeleteOrgResponse
+	8,  // 24: cwb.herald.v1.AdminService.GetProducts:output_type -> cwb.herald.v1.GetProductsResponse
+	10, // 25: cwb.herald.v1.AdminService.EnableProduct:output_type -> cwb.herald.v1.EnableProductResponse
+	12, // 26: cwb.herald.v1.AdminService.DisableProduct:output_type -> cwb.herald.v1.DisableProductResponse
+	15, // 27: cwb.herald.v1.AdminService.CreateHuman:output_type -> cwb.herald.v1.CreateHumanResponse
+	18, // 28: cwb.herald.v1.AdminService.CreateAgent:output_type -> cwb.herald.v1.CreateAgentResponse
+	20, // 29: cwb.herald.v1.AdminService.SetHumanPassword:output_type -> cwb.herald.v1.SetHumanPasswordResponse
+	22, // 30: cwb.herald.v1.AdminService.IssueHumanToken:output_type -> cwb.herald.v1.IssueHumanTokenResponse
+	26, // 31: cwb.herald.v1.AdminService.Me:output_type -> cwb.herald.v1.MeResponse
+	24, // 32: cwb.herald.v1.AgentService.GetAgentByFingerprint:output_type -> cwb.herald.v1.GetAgentByFingerprintResponse
+	21, // [21:33] is the sub-list for method output_type
+	9,  // [9:21] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_cwb_herald_v1_herald_proto_init() }
@@ -1513,7 +1723,7 @@ func file_cwb_herald_v1_herald_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_herald_v1_herald_proto_rawDesc), len(file_cwb_herald_v1_herald_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   28,
+			NumMessages:   31,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
