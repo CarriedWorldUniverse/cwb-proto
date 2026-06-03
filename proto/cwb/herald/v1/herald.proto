@@ -92,6 +92,14 @@ service AdminService {
   rpc IssueHumanToken(IssueHumanTokenRequest) returns (IssueHumanTokenResponse) {
     option (google.api.http) = {post: "/api/humans/{id}/token"};
   }
+  // Me — the caller's own authoritative identity record. Any AUTHENTICATED
+  // principal (no admin scope); identity-derived from the verified subject.
+  rpc Me(MeRequest) returns (MeResponse) {
+    option (google.api.http) = {
+      get: "/api/me"
+      response_body: "user"
+    };
+  }
 }
 
 // AgentService is herald's INTERNAL lookup. GetAgentByFingerprint has NO http
@@ -210,4 +218,21 @@ message GetAgentByFingerprintRequest {
 }
 message GetAgentByFingerprintResponse {
   Agent agent = 1;
+}
+
+message MeRequest {}
+message MeResponse {
+  UserInfo user = 1;
+}
+// UserInfo is a caller's own authoritative identity (agent fields empty for humans).
+message UserInfo {
+  string id = 1;
+  string kind = 2;
+  string display_name = 3;
+  string org = 4;
+  string org_name = 5;
+  string status = 6;
+  repeated string scopes = 7;
+  string responsible_human = 8;
+  string fingerprint = 9;
 }

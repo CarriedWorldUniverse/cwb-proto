@@ -46,6 +46,7 @@ const (
 	AdminService_CreateAgent_FullMethodName      = "/cwb.herald.v1.AdminService/CreateAgent"
 	AdminService_SetHumanPassword_FullMethodName = "/cwb.herald.v1.AdminService/SetHumanPassword"
 	AdminService_IssueHumanToken_FullMethodName  = "/cwb.herald.v1.AdminService/IssueHumanToken"
+	AdminService_Me_FullMethodName               = "/cwb.herald.v1.AdminService/Me"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -75,6 +76,9 @@ type AdminServiceClient interface {
 	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
 	// IssueHumanToken — org-admin; mints a kind=human token (MVP login stand-in).
 	IssueHumanToken(ctx context.Context, in *IssueHumanTokenRequest, opts ...grpc.CallOption) (*IssueHumanTokenResponse, error)
+	// Me — the caller's own authoritative identity record. Any AUTHENTICATED
+	// principal (no admin scope); identity-derived from the verified subject.
+	Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOption) (*MeResponse, error)
 }
 
 type adminServiceClient struct {
@@ -185,6 +189,16 @@ func (c *adminServiceClient) IssueHumanToken(ctx context.Context, in *IssueHuman
 	return out, nil
 }
 
+func (c *adminServiceClient) Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOption) (*MeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MeResponse)
+	err := c.cc.Invoke(ctx, AdminService_Me_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility.
@@ -212,6 +226,9 @@ type AdminServiceServer interface {
 	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
 	// IssueHumanToken — org-admin; mints a kind=human token (MVP login stand-in).
 	IssueHumanToken(context.Context, *IssueHumanTokenRequest) (*IssueHumanTokenResponse, error)
+	// Me — the caller's own authoritative identity record. Any AUTHENTICATED
+	// principal (no admin scope); identity-derived from the verified subject.
+	Me(context.Context, *MeRequest) (*MeResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -251,6 +268,9 @@ func (UnimplementedAdminServiceServer) SetHumanPassword(context.Context, *SetHum
 }
 func (UnimplementedAdminServiceServer) IssueHumanToken(context.Context, *IssueHumanTokenRequest) (*IssueHumanTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method IssueHumanToken not implemented")
+}
+func (UnimplementedAdminServiceServer) Me(context.Context, *MeRequest) (*MeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Me not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 func (UnimplementedAdminServiceServer) testEmbeddedByValue()                      {}
@@ -453,6 +473,24 @@ func _AdminService_IssueHumanToken_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_Me_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).Me(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_Me_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).Me(ctx, req.(*MeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminService_ServiceDesc is the grpc.ServiceDesc for AdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -499,6 +537,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IssueHumanToken",
 			Handler:    _AdminService_IssueHumanToken_Handler,
+		},
+		{
+			MethodName: "Me",
+			Handler:    _AdminService_Me_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
