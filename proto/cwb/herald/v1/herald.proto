@@ -224,6 +224,7 @@ message MeRequest {}
 message MeResponse {
   UserInfo user = 1;
 }
+
 // UserInfo is a caller's own authoritative identity (agent fields empty for humans).
 message UserInfo {
   string id = 1;
