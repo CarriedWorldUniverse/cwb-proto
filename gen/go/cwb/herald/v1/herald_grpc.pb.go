@@ -36,17 +36,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AdminService_CreateOrg_FullMethodName        = "/cwb.herald.v1.AdminService/CreateOrg"
-	AdminService_ListOrgs_FullMethodName         = "/cwb.herald.v1.AdminService/ListOrgs"
-	AdminService_DeleteOrg_FullMethodName        = "/cwb.herald.v1.AdminService/DeleteOrg"
-	AdminService_GetProducts_FullMethodName      = "/cwb.herald.v1.AdminService/GetProducts"
-	AdminService_EnableProduct_FullMethodName    = "/cwb.herald.v1.AdminService/EnableProduct"
-	AdminService_DisableProduct_FullMethodName   = "/cwb.herald.v1.AdminService/DisableProduct"
-	AdminService_CreateHuman_FullMethodName      = "/cwb.herald.v1.AdminService/CreateHuman"
-	AdminService_CreateAgent_FullMethodName      = "/cwb.herald.v1.AdminService/CreateAgent"
-	AdminService_SetHumanPassword_FullMethodName = "/cwb.herald.v1.AdminService/SetHumanPassword"
-	AdminService_IssueHumanToken_FullMethodName  = "/cwb.herald.v1.AdminService/IssueHumanToken"
-	AdminService_Me_FullMethodName               = "/cwb.herald.v1.AdminService/Me"
+	AdminService_CreateOrg_FullMethodName               = "/cwb.herald.v1.AdminService/CreateOrg"
+	AdminService_ListOrgs_FullMethodName                = "/cwb.herald.v1.AdminService/ListOrgs"
+	AdminService_DeleteOrg_FullMethodName               = "/cwb.herald.v1.AdminService/DeleteOrg"
+	AdminService_GetProducts_FullMethodName             = "/cwb.herald.v1.AdminService/GetProducts"
+	AdminService_EnableProduct_FullMethodName           = "/cwb.herald.v1.AdminService/EnableProduct"
+	AdminService_DisableProduct_FullMethodName          = "/cwb.herald.v1.AdminService/DisableProduct"
+	AdminService_CreateHuman_FullMethodName             = "/cwb.herald.v1.AdminService/CreateHuman"
+	AdminService_CreateAgent_FullMethodName             = "/cwb.herald.v1.AdminService/CreateAgent"
+	AdminService_RegisterIssuer_FullMethodName          = "/cwb.herald.v1.AdminService/RegisterIssuer"
+	AdminService_EnrollFederatedIdentity_FullMethodName = "/cwb.herald.v1.AdminService/EnrollFederatedIdentity"
+	AdminService_SetHumanPassword_FullMethodName        = "/cwb.herald.v1.AdminService/SetHumanPassword"
+	AdminService_IssueHumanToken_FullMethodName         = "/cwb.herald.v1.AdminService/IssueHumanToken"
+	AdminService_Me_FullMethodName                      = "/cwb.herald.v1.AdminService/Me"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -72,6 +74,12 @@ type AdminServiceClient interface {
 	// CreateAgent — org-admin (own org) or platform-admin; bootstrap agent under a
 	// responsible human.
 	CreateAgent(ctx context.Context, in *CreateAgentRequest, opts ...grpc.CallOption) (*CreateAgentResponse, error)
+	// RegisterIssuer — org-admin (own org) or platform-admin; enrolls an
+	// external identity provider for federated grants.
+	RegisterIssuer(ctx context.Context, in *RegisterIssuerRequest, opts ...grpc.CallOption) (*RegisterIssuerResponse, error)
+	// EnrollFederatedIdentity — org-admin (own org) or platform-admin; creates a
+	// herald identity and binds it to an external issuer subject.
+	EnrollFederatedIdentity(ctx context.Context, in *EnrollFederatedIdentityRequest, opts ...grpc.CallOption) (*EnrollFederatedIdentityResponse, error)
 	// SetHumanPassword — org-admin of the human's org (path-A login credential).
 	SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error)
 	// IssueHumanToken — org-admin; mints a kind=human token (MVP login stand-in).
@@ -169,6 +177,26 @@ func (c *adminServiceClient) CreateAgent(ctx context.Context, in *CreateAgentReq
 	return out, nil
 }
 
+func (c *adminServiceClient) RegisterIssuer(ctx context.Context, in *RegisterIssuerRequest, opts ...grpc.CallOption) (*RegisterIssuerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegisterIssuerResponse)
+	err := c.cc.Invoke(ctx, AdminService_RegisterIssuer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) EnrollFederatedIdentity(ctx context.Context, in *EnrollFederatedIdentityRequest, opts ...grpc.CallOption) (*EnrollFederatedIdentityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EnrollFederatedIdentityResponse)
+	err := c.cc.Invoke(ctx, AdminService_EnrollFederatedIdentity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) SetHumanPassword(ctx context.Context, in *SetHumanPasswordRequest, opts ...grpc.CallOption) (*SetHumanPasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SetHumanPasswordResponse)
@@ -222,6 +250,12 @@ type AdminServiceServer interface {
 	// CreateAgent — org-admin (own org) or platform-admin; bootstrap agent under a
 	// responsible human.
 	CreateAgent(context.Context, *CreateAgentRequest) (*CreateAgentResponse, error)
+	// RegisterIssuer — org-admin (own org) or platform-admin; enrolls an
+	// external identity provider for federated grants.
+	RegisterIssuer(context.Context, *RegisterIssuerRequest) (*RegisterIssuerResponse, error)
+	// EnrollFederatedIdentity — org-admin (own org) or platform-admin; creates a
+	// herald identity and binds it to an external issuer subject.
+	EnrollFederatedIdentity(context.Context, *EnrollFederatedIdentityRequest) (*EnrollFederatedIdentityResponse, error)
 	// SetHumanPassword — org-admin of the human's org (path-A login credential).
 	SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error)
 	// IssueHumanToken — org-admin; mints a kind=human token (MVP login stand-in).
@@ -262,6 +296,12 @@ func (UnimplementedAdminServiceServer) CreateHuman(context.Context, *CreateHuman
 }
 func (UnimplementedAdminServiceServer) CreateAgent(context.Context, *CreateAgentRequest) (*CreateAgentResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAgent not implemented")
+}
+func (UnimplementedAdminServiceServer) RegisterIssuer(context.Context, *RegisterIssuerRequest) (*RegisterIssuerResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RegisterIssuer not implemented")
+}
+func (UnimplementedAdminServiceServer) EnrollFederatedIdentity(context.Context, *EnrollFederatedIdentityRequest) (*EnrollFederatedIdentityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method EnrollFederatedIdentity not implemented")
 }
 func (UnimplementedAdminServiceServer) SetHumanPassword(context.Context, *SetHumanPasswordRequest) (*SetHumanPasswordResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetHumanPassword not implemented")
@@ -437,6 +477,42 @@ func _AdminService_CreateAgent_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_RegisterIssuer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterIssuerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).RegisterIssuer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_RegisterIssuer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).RegisterIssuer(ctx, req.(*RegisterIssuerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_EnrollFederatedIdentity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EnrollFederatedIdentityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).EnrollFederatedIdentity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_EnrollFederatedIdentity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).EnrollFederatedIdentity(ctx, req.(*EnrollFederatedIdentityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_SetHumanPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetHumanPasswordRequest)
 	if err := dec(in); err != nil {
@@ -529,6 +605,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAgent",
 			Handler:    _AdminService_CreateAgent_Handler,
+		},
+		{
+			MethodName: "RegisterIssuer",
+			Handler:    _AdminService_RegisterIssuer_Handler,
+		},
+		{
+			MethodName: "EnrollFederatedIdentity",
+			Handler:    _AdminService_EnrollFederatedIdentity_Handler,
 		},
 		{
 			MethodName: "SetHumanPassword",
