@@ -56,7 +56,7 @@ Validate against the published contract before merging:
 buf breaking --against 'https://github.com/CarriedWorldUniverse/cwb-proto.git#branch=main'
 ```
 
-CI (`.github/workflows/buf.yml`) runs `buf lint` and `buf breaking` on every PR (via `bufbuild/buf-action`, comparing against published `main`), then regenerates `gen/` and fails on any drift (`git diff --exit-code gen/`), and finally builds the generated Go. The codegen plugin versions are pinned in the workflow to match the committed output.
+CI (`.github/workflows/buf.yml`) runs `buf lint` and `buf breaking` on every PR (via `bufbuild/buf-action`, comparing against published `main`), then regenerates `gen/` and fails on any drift (`git diff --exit-code gen/`), and finally builds the generated Go. The codegen plugin versions are pinned in the workflow to match the committed output — the pinned versions (e.g. `protoc-gen-go@v1.36.11`) are the canonical ones to install locally.
 
 ## Consuming the generated Go
 
