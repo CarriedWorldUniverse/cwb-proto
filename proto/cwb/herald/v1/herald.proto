@@ -81,6 +81,24 @@ service AdminService {
       response_body: "agent"
     };
   }
+  // RegisterIssuer — org-admin (own org) or platform-admin; enrolls an
+  // external identity provider for federated grants.
+  rpc RegisterIssuer(RegisterIssuerRequest) returns (RegisterIssuerResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/issuers"
+      body: "*"
+      response_body: "issuer"
+    };
+  }
+  // EnrollFederatedIdentity — org-admin (own org) or platform-admin; creates a
+  // herald identity and binds it to an external issuer subject.
+  rpc EnrollFederatedIdentity(EnrollFederatedIdentityRequest) returns (EnrollFederatedIdentityResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/federated-identities"
+      body: "*"
+      response_body: "identity"
+    };
+  }
   // SetHumanPassword — org-admin of the human's org (path-A login credential).
   rpc SetHumanPassword(SetHumanPasswordRequest) returns (SetHumanPasswordResponse) {
     option (google.api.http) = {
@@ -199,6 +217,31 @@ message CreateAgentResponse {
   Agent agent = 1;
 }
 
+message Issuer {
+  string id = 1;
+  string org = 2;
+  string kind = 3;
+  string ref = 4;
+}
+message RegisterIssuerRequest {
+  string org = 1; // path
+  string kind = 2;
+  string ref = 3;
+}
+message RegisterIssuerResponse {
+  Issuer issuer = 1;
+}
+
+message EnrollFederatedIdentityRequest {
+  string org = 1; // path
+  string display_name = 2;
+  string issuer_id = 3;
+  string subject = 4;
+}
+message EnrollFederatedIdentityResponse {
+  Agent identity = 1;
+}
+
 message SetHumanPasswordRequest {
   string id = 1; // path (human id)
   string password = 2;
@@ -224,6 +267,7 @@ message MeRequest {}
 message MeResponse {
   UserInfo user = 1;
 }
+
 // UserInfo is a caller's own authoritative identity (agent fields empty for humans).
 message UserInfo {
   string id = 1;

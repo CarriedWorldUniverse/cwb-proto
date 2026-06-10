@@ -1046,6 +1046,290 @@ func (x *CreateAgentResponse) GetAgent() *Agent {
 	return nil
 }
 
+type Issuer struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Org           string                 `protobuf:"bytes,2,opt,name=org,proto3" json:"org,omitempty"`
+	Kind          string                 `protobuf:"bytes,3,opt,name=kind,proto3" json:"kind,omitempty"`
+	Ref           string                 `protobuf:"bytes,4,opt,name=ref,proto3" json:"ref,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Issuer) Reset() {
+	*x = Issuer{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Issuer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Issuer) ProtoMessage() {}
+
+func (x *Issuer) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Issuer.ProtoReflect.Descriptor instead.
+func (*Issuer) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *Issuer) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Issuer) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *Issuer) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *Issuer) GetRef() string {
+	if x != nil {
+		return x.Ref
+	}
+	return ""
+}
+
+type RegisterIssuerRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Org           string                 `protobuf:"bytes,1,opt,name=org,proto3" json:"org,omitempty"` // path
+	Kind          string                 `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"`
+	Ref           string                 `protobuf:"bytes,3,opt,name=ref,proto3" json:"ref,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegisterIssuerRequest) Reset() {
+	*x = RegisterIssuerRequest{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegisterIssuerRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterIssuerRequest) ProtoMessage() {}
+
+func (x *RegisterIssuerRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterIssuerRequest.ProtoReflect.Descriptor instead.
+func (*RegisterIssuerRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *RegisterIssuerRequest) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *RegisterIssuerRequest) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *RegisterIssuerRequest) GetRef() string {
+	if x != nil {
+		return x.Ref
+	}
+	return ""
+}
+
+type RegisterIssuerResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Issuer        *Issuer                `protobuf:"bytes,1,opt,name=issuer,proto3" json:"issuer,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegisterIssuerResponse) Reset() {
+	*x = RegisterIssuerResponse{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegisterIssuerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterIssuerResponse) ProtoMessage() {}
+
+func (x *RegisterIssuerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterIssuerResponse.ProtoReflect.Descriptor instead.
+func (*RegisterIssuerResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *RegisterIssuerResponse) GetIssuer() *Issuer {
+	if x != nil {
+		return x.Issuer
+	}
+	return nil
+}
+
+type EnrollFederatedIdentityRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Org           string                 `protobuf:"bytes,1,opt,name=org,proto3" json:"org,omitempty"` // path
+	DisplayName   string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	IssuerId      string                 `protobuf:"bytes,3,opt,name=issuer_id,json=issuerId,proto3" json:"issuer_id,omitempty"`
+	Subject       string                 `protobuf:"bytes,4,opt,name=subject,proto3" json:"subject,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EnrollFederatedIdentityRequest) Reset() {
+	*x = EnrollFederatedIdentityRequest{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EnrollFederatedIdentityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnrollFederatedIdentityRequest) ProtoMessage() {}
+
+func (x *EnrollFederatedIdentityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EnrollFederatedIdentityRequest.ProtoReflect.Descriptor instead.
+func (*EnrollFederatedIdentityRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *EnrollFederatedIdentityRequest) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *EnrollFederatedIdentityRequest) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *EnrollFederatedIdentityRequest) GetIssuerId() string {
+	if x != nil {
+		return x.IssuerId
+	}
+	return ""
+}
+
+func (x *EnrollFederatedIdentityRequest) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
+type EnrollFederatedIdentityResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Identity      *Agent                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EnrollFederatedIdentityResponse) Reset() {
+	*x = EnrollFederatedIdentityResponse{}
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EnrollFederatedIdentityResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnrollFederatedIdentityResponse) ProtoMessage() {}
+
+func (x *EnrollFederatedIdentityResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EnrollFederatedIdentityResponse.ProtoReflect.Descriptor instead.
+func (*EnrollFederatedIdentityResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *EnrollFederatedIdentityResponse) GetIdentity() *Agent {
+	if x != nil {
+		return x.Identity
+	}
+	return nil
+}
+
 type SetHumanPasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // path (human id)
@@ -1056,7 +1340,7 @@ type SetHumanPasswordRequest struct {
 
 func (x *SetHumanPasswordRequest) Reset() {
 	*x = SetHumanPasswordRequest{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[19]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1068,7 +1352,7 @@ func (x *SetHumanPasswordRequest) String() string {
 func (*SetHumanPasswordRequest) ProtoMessage() {}
 
 func (x *SetHumanPasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[19]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1081,7 +1365,7 @@ func (x *SetHumanPasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetHumanPasswordRequest.ProtoReflect.Descriptor instead.
 func (*SetHumanPasswordRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{19}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *SetHumanPasswordRequest) GetId() string {
@@ -1106,7 +1390,7 @@ type SetHumanPasswordResponse struct {
 
 func (x *SetHumanPasswordResponse) Reset() {
 	*x = SetHumanPasswordResponse{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[20]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1118,7 +1402,7 @@ func (x *SetHumanPasswordResponse) String() string {
 func (*SetHumanPasswordResponse) ProtoMessage() {}
 
 func (x *SetHumanPasswordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[20]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1131,7 +1415,7 @@ func (x *SetHumanPasswordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetHumanPasswordResponse.ProtoReflect.Descriptor instead.
 func (*SetHumanPasswordResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{20}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{25}
 }
 
 type IssueHumanTokenRequest struct {
@@ -1143,7 +1427,7 @@ type IssueHumanTokenRequest struct {
 
 func (x *IssueHumanTokenRequest) Reset() {
 	*x = IssueHumanTokenRequest{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[21]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1155,7 +1439,7 @@ func (x *IssueHumanTokenRequest) String() string {
 func (*IssueHumanTokenRequest) ProtoMessage() {}
 
 func (x *IssueHumanTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[21]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1168,7 +1452,7 @@ func (x *IssueHumanTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssueHumanTokenRequest.ProtoReflect.Descriptor instead.
 func (*IssueHumanTokenRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{21}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *IssueHumanTokenRequest) GetId() string {
@@ -1188,7 +1472,7 @@ type IssueHumanTokenResponse struct {
 
 func (x *IssueHumanTokenResponse) Reset() {
 	*x = IssueHumanTokenResponse{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[22]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1200,7 +1484,7 @@ func (x *IssueHumanTokenResponse) String() string {
 func (*IssueHumanTokenResponse) ProtoMessage() {}
 
 func (x *IssueHumanTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[22]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1213,7 +1497,7 @@ func (x *IssueHumanTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssueHumanTokenResponse.ProtoReflect.Descriptor instead.
 func (*IssueHumanTokenResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{22}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *IssueHumanTokenResponse) GetAccessToken() string {
@@ -1239,7 +1523,7 @@ type GetAgentByFingerprintRequest struct {
 
 func (x *GetAgentByFingerprintRequest) Reset() {
 	*x = GetAgentByFingerprintRequest{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[23]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1251,7 +1535,7 @@ func (x *GetAgentByFingerprintRequest) String() string {
 func (*GetAgentByFingerprintRequest) ProtoMessage() {}
 
 func (x *GetAgentByFingerprintRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[23]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1264,7 +1548,7 @@ func (x *GetAgentByFingerprintRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentByFingerprintRequest.ProtoReflect.Descriptor instead.
 func (*GetAgentByFingerprintRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{23}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *GetAgentByFingerprintRequest) GetFingerprint() string {
@@ -1283,7 +1567,7 @@ type GetAgentByFingerprintResponse struct {
 
 func (x *GetAgentByFingerprintResponse) Reset() {
 	*x = GetAgentByFingerprintResponse{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[24]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1295,7 +1579,7 @@ func (x *GetAgentByFingerprintResponse) String() string {
 func (*GetAgentByFingerprintResponse) ProtoMessage() {}
 
 func (x *GetAgentByFingerprintResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[24]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1308,7 +1592,7 @@ func (x *GetAgentByFingerprintResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentByFingerprintResponse.ProtoReflect.Descriptor instead.
 func (*GetAgentByFingerprintResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{24}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetAgentByFingerprintResponse) GetAgent() *Agent {
@@ -1326,7 +1610,7 @@ type MeRequest struct {
 
 func (x *MeRequest) Reset() {
 	*x = MeRequest{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1338,7 +1622,7 @@ func (x *MeRequest) String() string {
 func (*MeRequest) ProtoMessage() {}
 
 func (x *MeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[25]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1351,7 +1635,7 @@ func (x *MeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeRequest.ProtoReflect.Descriptor instead.
 func (*MeRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{25}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{30}
 }
 
 type MeResponse struct {
@@ -1363,7 +1647,7 @@ type MeResponse struct {
 
 func (x *MeResponse) Reset() {
 	*x = MeResponse{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1375,7 +1659,7 @@ func (x *MeResponse) String() string {
 func (*MeResponse) ProtoMessage() {}
 
 func (x *MeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[26]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1388,7 +1672,7 @@ func (x *MeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeResponse.ProtoReflect.Descriptor instead.
 func (*MeResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{26}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *MeResponse) GetUser() *UserInfo {
@@ -1416,7 +1700,7 @@ type UserInfo struct {
 
 func (x *UserInfo) Reset() {
 	*x = UserInfo{}
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1428,7 +1712,7 @@ func (x *UserInfo) String() string {
 func (*UserInfo) ProtoMessage() {}
 
 func (x *UserInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_herald_v1_herald_proto_msgTypes[27]
+	mi := &file_cwb_herald_v1_herald_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1441,7 +1725,7 @@ func (x *UserInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
 func (*UserInfo) Descriptor() ([]byte, []int) {
-	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{27}
+	return file_cwb_herald_v1_herald_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *UserInfo) GetId() string {
@@ -1579,7 +1863,25 @@ const file_cwb_herald_v1_herald_proto_rawDesc = "" +
 	"\rcasket_pubkey\x18\x04 \x01(\tR\fcasketPubkey\x12\x16\n" +
 	"\x06scopes\x18\x05 \x03(\tR\x06scopes\"A\n" +
 	"\x13CreateAgentResponse\x12*\n" +
-	"\x05agent\x18\x01 \x01(\v2\x14.cwb.herald.v1.AgentR\x05agent\"E\n" +
+	"\x05agent\x18\x01 \x01(\v2\x14.cwb.herald.v1.AgentR\x05agent\"P\n" +
+	"\x06Issuer\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x03org\x18\x02 \x01(\tR\x03org\x12\x12\n" +
+	"\x04kind\x18\x03 \x01(\tR\x04kind\x12\x10\n" +
+	"\x03ref\x18\x04 \x01(\tR\x03ref\"O\n" +
+	"\x15RegisterIssuerRequest\x12\x10\n" +
+	"\x03org\x18\x01 \x01(\tR\x03org\x12\x12\n" +
+	"\x04kind\x18\x02 \x01(\tR\x04kind\x12\x10\n" +
+	"\x03ref\x18\x03 \x01(\tR\x03ref\"G\n" +
+	"\x16RegisterIssuerResponse\x12-\n" +
+	"\x06issuer\x18\x01 \x01(\v2\x15.cwb.herald.v1.IssuerR\x06issuer\"\x8c\x01\n" +
+	"\x1eEnrollFederatedIdentityRequest\x12\x10\n" +
+	"\x03org\x18\x01 \x01(\tR\x03org\x12!\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x1b\n" +
+	"\tissuer_id\x18\x03 \x01(\tR\bissuerId\x12\x18\n" +
+	"\asubject\x18\x04 \x01(\tR\asubject\"S\n" +
+	"\x1fEnrollFederatedIdentityResponse\x120\n" +
+	"\bidentity\x18\x01 \x01(\v2\x14.cwb.herald.v1.AgentR\bidentity\"E\n" +
 	"\x17SetHumanPasswordRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x1a\n" +
@@ -1607,8 +1909,7 @@ const file_cwb_herald_v1_herald_proto_rawDesc = "" +
 	"\x06status\x18\x06 \x01(\tR\x06status\x12\x16\n" +
 	"\x06scopes\x18\a \x03(\tR\x06scopes\x12+\n" +
 	"\x11responsible_human\x18\b \x01(\tR\x10responsibleHuman\x12 \n" +
-	"\vfingerprint\x18\t \x01(\tR\vfingerprint2\xe0\n" +
-	"\n" +
+	"\vfingerprint\x18\t \x01(\tR\vfingerprint2\xa2\r\n" +
 	"\fAdminService\x12i\n" +
 	"\tCreateOrg\x12\x1f.cwb.herald.v1.CreateOrgRequest\x1a .cwb.herald.v1.CreateOrgResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*b\x03org\"\t/api/orgs\x12^\n" +
 	"\bListOrgs\x12\x1e.cwb.herald.v1.ListOrgsRequest\x1a\x1f.cwb.herald.v1.ListOrgsResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/api/orgs\x12i\n" +
@@ -1618,6 +1919,8 @@ const file_cwb_herald_v1_herald_proto_rawDesc = "" +
 	"\x0eDisableProduct\x12$.cwb.herald.v1.DisableProductRequest\x1a%.cwb.herald.v1.DisableProductResponse\"<\x82\xd3\xe4\x93\x026b\bproducts\"*/api/orgs/{org}/products/{product}/disable\x12~\n" +
 	"\vCreateHuman\x12!.cwb.herald.v1.CreateHumanRequest\x1a\".cwb.herald.v1.CreateHumanResponse\"(\x82\xd3\xe4\x93\x02\":\x01*b\x05human\"\x16/api/orgs/{org}/humans\x12~\n" +
 	"\vCreateAgent\x12!.cwb.herald.v1.CreateAgentRequest\x1a\".cwb.herald.v1.CreateAgentResponse\"(\x82\xd3\xe4\x93\x02\":\x01*b\x05agent\"\x16/api/orgs/{org}/agents\x12\x89\x01\n" +
+	"\x0eRegisterIssuer\x12$.cwb.herald.v1.RegisterIssuerRequest\x1a%.cwb.herald.v1.RegisterIssuerResponse\"*\x82\xd3\xe4\x93\x02$:\x01*b\x06issuer\"\x17/api/orgs/{org}/issuers\x12\xb3\x01\n" +
+	"\x17EnrollFederatedIdentity\x12-.cwb.herald.v1.EnrollFederatedIdentityRequest\x1a..cwb.herald.v1.EnrollFederatedIdentityResponse\"9\x82\xd3\xe4\x93\x023:\x01*b\bidentity\"$/api/orgs/{org}/federated-identities\x12\x89\x01\n" +
 	"\x10SetHumanPassword\x12&.cwb.herald.v1.SetHumanPasswordRequest\x1a'.cwb.herald.v1.SetHumanPasswordResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/humans/{id}/password\x12\x80\x01\n" +
 	"\x0fIssueHumanToken\x12%.cwb.herald.v1.IssueHumanTokenRequest\x1a&.cwb.herald.v1.IssueHumanTokenResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x16/api/humans/{id}/token\x12P\n" +
 	"\x02Me\x12\x18.cwb.herald.v1.MeRequest\x1a\x19.cwb.herald.v1.MeResponse\"\x15\x82\xd3\xe4\x93\x02\x0fb\x04user\x12\a/api/me2\x82\x01\n" +
@@ -1637,79 +1940,90 @@ func file_cwb_herald_v1_herald_proto_rawDescGZIP() []byte {
 	return file_cwb_herald_v1_herald_proto_rawDescData
 }
 
-var file_cwb_herald_v1_herald_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
+var file_cwb_herald_v1_herald_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_cwb_herald_v1_herald_proto_goTypes = []any{
-	(*Org)(nil),                           // 0: cwb.herald.v1.Org
-	(*CreateOrgRequest)(nil),              // 1: cwb.herald.v1.CreateOrgRequest
-	(*CreateOrgResponse)(nil),             // 2: cwb.herald.v1.CreateOrgResponse
-	(*ListOrgsRequest)(nil),               // 3: cwb.herald.v1.ListOrgsRequest
-	(*ListOrgsResponse)(nil),              // 4: cwb.herald.v1.ListOrgsResponse
-	(*DeleteOrgRequest)(nil),              // 5: cwb.herald.v1.DeleteOrgRequest
-	(*DeleteOrgResponse)(nil),             // 6: cwb.herald.v1.DeleteOrgResponse
-	(*GetProductsRequest)(nil),            // 7: cwb.herald.v1.GetProductsRequest
-	(*GetProductsResponse)(nil),           // 8: cwb.herald.v1.GetProductsResponse
-	(*EnableProductRequest)(nil),          // 9: cwb.herald.v1.EnableProductRequest
-	(*EnableProductResponse)(nil),         // 10: cwb.herald.v1.EnableProductResponse
-	(*DisableProductRequest)(nil),         // 11: cwb.herald.v1.DisableProductRequest
-	(*DisableProductResponse)(nil),        // 12: cwb.herald.v1.DisableProductResponse
-	(*Human)(nil),                         // 13: cwb.herald.v1.Human
-	(*CreateHumanRequest)(nil),            // 14: cwb.herald.v1.CreateHumanRequest
-	(*CreateHumanResponse)(nil),           // 15: cwb.herald.v1.CreateHumanResponse
-	(*Agent)(nil),                         // 16: cwb.herald.v1.Agent
-	(*CreateAgentRequest)(nil),            // 17: cwb.herald.v1.CreateAgentRequest
-	(*CreateAgentResponse)(nil),           // 18: cwb.herald.v1.CreateAgentResponse
-	(*SetHumanPasswordRequest)(nil),       // 19: cwb.herald.v1.SetHumanPasswordRequest
-	(*SetHumanPasswordResponse)(nil),      // 20: cwb.herald.v1.SetHumanPasswordResponse
-	(*IssueHumanTokenRequest)(nil),        // 21: cwb.herald.v1.IssueHumanTokenRequest
-	(*IssueHumanTokenResponse)(nil),       // 22: cwb.herald.v1.IssueHumanTokenResponse
-	(*GetAgentByFingerprintRequest)(nil),  // 23: cwb.herald.v1.GetAgentByFingerprintRequest
-	(*GetAgentByFingerprintResponse)(nil), // 24: cwb.herald.v1.GetAgentByFingerprintResponse
-	(*MeRequest)(nil),                     // 25: cwb.herald.v1.MeRequest
-	(*MeResponse)(nil),                    // 26: cwb.herald.v1.MeResponse
-	(*UserInfo)(nil),                      // 27: cwb.herald.v1.UserInfo
-	nil,                                   // 28: cwb.herald.v1.GetProductsResponse.ProductsEntry
-	nil,                                   // 29: cwb.herald.v1.EnableProductResponse.ProductsEntry
-	nil,                                   // 30: cwb.herald.v1.DisableProductResponse.ProductsEntry
+	(*Org)(nil),                             // 0: cwb.herald.v1.Org
+	(*CreateOrgRequest)(nil),                // 1: cwb.herald.v1.CreateOrgRequest
+	(*CreateOrgResponse)(nil),               // 2: cwb.herald.v1.CreateOrgResponse
+	(*ListOrgsRequest)(nil),                 // 3: cwb.herald.v1.ListOrgsRequest
+	(*ListOrgsResponse)(nil),                // 4: cwb.herald.v1.ListOrgsResponse
+	(*DeleteOrgRequest)(nil),                // 5: cwb.herald.v1.DeleteOrgRequest
+	(*DeleteOrgResponse)(nil),               // 6: cwb.herald.v1.DeleteOrgResponse
+	(*GetProductsRequest)(nil),              // 7: cwb.herald.v1.GetProductsRequest
+	(*GetProductsResponse)(nil),             // 8: cwb.herald.v1.GetProductsResponse
+	(*EnableProductRequest)(nil),            // 9: cwb.herald.v1.EnableProductRequest
+	(*EnableProductResponse)(nil),           // 10: cwb.herald.v1.EnableProductResponse
+	(*DisableProductRequest)(nil),           // 11: cwb.herald.v1.DisableProductRequest
+	(*DisableProductResponse)(nil),          // 12: cwb.herald.v1.DisableProductResponse
+	(*Human)(nil),                           // 13: cwb.herald.v1.Human
+	(*CreateHumanRequest)(nil),              // 14: cwb.herald.v1.CreateHumanRequest
+	(*CreateHumanResponse)(nil),             // 15: cwb.herald.v1.CreateHumanResponse
+	(*Agent)(nil),                           // 16: cwb.herald.v1.Agent
+	(*CreateAgentRequest)(nil),              // 17: cwb.herald.v1.CreateAgentRequest
+	(*CreateAgentResponse)(nil),             // 18: cwb.herald.v1.CreateAgentResponse
+	(*Issuer)(nil),                          // 19: cwb.herald.v1.Issuer
+	(*RegisterIssuerRequest)(nil),           // 20: cwb.herald.v1.RegisterIssuerRequest
+	(*RegisterIssuerResponse)(nil),          // 21: cwb.herald.v1.RegisterIssuerResponse
+	(*EnrollFederatedIdentityRequest)(nil),  // 22: cwb.herald.v1.EnrollFederatedIdentityRequest
+	(*EnrollFederatedIdentityResponse)(nil), // 23: cwb.herald.v1.EnrollFederatedIdentityResponse
+	(*SetHumanPasswordRequest)(nil),         // 24: cwb.herald.v1.SetHumanPasswordRequest
+	(*SetHumanPasswordResponse)(nil),        // 25: cwb.herald.v1.SetHumanPasswordResponse
+	(*IssueHumanTokenRequest)(nil),          // 26: cwb.herald.v1.IssueHumanTokenRequest
+	(*IssueHumanTokenResponse)(nil),         // 27: cwb.herald.v1.IssueHumanTokenResponse
+	(*GetAgentByFingerprintRequest)(nil),    // 28: cwb.herald.v1.GetAgentByFingerprintRequest
+	(*GetAgentByFingerprintResponse)(nil),   // 29: cwb.herald.v1.GetAgentByFingerprintResponse
+	(*MeRequest)(nil),                       // 30: cwb.herald.v1.MeRequest
+	(*MeResponse)(nil),                      // 31: cwb.herald.v1.MeResponse
+	(*UserInfo)(nil),                        // 32: cwb.herald.v1.UserInfo
+	nil,                                     // 33: cwb.herald.v1.GetProductsResponse.ProductsEntry
+	nil,                                     // 34: cwb.herald.v1.EnableProductResponse.ProductsEntry
+	nil,                                     // 35: cwb.herald.v1.DisableProductResponse.ProductsEntry
 }
 var file_cwb_herald_v1_herald_proto_depIdxs = []int32{
 	0,  // 0: cwb.herald.v1.CreateOrgResponse.org:type_name -> cwb.herald.v1.Org
 	0,  // 1: cwb.herald.v1.ListOrgsResponse.orgs:type_name -> cwb.herald.v1.Org
-	28, // 2: cwb.herald.v1.GetProductsResponse.products:type_name -> cwb.herald.v1.GetProductsResponse.ProductsEntry
-	29, // 3: cwb.herald.v1.EnableProductResponse.products:type_name -> cwb.herald.v1.EnableProductResponse.ProductsEntry
-	30, // 4: cwb.herald.v1.DisableProductResponse.products:type_name -> cwb.herald.v1.DisableProductResponse.ProductsEntry
+	33, // 2: cwb.herald.v1.GetProductsResponse.products:type_name -> cwb.herald.v1.GetProductsResponse.ProductsEntry
+	34, // 3: cwb.herald.v1.EnableProductResponse.products:type_name -> cwb.herald.v1.EnableProductResponse.ProductsEntry
+	35, // 4: cwb.herald.v1.DisableProductResponse.products:type_name -> cwb.herald.v1.DisableProductResponse.ProductsEntry
 	13, // 5: cwb.herald.v1.CreateHumanResponse.human:type_name -> cwb.herald.v1.Human
 	16, // 6: cwb.herald.v1.CreateAgentResponse.agent:type_name -> cwb.herald.v1.Agent
-	16, // 7: cwb.herald.v1.GetAgentByFingerprintResponse.agent:type_name -> cwb.herald.v1.Agent
-	27, // 8: cwb.herald.v1.MeResponse.user:type_name -> cwb.herald.v1.UserInfo
-	1,  // 9: cwb.herald.v1.AdminService.CreateOrg:input_type -> cwb.herald.v1.CreateOrgRequest
-	3,  // 10: cwb.herald.v1.AdminService.ListOrgs:input_type -> cwb.herald.v1.ListOrgsRequest
-	5,  // 11: cwb.herald.v1.AdminService.DeleteOrg:input_type -> cwb.herald.v1.DeleteOrgRequest
-	7,  // 12: cwb.herald.v1.AdminService.GetProducts:input_type -> cwb.herald.v1.GetProductsRequest
-	9,  // 13: cwb.herald.v1.AdminService.EnableProduct:input_type -> cwb.herald.v1.EnableProductRequest
-	11, // 14: cwb.herald.v1.AdminService.DisableProduct:input_type -> cwb.herald.v1.DisableProductRequest
-	14, // 15: cwb.herald.v1.AdminService.CreateHuman:input_type -> cwb.herald.v1.CreateHumanRequest
-	17, // 16: cwb.herald.v1.AdminService.CreateAgent:input_type -> cwb.herald.v1.CreateAgentRequest
-	19, // 17: cwb.herald.v1.AdminService.SetHumanPassword:input_type -> cwb.herald.v1.SetHumanPasswordRequest
-	21, // 18: cwb.herald.v1.AdminService.IssueHumanToken:input_type -> cwb.herald.v1.IssueHumanTokenRequest
-	25, // 19: cwb.herald.v1.AdminService.Me:input_type -> cwb.herald.v1.MeRequest
-	23, // 20: cwb.herald.v1.AgentService.GetAgentByFingerprint:input_type -> cwb.herald.v1.GetAgentByFingerprintRequest
-	2,  // 21: cwb.herald.v1.AdminService.CreateOrg:output_type -> cwb.herald.v1.CreateOrgResponse
-	4,  // 22: cwb.herald.v1.AdminService.ListOrgs:output_type -> cwb.herald.v1.ListOrgsResponse
-	6,  // 23: cwb.herald.v1.AdminService.DeleteOrg:output_type -> cwb.herald.v1.DeleteOrgResponse
-	8,  // 24: cwb.herald.v1.AdminService.GetProducts:output_type -> cwb.herald.v1.GetProductsResponse
-	10, // 25: cwb.herald.v1.AdminService.EnableProduct:output_type -> cwb.herald.v1.EnableProductResponse
-	12, // 26: cwb.herald.v1.AdminService.DisableProduct:output_type -> cwb.herald.v1.DisableProductResponse
-	15, // 27: cwb.herald.v1.AdminService.CreateHuman:output_type -> cwb.herald.v1.CreateHumanResponse
-	18, // 28: cwb.herald.v1.AdminService.CreateAgent:output_type -> cwb.herald.v1.CreateAgentResponse
-	20, // 29: cwb.herald.v1.AdminService.SetHumanPassword:output_type -> cwb.herald.v1.SetHumanPasswordResponse
-	22, // 30: cwb.herald.v1.AdminService.IssueHumanToken:output_type -> cwb.herald.v1.IssueHumanTokenResponse
-	26, // 31: cwb.herald.v1.AdminService.Me:output_type -> cwb.herald.v1.MeResponse
-	24, // 32: cwb.herald.v1.AgentService.GetAgentByFingerprint:output_type -> cwb.herald.v1.GetAgentByFingerprintResponse
-	21, // [21:33] is the sub-list for method output_type
-	9,  // [9:21] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	19, // 7: cwb.herald.v1.RegisterIssuerResponse.issuer:type_name -> cwb.herald.v1.Issuer
+	16, // 8: cwb.herald.v1.EnrollFederatedIdentityResponse.identity:type_name -> cwb.herald.v1.Agent
+	16, // 9: cwb.herald.v1.GetAgentByFingerprintResponse.agent:type_name -> cwb.herald.v1.Agent
+	32, // 10: cwb.herald.v1.MeResponse.user:type_name -> cwb.herald.v1.UserInfo
+	1,  // 11: cwb.herald.v1.AdminService.CreateOrg:input_type -> cwb.herald.v1.CreateOrgRequest
+	3,  // 12: cwb.herald.v1.AdminService.ListOrgs:input_type -> cwb.herald.v1.ListOrgsRequest
+	5,  // 13: cwb.herald.v1.AdminService.DeleteOrg:input_type -> cwb.herald.v1.DeleteOrgRequest
+	7,  // 14: cwb.herald.v1.AdminService.GetProducts:input_type -> cwb.herald.v1.GetProductsRequest
+	9,  // 15: cwb.herald.v1.AdminService.EnableProduct:input_type -> cwb.herald.v1.EnableProductRequest
+	11, // 16: cwb.herald.v1.AdminService.DisableProduct:input_type -> cwb.herald.v1.DisableProductRequest
+	14, // 17: cwb.herald.v1.AdminService.CreateHuman:input_type -> cwb.herald.v1.CreateHumanRequest
+	17, // 18: cwb.herald.v1.AdminService.CreateAgent:input_type -> cwb.herald.v1.CreateAgentRequest
+	20, // 19: cwb.herald.v1.AdminService.RegisterIssuer:input_type -> cwb.herald.v1.RegisterIssuerRequest
+	22, // 20: cwb.herald.v1.AdminService.EnrollFederatedIdentity:input_type -> cwb.herald.v1.EnrollFederatedIdentityRequest
+	24, // 21: cwb.herald.v1.AdminService.SetHumanPassword:input_type -> cwb.herald.v1.SetHumanPasswordRequest
+	26, // 22: cwb.herald.v1.AdminService.IssueHumanToken:input_type -> cwb.herald.v1.IssueHumanTokenRequest
+	30, // 23: cwb.herald.v1.AdminService.Me:input_type -> cwb.herald.v1.MeRequest
+	28, // 24: cwb.herald.v1.AgentService.GetAgentByFingerprint:input_type -> cwb.herald.v1.GetAgentByFingerprintRequest
+	2,  // 25: cwb.herald.v1.AdminService.CreateOrg:output_type -> cwb.herald.v1.CreateOrgResponse
+	4,  // 26: cwb.herald.v1.AdminService.ListOrgs:output_type -> cwb.herald.v1.ListOrgsResponse
+	6,  // 27: cwb.herald.v1.AdminService.DeleteOrg:output_type -> cwb.herald.v1.DeleteOrgResponse
+	8,  // 28: cwb.herald.v1.AdminService.GetProducts:output_type -> cwb.herald.v1.GetProductsResponse
+	10, // 29: cwb.herald.v1.AdminService.EnableProduct:output_type -> cwb.herald.v1.EnableProductResponse
+	12, // 30: cwb.herald.v1.AdminService.DisableProduct:output_type -> cwb.herald.v1.DisableProductResponse
+	15, // 31: cwb.herald.v1.AdminService.CreateHuman:output_type -> cwb.herald.v1.CreateHumanResponse
+	18, // 32: cwb.herald.v1.AdminService.CreateAgent:output_type -> cwb.herald.v1.CreateAgentResponse
+	21, // 33: cwb.herald.v1.AdminService.RegisterIssuer:output_type -> cwb.herald.v1.RegisterIssuerResponse
+	23, // 34: cwb.herald.v1.AdminService.EnrollFederatedIdentity:output_type -> cwb.herald.v1.EnrollFederatedIdentityResponse
+	25, // 35: cwb.herald.v1.AdminService.SetHumanPassword:output_type -> cwb.herald.v1.SetHumanPasswordResponse
+	27, // 36: cwb.herald.v1.AdminService.IssueHumanToken:output_type -> cwb.herald.v1.IssueHumanTokenResponse
+	31, // 37: cwb.herald.v1.AdminService.Me:output_type -> cwb.herald.v1.MeResponse
+	29, // 38: cwb.herald.v1.AgentService.GetAgentByFingerprint:output_type -> cwb.herald.v1.GetAgentByFingerprintResponse
+	25, // [25:39] is the sub-list for method output_type
+	11, // [11:25] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_cwb_herald_v1_herald_proto_init() }
@@ -1723,7 +2037,7 @@ func file_cwb_herald_v1_herald_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_herald_v1_herald_proto_rawDesc), len(file_cwb_herald_v1_herald_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   31,
+			NumMessages:   36,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
