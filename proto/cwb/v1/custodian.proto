@@ -1,0 +1,108 @@
+syntax = "proto3";
+package cwb.v1;
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// custodian is the external-credential vault pillar: it holds a consumer org's
+// credentials (git tokens, API keys, DB connections, …) and brokers their *use*
+// to that org's herald-verified identities — the scoped-handle pattern herald
+// uses for identity, applied to secrets.
+//
+// Credentials are casket-sealed at rest under a per-org DEK derived
+// (HKDF, domain-separated) from the org base seed; plaintext exists only
+// transiently in memory on a Fetch. Org isolation is cryptographic AND
+// structural — the org always comes from the herald-verified identity
+// (cwb-org metadata), never a request body, and every query is org-scoped.
+//
+// CredentialService runs behind interchange over mTLS; identity
+// (org/subject/scopes) comes from the cwb-* gRPC metadata the gateway injects.
+// Scopes:
+//   cred:read  → Fetch / ListCredentials
+//   cred:write → SetCredential
+//
+// M1 serves kind="git": a GitBundle (username/password/host) keyed by host
+// (name = the git host, e.g. "github.com"). Every Fetch — success or denial —
+// is audited; the brokered-use audit trail is custodian's whole point.
+
+// =============================================================================
+// Shared messages
+// =============================================================================
+
+// GitBundle is a git push/fetch credential. password is a PAT or token and is
+// NEVER returned by List/metadata paths or logged — only by Fetch over mTLS.
+message GitBundle {
+  string username = 1;
+  string password = 2; // PAT or token; NEVER log, never in List
+  string host = 3; // e.g. github.com
+}
+
+// CredentialMeta describes a stored credential WITHOUT its secret material —
+// used by ListCredentials.
+message CredentialMeta {
+  string kind = 1; // e.g. "git"
+  string name = 2; // for git, the host
+  string created_at = 3;
+  string updated_at = 4;
+  string writer = 5;
+}
+
+// =============================================================================
+// CredentialService
+// =============================================================================
+
+service CredentialService {
+  // Fetch returns the decrypted credential bundle for (kind, name) in the
+  // caller's org. Requires cred:read. Plaintext is returned only over mTLS;
+  // every call is audited (success and denial).
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+
+  // SetCredential seals and stores a credential bundle. Requires cred:write.
+  rpc SetCredential(SetCredentialRequest) returns (SetCredentialResponse);
+
+  // ListCredentials lists credential metadata in the caller's org — NEVER
+  // secret material. Requires cred:read.
+  rpc ListCredentials(ListCredentialsRequest) returns (ListCredentialsResponse);
+}
+
+message FetchRequest {
+  // identity is informational context the caller may pass (e.g. the acting
+  // aspect/agent on whose behalf the broker fetches). The authoritative
+  // identity + org are ALWAYS the herald-verified cwb-subject / cwb-org
+  // metadata — identity here never overrides them, and org is never read
+  // from the request body.
+  string identity = 1;
+  string kind = 2; // M1: "git"
+  string name = 3; // for git, the host (e.g. "github.com")
+}
+
+// FetchResponse carries the decrypted bundle for the requested kind.
+message FetchResponse {
+  string kind = 1;
+  string name = 2;
+  oneof bundle {
+    GitBundle git_bundle = 3;
+  }
+}
+
+message SetCredentialRequest {
+  string kind = 1; // M1: "git"
+  string name = 2; // for git, the host
+  oneof bundle {
+    GitBundle git_bundle = 3;
+  }
+}
+
+// SetCredentialResponse returns metadata only (never echoes the secret).
+message SetCredentialResponse {
+  CredentialMeta item = 1;
+}
+
+message ListCredentialsRequest {
+  // kind optionally narrows the listing (empty = all kinds in the org).
+  string kind = 1;
+}
+
+// ListCredentialsResponse: metadata only, no secret material.
+message ListCredentialsResponse {
+  repeated CredentialMeta items = 1;
+}
