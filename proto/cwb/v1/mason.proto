@@ -1,0 +1,57 @@
+syntax = "proto3";
+package cwb.v1;
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// mason is the Strata deployment engine: almanac-declared apps reconciled
+// onto the cluster. AppService is read/trigger only — declarations are
+// WRITTEN to almanac (ConfigService), never through mason.
+//
+// Scopes: app:read → ListApps/GetApp; app:write → TriggerSync.
+service AppService {
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  rpc TriggerSync(TriggerSyncRequest) returns (TriggerSyncResponse);
+}
+
+// AppPhase is the reconcile state of one declared app.
+enum AppPhase {
+  APP_PHASE_UNSPECIFIED = 0;
+  APP_PHASE_UNKNOWN = 1;      // not yet examined
+  APP_PHASE_INVALID = 2;      // declaration failed validation
+  APP_PHASE_PROGRESSING = 3;  // applied, rollout incomplete
+  APP_PHASE_DEGRADED = 4;     // apply error or field-manager conflict
+  APP_PHASE_SYNCED = 5;       // applied and workload ready
+}
+
+message AppStatus {
+  string name = 1;
+  string namespace = 2;
+  AppPhase phase = 3;
+  string message = 4;          // human-readable detail (error, conflict, rollout)
+  string ready = 5;            // "1/1" readyReplicas/replicas
+  string decl_hash = 6;        // sha256 of current declaration
+  string applied_hash = 7;     // hash last successfully applied
+  string last_applied_at = 8;  // RFC3339; empty if never
+  string last_checked_at = 9;  // RFC3339
+}
+
+message ListAppsRequest {}
+message ListAppsResponse {
+  repeated AppStatus apps = 1;
+}
+
+message GetAppRequest {
+  string name = 1;
+}
+message GetAppResponse {
+  AppStatus app = 1;
+  string declaration = 2;  // the almanac-stored YAML, verbatim
+}
+
+message TriggerSyncRequest {
+  string name = 1;  // empty = full pass over all apps
+}
+message TriggerSyncResponse {
+  repeated AppStatus apps = 1;  // statuses after the pass (one entry if name set)
+}
