@@ -1,0 +1,217 @@
+syntax = "proto3";
+package cwb.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// almanac is the configuration & internal-secrets pillar: a hierarchical-path
+// KV store of plain Parameters (cleartext config) and casket-sealed
+// SecureParameters (secrets), with layered resolution. Two services keep the
+// scope lanes clean:
+//
+//   ConfigService — plain config (config:read / config:write scopes)
+//   SecretService — secrets   (secret:read / secret:write scopes)
+//
+// Both run behind interchange over mTLS; identity (org/subject/scopes) comes
+// from the cwb-* gRPC metadata the gateway injects. Org isolation is enforced
+// on every call — a caller only ever sees its own org's tree.
+
+// =============================================================================
+// Shared messages
+// =============================================================================
+
+// ConfigItem is one resolved key. For plain config the value is the cleartext
+// string; for secrets returned by GetSecret the value is the decrypted
+// plaintext. List/Resolve of secrets carry metadata only (value empty unless
+// the caller holds secret:read and the RPC decrypts).
+message ConfigItem {
+  string path = 1;
+  string value = 2;
+  bool is_secret = 3;
+  int64 version = 4;
+  // source_layer tags which resolution layer this key came from
+  // (e.g. "_global", "<service>", "<service>/<env>"). Empty for direct Get.
+  string source_layer = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// SecretMeta describes a secret WITHOUT its plaintext — used by ListSecrets.
+message SecretMeta {
+  string path = 1;
+  int64 version = 2;
+  string created_at = 3;
+  string updated_at = 4;
+  string writer = 5;
+}
+
+// =============================================================================
+// ConfigService — plain Parameters
+// =============================================================================
+
+service ConfigService {
+  // GetConfig fetches a single plain parameter by exact path.
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {
+    option (google.api.http) = {
+      get: "/api/config/{path=**}"
+      response_body: "item"
+    };
+  }
+
+  // ResolveConfig merges the precedence stack for (service, env) and returns
+  // every effective key tagged with its source layer. The layered-merge RPC.
+  rpc ResolveConfig(ResolveConfigRequest) returns (ResolveConfigResponse) {
+    option (google.api.http) = {get: "/api/config:resolve"};
+  }
+
+  // ListConfig lists plain parameters under a path prefix.
+  rpc ListConfig(ListConfigRequest) returns (ListConfigResponse) {
+    option (google.api.http) = {get: "/api/config"};
+  }
+
+  // SetConfig creates or updates a plain parameter (new version each write).
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse) {
+    option (google.api.http) = {
+      put: "/api/config/{path=**}"
+      body: "*"
+    };
+  }
+
+  // DeleteConfig removes a plain parameter.
+  rpc DeleteConfig(DeleteConfigRequest) returns (DeleteConfigResponse) {
+    option (google.api.http) = {delete: "/api/config/{path=**}"};
+  }
+}
+
+message GetConfigRequest {
+  string path = 1;
+}
+
+message GetConfigResponse {
+  ConfigItem item = 1;
+}
+
+message ResolveConfigRequest {
+  string service = 1;
+  string env = 2;
+}
+
+// ResolveConfigResponse: each item tagged with its source_layer.
+message ResolveConfigResponse {
+  repeated ConfigItem items = 1;
+}
+
+message ListConfigRequest {
+  string prefix = 1;
+}
+
+// ListConfigResponse: handler emits a bare array; grpc-gateway wraps it.
+message ListConfigResponse {
+  repeated ConfigItem items = 1;
+}
+
+message SetConfigRequest {
+  string path = 1;
+  string value = 2;
+}
+
+message SetConfigResponse {
+  ConfigItem item = 1;
+}
+
+message DeleteConfigRequest {
+  string path = 1;
+}
+
+// DeleteConfig returns HTTP 200 with no body.
+message DeleteConfigResponse {}
+
+// =============================================================================
+// SecretService — casket-sealed SecureParameters
+// =============================================================================
+
+service SecretService {
+  // GetSecret fetches and decrypts a single secret. Requires secret:read.
+  rpc GetSecret(GetSecretRequest) returns (GetSecretResponse) {
+    option (google.api.http) = {
+      get: "/api/secret/{path=**}"
+      response_body: "item"
+    };
+  }
+
+  // ListSecrets lists secret metadata under a prefix — NEVER plaintext values.
+  rpc ListSecrets(ListSecretsRequest) returns (ListSecretsResponse) {
+    option (google.api.http) = {get: "/api/secret"};
+  }
+
+  // SetSecret seals and stores a secret (new version each write).
+  rpc SetSecret(SetSecretRequest) returns (SetSecretResponse) {
+    option (google.api.http) = {
+      put: "/api/secret/{path=**}"
+      body: "*"
+    };
+  }
+
+  // DeleteSecret removes a secret.
+  rpc DeleteSecret(DeleteSecretRequest) returns (DeleteSecretResponse) {
+    option (google.api.http) = {delete: "/api/secret/{path=**}"};
+  }
+}
+
+message GetSecretRequest {
+  string path = 1;
+}
+
+// GetSecretResponse carries the decrypted plaintext in item.value.
+message GetSecretResponse {
+  ConfigItem item = 1;
+}
+
+message ListSecretsRequest {
+  string prefix = 1;
+}
+
+// ListSecretsResponse: metadata only, no plaintext.
+message ListSecretsResponse {
+  repeated SecretMeta items = 1;
+}
+
+message SetSecretRequest {
+  string path = 1;
+  string value = 2; // plaintext to seal; never stored cleartext
+}
+
+// SetSecretResponse returns metadata only (no plaintext echo).
+message SetSecretResponse {
+  SecretMeta item = 1;
+}
+
+message DeleteSecretRequest {
+  string path = 1;
+}
+
+// DeleteSecret returns HTTP 200 with no body.
+message DeleteSecretResponse {}
+
+// =============================================================================
+// AlmanacAdminService — destructive org operations
+// =============================================================================
+
+service AlmanacAdminService {
+  // PurgeOrg removes the caller's entire org config + secret tree.
+  // Requires almanac:purge (admin:write does NOT satisfy it).
+  rpc PurgeOrg(AlmanacAdminServicePurgeOrgRequest) returns (AlmanacAdminServicePurgeOrgResponse) {
+    option (google.api.http) = {
+      post: "/api/almanac:purge"
+      body: "*"
+    };
+  }
+}
+
+message AlmanacAdminServicePurgeOrgRequest {}
+
+// AlmanacAdminServicePurgeOrgResponse: {"purged": "<org>"}.
+message AlmanacAdminServicePurgeOrgResponse {
+  string purged = 1;
+}
