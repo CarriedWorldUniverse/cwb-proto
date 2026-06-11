@@ -33,7 +33,7 @@ option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwb
 message GitBundle {
   string username = 1;
   string password = 2; // PAT or token; NEVER log, never in List
-  string host = 3;     // e.g. github.com
+  string host = 3; // e.g. github.com
 }
 
 // CredentialMeta describes a stored credential WITHOUT its secret material —
