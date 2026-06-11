@@ -16,8 +16,8 @@ service AppService {
 
 // AppPhase is the reconcile state of one declared app.
 enum AppPhase {
-  APP_PHASE_UNSPECIFIED = 0;
-  APP_PHASE_UNKNOWN = 1; // not yet examined
+  APP_PHASE_UNSPECIFIED = 0; // absent/zero-value — never written by mason
+  APP_PHASE_UNKNOWN = 1; // written explicitly by the reconciler: declared but not yet examined
   APP_PHASE_INVALID = 2; // declaration failed validation
   APP_PHASE_PROGRESSING = 3; // applied, rollout incomplete
   APP_PHASE_DEGRADED = 4; // apply error or field-manager conflict

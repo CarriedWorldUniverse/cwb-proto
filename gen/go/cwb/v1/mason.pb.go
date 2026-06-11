@@ -25,8 +25,8 @@ const (
 type AppPhase int32
 
 const (
-	AppPhase_APP_PHASE_UNSPECIFIED AppPhase = 0
-	AppPhase_APP_PHASE_UNKNOWN     AppPhase = 1 // not yet examined
+	AppPhase_APP_PHASE_UNSPECIFIED AppPhase = 0 // absent/zero-value — never written by mason
+	AppPhase_APP_PHASE_UNKNOWN     AppPhase = 1 // written explicitly by the reconciler: declared but not yet examined
 	AppPhase_APP_PHASE_INVALID     AppPhase = 2 // declaration failed validation
 	AppPhase_APP_PHASE_PROGRESSING AppPhase = 3 // applied, rollout incomplete
 	AppPhase_APP_PHASE_DEGRADED    AppPhase = 4 // apply error or field-manager conflict
