@@ -21,8 +21,10 @@ option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwb
 //   cred:write → SetCredential
 //
 // M1 serves kind="git": a GitBundle (username/password/host) keyed by host
-// (name = the git host, e.g. "github.com"). Every Fetch — success or denial —
-// is audited; the brokered-use audit trail is custodian's whole point.
+// (name = the git host, e.g. "github.com"). M2 adds kind="oauth": an
+// OAuthBundle (client credentials + refresh token) keyed by a logical service
+// name (e.g. "google-workspace"). Every Fetch — success or denial — is
+// audited; the brokered-use audit trail is custodian's whole point.
 
 // =============================================================================
 // Shared messages
@@ -36,11 +38,23 @@ message GitBundle {
   string host = 3; // e.g. github.com
 }
 
+// OAuthBundle holds OAuth 2.0 client credentials and a refresh token for an
+// external service. client_secret and refresh_token are secret material —
+// NEVER returned by List/metadata paths or logged — only by Fetch over mTLS.
+// Required fields (validated on Set): client_id, refresh_token, token_uri.
+message OAuthBundle {
+  string client_id = 1; // OAuth client identifier
+  string client_secret = 2; // OAuth client secret; NEVER log, never in List
+  string refresh_token = 3; // refresh token; NEVER log, never in List
+  string token_uri = 4; // token endpoint URI (e.g. https://oauth2.googleapis.com/token)
+  string scope = 5; // space-separated OAuth scopes (optional, informational)
+}
+
 // CredentialMeta describes a stored credential WITHOUT its secret material —
 // used by ListCredentials.
 message CredentialMeta {
-  string kind = 1; // e.g. "git"
-  string name = 2; // for git, the host
+  string kind = 1; // e.g. "git" or "oauth"
+  string name = 2; // for git, the host; for oauth, a logical service name
   string created_at = 3;
   string updated_at = 4;
   string writer = 5;
@@ -71,8 +85,8 @@ message FetchRequest {
   // metadata — identity here never overrides them, and org is never read
   // from the request body.
   string identity = 1;
-  string kind = 2; // M1: "git"
-  string name = 3; // for git, the host (e.g. "github.com")
+  string kind = 2; // "git" or "oauth"
+  string name = 3; // for git, the host (e.g. "github.com"); for oauth, a logical service name
 }
 
 // FetchResponse carries the decrypted bundle for the requested kind.
@@ -81,14 +95,16 @@ message FetchResponse {
   string name = 2;
   oneof bundle {
     GitBundle git_bundle = 3;
+    OAuthBundle oauth_bundle = 4;
   }
 }
 
 message SetCredentialRequest {
-  string kind = 1; // M1: "git"
-  string name = 2; // for git, the host
+  string kind = 1; // "git" or "oauth"
+  string name = 2; // for git, the host; for oauth, a logical service name
   oneof bundle {
     GitBundle git_bundle = 3;
+    OAuthBundle oauth_bundle = 4;
   }
 }
 
