@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package cwb.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
+
+// BackupStatusService reports porter-backup's sync state. Read-only,
+// in-mesh (mTLS) — consumed by atlas for the map's backup clock.
+service BackupStatusService {
+  rpc GetBackupStatus(GetBackupStatusRequest) returns (GetBackupStatusResponse);
+}
+
+message GetBackupStatusRequest {}
+
+message GetBackupStatusResponse {
+  BackupStatus status = 1;
+}
+
+// BackupStatus is one porter instance's view of its last sync pass.
+message BackupStatus {
+  // last_success is when the last fully-successful pass completed (unset if
+  // no pass has succeeded since porter started).
+  google.protobuf.Timestamp last_success = 1;
+  // last_attempt is when the most recent pass (success or not) completed.
+  google.protobuf.Timestamp last_attempt = 2;
+  // last_error is the most recent pass failure message ("" if it succeeded).
+  string last_error = 3;
+  // sources backed up in the last successful pass.
+  repeated BackupSource sources = 4;
+  // next_due is last_attempt + the configured sync interval.
+  google.protobuf.Timestamp next_due = 5;
+}
+
+message BackupSource {
+  string name = 1; // e.g. "croft-home"
+  int64 size = 2;  // plaintext bytes
+}
