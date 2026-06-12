@@ -7,6 +7,7 @@
 package cwbv1
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -456,7 +457,7 @@ var File_cwb_v1_mason_proto protoreflect.FileDescriptor
 
 const file_cwb_v1_mason_proto_rawDesc = "" +
 	"\n" +
-	"\x12cwb/v1/mason.proto\x12\x06cwb.v1\"\xa5\x02\n" +
+	"\x12cwb/v1/mason.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xa5\x02\n" +
 	"\tAppStatus\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
 	"\tnamespace\x18\x02 \x01(\tR\tnamespace\x12&\n" +
@@ -485,12 +486,12 @@ const file_cwb_v1_mason_proto_rawDesc = "" +
 	"\x11APP_PHASE_INVALID\x10\x02\x12\x19\n" +
 	"\x15APP_PHASE_PROGRESSING\x10\x03\x12\x16\n" +
 	"\x12APP_PHASE_DEGRADED\x10\x04\x12\x14\n" +
-	"\x10APP_PHASE_SYNCED\x10\x052\xcc\x01\n" +
+	"\x10APP_PHASE_SYNCED\x10\x052\x94\x02\n" +
 	"\n" +
-	"AppService\x12=\n" +
-	"\bListApps\x12\x17.cwb.v1.ListAppsRequest\x1a\x18.cwb.v1.ListAppsResponse\x127\n" +
-	"\x06GetApp\x12\x15.cwb.v1.GetAppRequest\x1a\x16.cwb.v1.GetAppResponse\x12F\n" +
-	"\vTriggerSync\x12\x1a.cwb.v1.TriggerSyncRequest\x1a\x1b.cwb.v1.TriggerSyncResponseB\x90\x01\n" +
+	"AppService\x12P\n" +
+	"\bListApps\x12\x17.cwb.v1.ListAppsRequest\x1a\x18.cwb.v1.ListAppsResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/api/apps\x12Q\n" +
+	"\x06GetApp\x12\x15.cwb.v1.GetAppRequest\x1a\x16.cwb.v1.GetAppResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/apps/{name}\x12a\n" +
+	"\vTriggerSync\x12\x1a.cwb.v1.TriggerSyncRequest\x1a\x1b.cwb.v1.TriggerSyncResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/api/apps:syncB\x90\x01\n" +
 	"\n" +
 	"com.cwb.v1B\n" +
 	"MasonProtoP\x01Z=github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1\xa2\x02\x03CXX\xaa\x02\x06Cwb.V1\xca\x02\x06Cwb\\V1\xe2\x02\x12Cwb\\V1\\GPBMetadata\xea\x02\aCwb::V1b\x06proto3"

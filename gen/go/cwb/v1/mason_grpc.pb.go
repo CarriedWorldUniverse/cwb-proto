@@ -33,6 +33,9 @@ const (
 // WRITTEN to almanac (ConfigService), never through mason.
 //
 // Scopes: app:read → ListApps/GetApp; app:write → TriggerSync.
+//
+// HTTP bindings serve the interchange grpc-gateway edge (mounted under the
+// /mason route prefix, which the gateway strips before dispatch).
 type AppServiceClient interface {
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
@@ -86,6 +89,9 @@ func (c *appServiceClient) TriggerSync(ctx context.Context, in *TriggerSyncReque
 // WRITTEN to almanac (ConfigService), never through mason.
 //
 // Scopes: app:read → ListApps/GetApp; app:write → TriggerSync.
+//
+// HTTP bindings serve the interchange grpc-gateway edge (mounted under the
+// /mason route prefix, which the gateway strips before dispatch).
 type AppServiceServer interface {
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
