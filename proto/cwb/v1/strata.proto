@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package cwb.v1;
 
+import "cwb/v1/porter.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
-import "cwb/v1/porter.proto";
 
 option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
 
@@ -13,9 +13,7 @@ option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwb
 // "Ops seams"). atlas serves it; cw/MCP/the web page consume it.
 service StrataService {
   rpc GetCloudState(GetCloudStateRequest) returns (GetCloudStateResponse) {
-    option (google.api.http) = {
-      get: "/api/strata/state"
-    };
+    option (google.api.http) = {get: "/api/strata/state"};
   }
 }
 
@@ -32,39 +30,39 @@ message GetCloudStateResponse {
 
 enum NodeKind {
   NODE_KIND_UNSPECIFIED = 0;
-  NODE_KIND_PILLAR = 1;        // the OS layer (herald, almanac, ...)
-  NODE_KIND_APP = 2;           // workloads on the cloud (broker, aspects, ...)
+  NODE_KIND_PILLAR = 1; // the OS layer (herald, almanac, ...)
+  NODE_KIND_APP = 2; // workloads on the cloud (broker, aspects, ...)
   NODE_KIND_CROSS_CUTTING = 3; // mason, porter
-  NODE_KIND_INFRA = 4;         // sqld, interchange edge
+  NODE_KIND_INFRA = 4; // sqld, interchange edge
 }
 
 enum NodeStatus {
   NODE_STATUS_UNSPECIFIED = 0;
   NODE_STATUS_UP = 1;
   NODE_STATUS_DEGRADED = 2; // 0 < ready < desired
-  NODE_STATUS_DOWN = 3;     // ready == 0, desired > 0
-  NODE_STATUS_DORMANT = 4;  // desired == 0 — benched on purpose, not broken
+  NODE_STATUS_DOWN = 3; // ready == 0, desired > 0
+  NODE_STATUS_DORMANT = 4; // desired == 0 — benched on purpose, not broken
 }
 
 message Node {
-  string id = 1;           // "herald", "nexus-broker", "croft"
+  string id = 1; // "herald", "nexus-broker", "croft"
   NodeKind kind = 2;
   string namespace = 3;
   NodeStatus status = 4;
-  string version = 5;      // human-readable pin, e.g. "sha-947a05e"
+  string version = 5; // human-readable pin, e.g. "sha-947a05e"
   string image_digest = 6; // full sha256 digest
   int32 ready = 7;
   int32 desired = 8;
   google.protobuf.Timestamp since = 9; // deployment creation
-  string detail = 10;      // mason phase for managed apps; "" otherwise
-  bool stale = 11;         // true when this node's source collector failed last pass
+  string detail = 10; // mason phase for managed apps; "" otherwise
+  bool stale = 11; // true when this node's source collector failed last pass
 }
 
 enum EdgeKind {
   EDGE_KIND_UNSPECIFIED = 0;
-  EDGE_KIND_REQUEST = 1;   // A calls B
+  EDGE_KIND_REQUEST = 1; // A calls B
   EDGE_KIND_RECONCILE = 2; // mason -> workloads
-  EDGE_KIND_BACKUP = 3;    // porter -> offsite
+  EDGE_KIND_BACKUP = 3; // porter -> offsite
 }
 
 // Edge is STATIC topology (the ARCHITECTURE.md shape), annotated — what
