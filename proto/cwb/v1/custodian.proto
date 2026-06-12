@@ -43,11 +43,11 @@ message GitBundle {
 // NEVER returned by List/metadata paths or logged — only by Fetch over mTLS.
 // Required fields (validated on Set): client_id, refresh_token, token_uri.
 message OAuthBundle {
-  string client_id = 1;     // OAuth client identifier
+  string client_id = 1; // OAuth client identifier
   string client_secret = 2; // OAuth client secret; NEVER log, never in List
   string refresh_token = 3; // refresh token; NEVER log, never in List
-  string token_uri = 4;     // token endpoint URI (e.g. https://oauth2.googleapis.com/token)
-  string scope = 5;         // space-separated OAuth scopes (optional, informational)
+  string token_uri = 4; // token endpoint URI (e.g. https://oauth2.googleapis.com/token)
+  string scope = 5; // space-separated OAuth scopes (optional, informational)
 }
 
 // CredentialMeta describes a stored credential WITHOUT its secret material —
