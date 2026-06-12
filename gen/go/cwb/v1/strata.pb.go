@@ -225,7 +225,7 @@ type GetCloudStateResponse struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Nodes  []*Node                `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
 	Edges  []*Edge                `protobuf:"bytes,2,rep,name=edges,proto3" json:"edges,omitempty"`
-	Backup *BackupStatus          `protobuf:"bytes,3,opt,name=backup,proto3" json:"backup,omitempty"`
+	Backup *BackupSummary         `protobuf:"bytes,3,opt,name=backup,proto3" json:"backup,omitempty"`
 	// observed_at is when the snapshot was collected — staleness is part of
 	// the contract, not an error.
 	ObservedAt    *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=observed_at,json=observedAt,proto3" json:"observed_at,omitempty"`
@@ -277,7 +277,7 @@ func (x *GetCloudStateResponse) GetEdges() []*Edge {
 	return nil
 }
 
-func (x *GetCloudStateResponse) GetBackup() *BackupStatus {
+func (x *GetCloudStateResponse) GetBackup() *BackupSummary {
 	if x != nil {
 		return x.Backup
 	}
@@ -292,16 +292,17 @@ func (x *GetCloudStateResponse) GetObservedAt() *timestamppb.Timestamp {
 }
 
 type Node struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // "herald", "nexus-broker", "croft"
-	Kind          NodeKind               `protobuf:"varint,2,opt,name=kind,proto3,enum=cwb.v1.NodeKind" json:"kind,omitempty"`
-	Namespace     string                 `protobuf:"bytes,3,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	Status        NodeStatus             `protobuf:"varint,4,opt,name=status,proto3,enum=cwb.v1.NodeStatus" json:"status,omitempty"`
-	Version       string                 `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty"`                            // human-readable pin, e.g. "sha-947a05e"
-	ImageDigest   string                 `protobuf:"bytes,6,opt,name=image_digest,json=imageDigest,proto3" json:"image_digest,omitempty"` // full sha256 digest
-	Ready         int32                  `protobuf:"varint,7,opt,name=ready,proto3" json:"ready,omitempty"`
-	Desired       int32                  `protobuf:"varint,8,opt,name=desired,proto3" json:"desired,omitempty"`
-	Since         *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=since,proto3" json:"since,omitempty"`    // deployment creation
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // "herald", "nexus-broker", "croft"
+	Kind        NodeKind               `protobuf:"varint,2,opt,name=kind,proto3,enum=cwb.v1.NodeKind" json:"kind,omitempty"`
+	Namespace   string                 `protobuf:"bytes,3,opt,name=namespace,proto3" json:"namespace,omitempty"`
+	Status      NodeStatus             `protobuf:"varint,4,opt,name=status,proto3,enum=cwb.v1.NodeStatus" json:"status,omitempty"`
+	Version     string                 `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty"`                            // human-readable pin, e.g. "sha-947a05e"
+	ImageDigest string                 `protobuf:"bytes,6,opt,name=image_digest,json=imageDigest,proto3" json:"image_digest,omitempty"` // full sha256 digest
+	Ready       int32                  `protobuf:"varint,7,opt,name=ready,proto3" json:"ready,omitempty"`
+	Desired     int32                  `protobuf:"varint,8,opt,name=desired,proto3" json:"desired,omitempty"`
+	// created_at is the workload's k8s creation timestamp.
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	Detail        string                 `protobuf:"bytes,10,opt,name=detail,proto3" json:"detail,omitempty"` // mason phase for managed apps; "" otherwise
 	Stale         bool                   `protobuf:"varint,11,opt,name=stale,proto3" json:"stale,omitempty"`  // true when this node's source collector failed last pass
 	unknownFields protoimpl.UnknownFields
@@ -394,9 +395,9 @@ func (x *Node) GetDesired() int32 {
 	return 0
 }
 
-func (x *Node) GetSince() *timestamppb.Timestamp {
+func (x *Node) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Since
+		return x.CreatedAt
 	}
 	return nil
 }
@@ -477,18 +478,98 @@ func (x *Edge) GetKind() EdgeKind {
 	return EdgeKind_EDGE_KIND_UNSPECIFIED
 }
 
+// BackupSummary is the map's view of the backup clock — a summary for the
+// snapshot, NOT the authoritative porter record (BackupStatusService). The
+// two start similar and are free to diverge; the summary deliberately
+// carries a count, not the per-source list.
+type BackupSummary struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LastSuccess   *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=last_success,json=lastSuccess,proto3" json:"last_success,omitempty"`
+	LastAttempt   *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=last_attempt,json=lastAttempt,proto3" json:"last_attempt,omitempty"`
+	LastError     string                 `protobuf:"bytes,3,opt,name=last_error,json=lastError,proto3" json:"last_error,omitempty"`
+	SourcesCount  int32                  `protobuf:"varint,4,opt,name=sources_count,json=sourcesCount,proto3" json:"sources_count,omitempty"`
+	NextDue       *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=next_due,json=nextDue,proto3" json:"next_due,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BackupSummary) Reset() {
+	*x = BackupSummary{}
+	mi := &file_cwb_v1_strata_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BackupSummary) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BackupSummary) ProtoMessage() {}
+
+func (x *BackupSummary) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_strata_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BackupSummary.ProtoReflect.Descriptor instead.
+func (*BackupSummary) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_strata_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *BackupSummary) GetLastSuccess() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastSuccess
+	}
+	return nil
+}
+
+func (x *BackupSummary) GetLastAttempt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastAttempt
+	}
+	return nil
+}
+
+func (x *BackupSummary) GetLastError() string {
+	if x != nil {
+		return x.LastError
+	}
+	return ""
+}
+
+func (x *BackupSummary) GetSourcesCount() int32 {
+	if x != nil {
+		return x.SourcesCount
+	}
+	return 0
+}
+
+func (x *BackupSummary) GetNextDue() *timestamppb.Timestamp {
+	if x != nil {
+		return x.NextDue
+	}
+	return nil
+}
+
 var File_cwb_v1_strata_proto protoreflect.FileDescriptor
 
 const file_cwb_v1_strata_proto_rawDesc = "" +
 	"\n" +
-	"\x13cwb/v1/strata.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13cwb/v1/porter.proto\"\x16\n" +
-	"\x14GetCloudStateRequest\"\xca\x01\n" +
+	"\x13cwb/v1/strata.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x16\n" +
+	"\x14GetCloudStateRequest\"\xcb\x01\n" +
 	"\x15GetCloudStateResponse\x12\"\n" +
 	"\x05nodes\x18\x01 \x03(\v2\f.cwb.v1.NodeR\x05nodes\x12\"\n" +
-	"\x05edges\x18\x02 \x03(\v2\f.cwb.v1.EdgeR\x05edges\x12,\n" +
-	"\x06backup\x18\x03 \x01(\v2\x14.cwb.v1.BackupStatusR\x06backup\x12;\n" +
+	"\x05edges\x18\x02 \x03(\v2\f.cwb.v1.EdgeR\x05edges\x12-\n" +
+	"\x06backup\x18\x03 \x01(\v2\x15.cwb.v1.BackupSummaryR\x06backup\x12;\n" +
 	"\vobserved_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"observedAt\"\xd3\x02\n" +
+	"observedAt\"\xdc\x02\n" +
 	"\x04Node\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12$\n" +
 	"\x04kind\x18\x02 \x01(\x0e2\x10.cwb.v1.NodeKindR\x04kind\x12\x1c\n" +
@@ -497,15 +578,23 @@ const file_cwb_v1_strata_proto_rawDesc = "" +
 	"\aversion\x18\x05 \x01(\tR\aversion\x12!\n" +
 	"\fimage_digest\x18\x06 \x01(\tR\vimageDigest\x12\x14\n" +
 	"\x05ready\x18\a \x01(\x05R\x05ready\x12\x18\n" +
-	"\adesired\x18\b \x01(\x05R\adesired\x120\n" +
-	"\x05since\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\x05since\x12\x16\n" +
+	"\adesired\x18\b \x01(\x05R\adesired\x129\n" +
+	"\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x16\n" +
 	"\x06detail\x18\n" +
 	" \x01(\tR\x06detail\x12\x14\n" +
 	"\x05stale\x18\v \x01(\bR\x05stale\"P\n" +
 	"\x04Edge\x12\x12\n" +
 	"\x04from\x18\x01 \x01(\tR\x04from\x12\x0e\n" +
 	"\x02to\x18\x02 \x01(\tR\x02to\x12$\n" +
-	"\x04kind\x18\x03 \x01(\x0e2\x10.cwb.v1.EdgeKindR\x04kind*\x80\x01\n" +
+	"\x04kind\x18\x03 \x01(\x0e2\x10.cwb.v1.EdgeKindR\x04kind\"\x88\x02\n" +
+	"\rBackupSummary\x12=\n" +
+	"\flast_success\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vlastSuccess\x12=\n" +
+	"\flast_attempt\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vlastAttempt\x12\x1d\n" +
+	"\n" +
+	"last_error\x18\x03 \x01(\tR\tlastError\x12#\n" +
+	"\rsources_count\x18\x04 \x01(\x05R\fsourcesCount\x125\n" +
+	"\bnext_due\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\anextDue*\x80\x01\n" +
 	"\bNodeKind\x12\x19\n" +
 	"\x15NODE_KIND_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10NODE_KIND_PILLAR\x10\x01\x12\x11\n" +
@@ -542,7 +631,7 @@ func file_cwb_v1_strata_proto_rawDescGZIP() []byte {
 }
 
 var file_cwb_v1_strata_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_cwb_v1_strata_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_cwb_v1_strata_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_cwb_v1_strata_proto_goTypes = []any{
 	(NodeKind)(0),                 // 0: cwb.v1.NodeKind
 	(NodeStatus)(0),               // 1: cwb.v1.NodeStatus
@@ -551,25 +640,28 @@ var file_cwb_v1_strata_proto_goTypes = []any{
 	(*GetCloudStateResponse)(nil), // 4: cwb.v1.GetCloudStateResponse
 	(*Node)(nil),                  // 5: cwb.v1.Node
 	(*Edge)(nil),                  // 6: cwb.v1.Edge
-	(*BackupStatus)(nil),          // 7: cwb.v1.BackupStatus
+	(*BackupSummary)(nil),         // 7: cwb.v1.BackupSummary
 	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_cwb_v1_strata_proto_depIdxs = []int32{
-	5, // 0: cwb.v1.GetCloudStateResponse.nodes:type_name -> cwb.v1.Node
-	6, // 1: cwb.v1.GetCloudStateResponse.edges:type_name -> cwb.v1.Edge
-	7, // 2: cwb.v1.GetCloudStateResponse.backup:type_name -> cwb.v1.BackupStatus
-	8, // 3: cwb.v1.GetCloudStateResponse.observed_at:type_name -> google.protobuf.Timestamp
-	0, // 4: cwb.v1.Node.kind:type_name -> cwb.v1.NodeKind
-	1, // 5: cwb.v1.Node.status:type_name -> cwb.v1.NodeStatus
-	8, // 6: cwb.v1.Node.since:type_name -> google.protobuf.Timestamp
-	2, // 7: cwb.v1.Edge.kind:type_name -> cwb.v1.EdgeKind
-	3, // 8: cwb.v1.StrataService.GetCloudState:input_type -> cwb.v1.GetCloudStateRequest
-	4, // 9: cwb.v1.StrataService.GetCloudState:output_type -> cwb.v1.GetCloudStateResponse
-	9, // [9:10] is the sub-list for method output_type
-	8, // [8:9] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	5,  // 0: cwb.v1.GetCloudStateResponse.nodes:type_name -> cwb.v1.Node
+	6,  // 1: cwb.v1.GetCloudStateResponse.edges:type_name -> cwb.v1.Edge
+	7,  // 2: cwb.v1.GetCloudStateResponse.backup:type_name -> cwb.v1.BackupSummary
+	8,  // 3: cwb.v1.GetCloudStateResponse.observed_at:type_name -> google.protobuf.Timestamp
+	0,  // 4: cwb.v1.Node.kind:type_name -> cwb.v1.NodeKind
+	1,  // 5: cwb.v1.Node.status:type_name -> cwb.v1.NodeStatus
+	8,  // 6: cwb.v1.Node.created_at:type_name -> google.protobuf.Timestamp
+	2,  // 7: cwb.v1.Edge.kind:type_name -> cwb.v1.EdgeKind
+	8,  // 8: cwb.v1.BackupSummary.last_success:type_name -> google.protobuf.Timestamp
+	8,  // 9: cwb.v1.BackupSummary.last_attempt:type_name -> google.protobuf.Timestamp
+	8,  // 10: cwb.v1.BackupSummary.next_due:type_name -> google.protobuf.Timestamp
+	3,  // 11: cwb.v1.StrataService.GetCloudState:input_type -> cwb.v1.GetCloudStateRequest
+	4,  // 12: cwb.v1.StrataService.GetCloudState:output_type -> cwb.v1.GetCloudStateResponse
+	12, // [12:13] is the sub-list for method output_type
+	11, // [11:12] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_cwb_v1_strata_proto_init() }
@@ -577,14 +669,13 @@ func file_cwb_v1_strata_proto_init() {
 	if File_cwb_v1_strata_proto != nil {
 		return
 	}
-	file_cwb_v1_porter_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_v1_strata_proto_rawDesc), len(file_cwb_v1_strata_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

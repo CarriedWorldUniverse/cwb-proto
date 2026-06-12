@@ -187,8 +187,8 @@ func (x *BackupStatus) GetNextDue() *timestamppb.Timestamp {
 
 type BackupSource struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`  // e.g. "croft-home"
-	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"` // plaintext bytes
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                             // e.g. "croft-home"
+	SizeBytes     int64                  `protobuf:"varint,2,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"` // plaintext bytes
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -230,9 +230,9 @@ func (x *BackupSource) GetName() string {
 	return ""
 }
 
-func (x *BackupSource) GetSize() int64 {
+func (x *BackupSource) GetSizeBytes() int64 {
 	if x != nil {
-		return x.Size
+		return x.SizeBytes
 	}
 	return 0
 }
@@ -251,10 +251,11 @@ const file_cwb_v1_porter_proto_rawDesc = "" +
 	"\n" +
 	"last_error\x18\x03 \x01(\tR\tlastError\x12.\n" +
 	"\asources\x18\x04 \x03(\v2\x14.cwb.v1.BackupSourceR\asources\x125\n" +
-	"\bnext_due\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\anextDue\"6\n" +
+	"\bnext_due\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\anextDue\"A\n" +
 	"\fBackupSource\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04size\x18\x02 \x01(\x03R\x04size2i\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1d\n" +
+	"\n" +
+	"size_bytes\x18\x02 \x01(\x03R\tsizeBytes2i\n" +
 	"\x13BackupStatusService\x12R\n" +
 	"\x0fGetBackupStatus\x12\x1e.cwb.v1.GetBackupStatusRequest\x1a\x1f.cwb.v1.GetBackupStatusResponseB\x91\x01\n" +
 	"\n" +

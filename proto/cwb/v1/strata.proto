@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package cwb.v1;
 
-import "cwb/v1/porter.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -22,7 +21,7 @@ message GetCloudStateRequest {}
 message GetCloudStateResponse {
   repeated Node nodes = 1;
   repeated Edge edges = 2;
-  BackupStatus backup = 3;
+  BackupSummary backup = 3;
   // observed_at is when the snapshot was collected — staleness is part of
   // the contract, not an error.
   google.protobuf.Timestamp observed_at = 4;
@@ -53,7 +52,8 @@ message Node {
   string image_digest = 6; // full sha256 digest
   int32 ready = 7;
   int32 desired = 8;
-  google.protobuf.Timestamp since = 9; // deployment creation
+  // created_at is the workload's k8s creation timestamp.
+  google.protobuf.Timestamp created_at = 9;
   string detail = 10; // mason phase for managed apps; "" otherwise
   bool stale = 11; // true when this node's source collector failed last pass
 }
@@ -71,4 +71,16 @@ message Edge {
   string from = 1;
   string to = 2;
   EdgeKind kind = 3;
+}
+
+// BackupSummary is the map's view of the backup clock — a summary for the
+// snapshot, NOT the authoritative porter record (BackupStatusService). The
+// two start similar and are free to diverge; the summary deliberately
+// carries a count, not the per-source list.
+message BackupSummary {
+  google.protobuf.Timestamp last_success = 1;
+  google.protobuf.Timestamp last_attempt = 2;
+  string last_error = 3;
+  int32 sources_count = 4;
+  google.protobuf.Timestamp next_due = 5;
 }

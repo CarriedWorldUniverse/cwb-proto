@@ -35,5 +35,5 @@ message BackupStatus {
 
 message BackupSource {
   string name = 1; // e.g. "croft-home"
-  int64 size = 2; // plaintext bytes
+  int64 size_bytes = 2; // plaintext bytes
 }
