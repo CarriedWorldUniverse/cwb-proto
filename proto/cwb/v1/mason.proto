@@ -1,6 +1,8 @@
 syntax = "proto3";
 package cwb.v1;
 
+import "google/api/annotations.proto";
+
 option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1";
 
 // mason is the Strata deployment engine: almanac-declared apps reconciled
@@ -8,10 +10,22 @@ option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwb
 // WRITTEN to almanac (ConfigService), never through mason.
 //
 // Scopes: app:read → ListApps/GetApp; app:write → TriggerSync.
+//
+// HTTP bindings serve the interchange grpc-gateway edge (mounted under the
+// /mason route prefix, which the gateway strips before dispatch).
 service AppService {
-  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
-  rpc GetApp(GetAppRequest) returns (GetAppResponse);
-  rpc TriggerSync(TriggerSyncRequest) returns (TriggerSyncResponse);
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse) {
+    option (google.api.http) = {get: "/api/apps"};
+  }
+  rpc GetApp(GetAppRequest) returns (GetAppResponse) {
+    option (google.api.http) = {get: "/api/apps/{name}"};
+  }
+  rpc TriggerSync(TriggerSyncRequest) returns (TriggerSyncResponse) {
+    option (google.api.http) = {
+      post: "/api/apps:sync"
+      body: "*"
+    };
+  }
 }
 
 // AppPhase is the reconcile state of one declared app.
