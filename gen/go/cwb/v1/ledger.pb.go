@@ -1204,6 +1204,7 @@ type CreateIssueRequest struct {
 	AssigneeAspect   string                 `protobuf:"bytes,9,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
 	AssigneeTeam     string                 `protobuf:"bytes,10,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
 	ExternalRefs     []*ExternalRef         `protobuf:"bytes,11,rep,name=external_refs,json=externalRefs,proto3" json:"external_refs,omitempty"`
+	Skills           []string               `protobuf:"bytes,12,rep,name=skills,proto3" json:"skills,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1311,6 +1312,13 @@ func (x *CreateIssueRequest) GetAssigneeTeam() string {
 func (x *CreateIssueRequest) GetExternalRefs() []*ExternalRef {
 	if x != nil {
 		return x.ExternalRefs
+	}
+	return nil
+}
+
+func (x *CreateIssueRequest) GetSkills() []string {
+	if x != nil {
+		return x.Skills
 	}
 	return nil
 }
@@ -4932,7 +4940,7 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\border_by\x18\t \x01(\tR\aorderBy\x12\x1b\n" +
 	"\torder_dir\x18\n" +
 	" \x01(\tR\borderDir\x12\x14\n" +
-	"\x05limit\x18\v \x01(\x05R\x05limit\"\x8b\x03\n" +
+	"\x05limit\x18\v \x01(\x05R\x05limit\"\xa3\x03\n" +
 	"\x12CreateIssueRequest\x12\x18\n" +
 	"\aproject\x18\x01 \x01(\tR\aproject\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12\x18\n" +
@@ -4946,7 +4954,8 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x0fassignee_aspect\x18\t \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\n" +
 	" \x01(\tR\fassigneeTeam\x128\n" +
-	"\rexternal_refs\x18\v \x03(\v2\x13.cwb.v1.ExternalRefR\fexternalRefs\":\n" +
+	"\rexternal_refs\x18\v \x03(\v2\x13.cwb.v1.ExternalRefR\fexternalRefs\x12\x16\n" +
+	"\x06skills\x18\f \x03(\tR\x06skills\":\n" +
 	"\x13CreateIssueResponse\x12#\n" +
 	"\x05issue\x18\x01 \x01(\v2\r.cwb.v1.IssueR\x05issue\";\n" +
 	"\x0fGetIssueRequest\x12\x10\n" +

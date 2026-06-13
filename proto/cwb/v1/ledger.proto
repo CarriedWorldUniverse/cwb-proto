@@ -397,6 +397,7 @@ message CreateIssueRequest {
   string assignee_aspect = 9;
   string assignee_team = 10;
   repeated ExternalRef external_refs = 11;
+  repeated string skills = 12;
 }
 
 // CreateIssueResponse wraps the bare Issue the handler returns.
