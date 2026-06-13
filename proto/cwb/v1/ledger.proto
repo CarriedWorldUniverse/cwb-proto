@@ -36,6 +36,20 @@ service IssueService {
     };
   }
 
+  rpc SetProjectWorkflow(SetProjectWorkflowRequest) returns (SetProjectWorkflowResponse) {
+    option (google.api.http) = {
+      post: "/api/issues/{project}/workflow"
+      body: "*"
+    };
+  }
+
+  rpc GetProjectWorkflow(GetProjectWorkflowRequest) returns (GetProjectWorkflowResponse) {
+    option (google.api.http) = {
+      get: "/api/issues/{project}/workflow"
+      response_body: "workflow"
+    };
+  }
+
   rpc AssignIssue(AssignIssueRequest) returns (AssignIssueResponse) {
     option (google.api.http) = {
       post: "/api/issues/{key}/assign"
@@ -223,6 +237,19 @@ service AdminService {
 // Shared domain messages
 // =============================================================================
 
+enum StatusCategory {
+  STATUS_CATEGORY_UNSPECIFIED = 0;
+  DRAFT = 1;
+  READY = 2;
+  ACTIVE = 3;
+  IN_REVIEW = 4;
+  AWAITING_MERGE = 5;
+  BLOCKED = 6;
+  FAILED = 7;
+  DONE = 8;
+  CANCELLED = 9;
+}
+
 // Issue is the full issue row. Field names match the grpc-gateway JSON output
 // (snake_case proto names, UseProtoNames=true). The REST server currently
 // marshals Go struct fields (PascalCase); the gRPC server will use these names.
@@ -244,6 +271,7 @@ message Issue {
   repeated ExternalRef external_refs = 15;
   string created_at = 16;
   string updated_at = 17;
+  StatusCategory category = 18;
 }
 
 // ExternalRef points at a ticket in an external tracker.
@@ -266,6 +294,23 @@ message IssueRef {
   string assignee_aspect = 7;
   string assignee_team = 8;
   string updated_at = 9;
+  StatusCategory category = 10;
+}
+
+message WorkflowState {
+  string name = 1;
+  StatusCategory category = 2;
+  bool dod_gate = 3;
+}
+
+message WorkflowTransition {
+  string from = 1;
+  repeated string to = 2;
+}
+
+message Workflow {
+  repeated WorkflowState states = 1;
+  repeated WorkflowTransition transitions = 2;
 }
 
 // Project is a top-level issue container.
@@ -393,6 +438,22 @@ message TransitionIssueRequest {
 
 // TransitionIssue returns HTTP 200 with no body.
 message TransitionIssueResponse {}
+
+message SetProjectWorkflowRequest {
+  string project = 1;
+  Workflow workflow = 2;
+}
+
+// SetProjectWorkflow returns HTTP 200 with no body.
+message SetProjectWorkflowResponse {}
+
+message GetProjectWorkflowRequest {
+  string project = 1;
+}
+
+message GetProjectWorkflowResponse {
+  Workflow workflow = 1;
+}
 
 message AssignIssueRequest {
   string key = 1;

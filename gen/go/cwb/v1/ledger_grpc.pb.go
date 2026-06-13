@@ -19,25 +19,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	IssueService_GetIssue_FullMethodName         = "/cwb.v1.IssueService/GetIssue"
-	IssueService_UpdateIssue_FullMethodName      = "/cwb.v1.IssueService/UpdateIssue"
-	IssueService_TransitionIssue_FullMethodName  = "/cwb.v1.IssueService/TransitionIssue"
-	IssueService_AssignIssue_FullMethodName      = "/cwb.v1.IssueService/AssignIssue"
-	IssueService_CommentIssue_FullMethodName     = "/cwb.v1.IssueService/CommentIssue"
-	IssueService_ListComments_FullMethodName     = "/cwb.v1.IssueService/ListComments"
-	IssueService_ClaimIssue_FullMethodName       = "/cwb.v1.IssueService/ClaimIssue"
-	IssueService_AddWatcher_FullMethodName       = "/cwb.v1.IssueService/AddWatcher"
-	IssueService_ListWatchers_FullMethodName     = "/cwb.v1.IssueService/ListWatchers"
-	IssueService_RemoveWatcher_FullMethodName    = "/cwb.v1.IssueService/RemoveWatcher"
-	IssueService_AddLink_FullMethodName          = "/cwb.v1.IssueService/AddLink"
-	IssueService_ListLinks_FullMethodName        = "/cwb.v1.IssueService/ListLinks"
-	IssueService_RemoveLink_FullMethodName       = "/cwb.v1.IssueService/RemoveLink"
-	IssueService_CreateIssue_FullMethodName      = "/cwb.v1.IssueService/CreateIssue"
-	IssueService_ListMyIssues_FullMethodName     = "/cwb.v1.IssueService/ListMyIssues"
-	IssueService_ListReadyIssues_FullMethodName  = "/cwb.v1.IssueService/ListReadyIssues"
-	IssueService_SearchIssues_FullMethodName     = "/cwb.v1.IssueService/SearchIssues"
-	IssueService_SearchIssuesText_FullMethodName = "/cwb.v1.IssueService/SearchIssuesText"
-	IssueService_ListUpdates_FullMethodName      = "/cwb.v1.IssueService/ListUpdates"
+	IssueService_GetIssue_FullMethodName           = "/cwb.v1.IssueService/GetIssue"
+	IssueService_UpdateIssue_FullMethodName        = "/cwb.v1.IssueService/UpdateIssue"
+	IssueService_TransitionIssue_FullMethodName    = "/cwb.v1.IssueService/TransitionIssue"
+	IssueService_SetProjectWorkflow_FullMethodName = "/cwb.v1.IssueService/SetProjectWorkflow"
+	IssueService_GetProjectWorkflow_FullMethodName = "/cwb.v1.IssueService/GetProjectWorkflow"
+	IssueService_AssignIssue_FullMethodName        = "/cwb.v1.IssueService/AssignIssue"
+	IssueService_CommentIssue_FullMethodName       = "/cwb.v1.IssueService/CommentIssue"
+	IssueService_ListComments_FullMethodName       = "/cwb.v1.IssueService/ListComments"
+	IssueService_ClaimIssue_FullMethodName         = "/cwb.v1.IssueService/ClaimIssue"
+	IssueService_AddWatcher_FullMethodName         = "/cwb.v1.IssueService/AddWatcher"
+	IssueService_ListWatchers_FullMethodName       = "/cwb.v1.IssueService/ListWatchers"
+	IssueService_RemoveWatcher_FullMethodName      = "/cwb.v1.IssueService/RemoveWatcher"
+	IssueService_AddLink_FullMethodName            = "/cwb.v1.IssueService/AddLink"
+	IssueService_ListLinks_FullMethodName          = "/cwb.v1.IssueService/ListLinks"
+	IssueService_RemoveLink_FullMethodName         = "/cwb.v1.IssueService/RemoveLink"
+	IssueService_CreateIssue_FullMethodName        = "/cwb.v1.IssueService/CreateIssue"
+	IssueService_ListMyIssues_FullMethodName       = "/cwb.v1.IssueService/ListMyIssues"
+	IssueService_ListReadyIssues_FullMethodName    = "/cwb.v1.IssueService/ListReadyIssues"
+	IssueService_SearchIssues_FullMethodName       = "/cwb.v1.IssueService/SearchIssues"
+	IssueService_SearchIssuesText_FullMethodName   = "/cwb.v1.IssueService/SearchIssuesText"
+	IssueService_ListUpdates_FullMethodName        = "/cwb.v1.IssueService/ListUpdates"
 )
 
 // IssueServiceClient is the client API for IssueService service.
@@ -55,6 +57,8 @@ type IssueServiceClient interface {
 	GetIssue(ctx context.Context, in *GetIssueRequest, opts ...grpc.CallOption) (*GetIssueResponse, error)
 	UpdateIssue(ctx context.Context, in *UpdateIssueRequest, opts ...grpc.CallOption) (*UpdateIssueResponse, error)
 	TransitionIssue(ctx context.Context, in *TransitionIssueRequest, opts ...grpc.CallOption) (*TransitionIssueResponse, error)
+	SetProjectWorkflow(ctx context.Context, in *SetProjectWorkflowRequest, opts ...grpc.CallOption) (*SetProjectWorkflowResponse, error)
+	GetProjectWorkflow(ctx context.Context, in *GetProjectWorkflowRequest, opts ...grpc.CallOption) (*GetProjectWorkflowResponse, error)
 	AssignIssue(ctx context.Context, in *AssignIssueRequest, opts ...grpc.CallOption) (*AssignIssueResponse, error)
 	CommentIssue(ctx context.Context, in *CommentIssueRequest, opts ...grpc.CallOption) (*CommentIssueResponse, error)
 	ListComments(ctx context.Context, in *ListCommentsRequest, opts ...grpc.CallOption) (*ListCommentsResponse, error)
@@ -107,6 +111,26 @@ func (c *issueServiceClient) TransitionIssue(ctx context.Context, in *Transition
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TransitionIssueResponse)
 	err := c.cc.Invoke(ctx, IssueService_TransitionIssue_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *issueServiceClient) SetProjectWorkflow(ctx context.Context, in *SetProjectWorkflowRequest, opts ...grpc.CallOption) (*SetProjectWorkflowResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetProjectWorkflowResponse)
+	err := c.cc.Invoke(ctx, IssueService_SetProjectWorkflow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *issueServiceClient) GetProjectWorkflow(ctx context.Context, in *GetProjectWorkflowRequest, opts ...grpc.CallOption) (*GetProjectWorkflowResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProjectWorkflowResponse)
+	err := c.cc.Invoke(ctx, IssueService_GetProjectWorkflow_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -288,6 +312,8 @@ type IssueServiceServer interface {
 	GetIssue(context.Context, *GetIssueRequest) (*GetIssueResponse, error)
 	UpdateIssue(context.Context, *UpdateIssueRequest) (*UpdateIssueResponse, error)
 	TransitionIssue(context.Context, *TransitionIssueRequest) (*TransitionIssueResponse, error)
+	SetProjectWorkflow(context.Context, *SetProjectWorkflowRequest) (*SetProjectWorkflowResponse, error)
+	GetProjectWorkflow(context.Context, *GetProjectWorkflowRequest) (*GetProjectWorkflowResponse, error)
 	AssignIssue(context.Context, *AssignIssueRequest) (*AssignIssueResponse, error)
 	CommentIssue(context.Context, *CommentIssueRequest) (*CommentIssueResponse, error)
 	ListComments(context.Context, *ListCommentsRequest) (*ListCommentsResponse, error)
@@ -324,6 +350,12 @@ func (UnimplementedIssueServiceServer) UpdateIssue(context.Context, *UpdateIssue
 }
 func (UnimplementedIssueServiceServer) TransitionIssue(context.Context, *TransitionIssueRequest) (*TransitionIssueResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransitionIssue not implemented")
+}
+func (UnimplementedIssueServiceServer) SetProjectWorkflow(context.Context, *SetProjectWorkflowRequest) (*SetProjectWorkflowResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetProjectWorkflow not implemented")
+}
+func (UnimplementedIssueServiceServer) GetProjectWorkflow(context.Context, *GetProjectWorkflowRequest) (*GetProjectWorkflowResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetProjectWorkflow not implemented")
 }
 func (UnimplementedIssueServiceServer) AssignIssue(context.Context, *AssignIssueRequest) (*AssignIssueResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AssignIssue not implemented")
@@ -444,6 +476,42 @@ func _IssueService_TransitionIssue_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IssueServiceServer).TransitionIssue(ctx, req.(*TransitionIssueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IssueService_SetProjectWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetProjectWorkflowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IssueServiceServer).SetProjectWorkflow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IssueService_SetProjectWorkflow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IssueServiceServer).SetProjectWorkflow(ctx, req.(*SetProjectWorkflowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IssueService_GetProjectWorkflow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProjectWorkflowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IssueServiceServer).GetProjectWorkflow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IssueService_GetProjectWorkflow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IssueServiceServer).GetProjectWorkflow(ctx, req.(*GetProjectWorkflowRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -754,6 +822,14 @@ var IssueService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TransitionIssue",
 			Handler:    _IssueService_TransitionIssue_Handler,
+		},
+		{
+			MethodName: "SetProjectWorkflow",
+			Handler:    _IssueService_SetProjectWorkflow_Handler,
+		},
+		{
+			MethodName: "GetProjectWorkflow",
+			Handler:    _IssueService_GetProjectWorkflow_Handler,
 		},
 		{
 			MethodName: "AssignIssue",

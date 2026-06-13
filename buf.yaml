@@ -3,6 +3,9 @@ modules:
   - path: proto
 lint:
   use: [STANDARD]
+  ignore_only:
+    ENUM_VALUE_PREFIX:
+      - proto/cwb/v1/ledger.proto
 breaking:
   use: [FILE]
 deps:
