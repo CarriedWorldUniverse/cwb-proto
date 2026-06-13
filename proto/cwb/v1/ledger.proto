@@ -264,7 +264,7 @@ message Issue {
   string definition_of_done = 8;
   string priority = 9;
   bool priority_locked = 10;
-  string assignee = 11;
+  string assignee_aspect = 11;
   string assignee_team = 12;
   string reporter = 13;
   string parent_key = 14;
@@ -292,7 +292,7 @@ message IssueRef {
   string status = 4;
   string summary = 5;
   string priority = 6;
-  string assignee = 7;
+  string assignee_aspect = 7;
   string assignee_team = 8;
   string updated_at = 9;
   StatusCategory category = 10;
@@ -372,7 +372,7 @@ message SearchFilter {
   repeated string types = 2;
   repeated string statuses = 3;
   repeated string priorities = 4;
-  string assignee = 5;
+  string assignee_aspect = 5;
   string assignee_team = 6;
   string reporter = 7;
   string parent_key = 8;
@@ -394,7 +394,7 @@ message CreateIssueRequest {
   string priority = 6;
   string reporter = 7;
   string parent_key = 8;
-  string assignee = 9;
+  string assignee_aspect = 9;
   string assignee_team = 10;
   repeated ExternalRef external_refs = 11;
 }
@@ -573,7 +573,7 @@ message ListMyIssuesResponse {
 }
 
 message ListReadyIssuesRequest {
-  string assignee = 1;
+  string aspect = 1;
   repeated string skills = 2;
 }
 

@@ -107,7 +107,7 @@ type Issue struct {
 	DefinitionOfDone string                 `protobuf:"bytes,8,opt,name=definition_of_done,json=definitionOfDone,proto3" json:"definition_of_done,omitempty"`
 	Priority         string                 `protobuf:"bytes,9,opt,name=priority,proto3" json:"priority,omitempty"`
 	PriorityLocked   bool                   `protobuf:"varint,10,opt,name=priority_locked,json=priorityLocked,proto3" json:"priority_locked,omitempty"`
-	Assignee         string                 `protobuf:"bytes,11,opt,name=assignee,proto3" json:"assignee,omitempty"`
+	AssigneeAspect   string                 `protobuf:"bytes,11,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
 	AssigneeTeam     string                 `protobuf:"bytes,12,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
 	Reporter         string                 `protobuf:"bytes,13,opt,name=reporter,proto3" json:"reporter,omitempty"`
 	ParentKey        string                 `protobuf:"bytes,14,opt,name=parent_key,json=parentKey,proto3" json:"parent_key,omitempty"`
@@ -220,9 +220,9 @@ func (x *Issue) GetPriorityLocked() bool {
 	return false
 }
 
-func (x *Issue) GetAssignee() string {
+func (x *Issue) GetAssigneeAspect() string {
 	if x != nil {
-		return x.Assignee
+		return x.AssigneeAspect
 	}
 	return ""
 }
@@ -355,19 +355,19 @@ func (x *ExternalRef) GetDescription() string {
 
 // IssueRef is the lightweight projection returned by search / list RPCs.
 type IssueRef struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	Project       string                 `protobuf:"bytes,2,opt,name=project,proto3" json:"project,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Status        string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	Summary       string                 `protobuf:"bytes,5,opt,name=summary,proto3" json:"summary,omitempty"`
-	Priority      string                 `protobuf:"bytes,6,opt,name=priority,proto3" json:"priority,omitempty"`
-	Assignee      string                 `protobuf:"bytes,7,opt,name=assignee,proto3" json:"assignee,omitempty"`
-	AssigneeTeam  string                 `protobuf:"bytes,8,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
-	UpdatedAt     string                 `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	Category      StatusCategory         `protobuf:"varint,10,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Key            string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Project        string                 `protobuf:"bytes,2,opt,name=project,proto3" json:"project,omitempty"`
+	Type           string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Status         string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Summary        string                 `protobuf:"bytes,5,opt,name=summary,proto3" json:"summary,omitempty"`
+	Priority       string                 `protobuf:"bytes,6,opt,name=priority,proto3" json:"priority,omitempty"`
+	AssigneeAspect string                 `protobuf:"bytes,7,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
+	AssigneeTeam   string                 `protobuf:"bytes,8,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
+	UpdatedAt      string                 `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Category       StatusCategory         `protobuf:"varint,10,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *IssueRef) Reset() {
@@ -442,9 +442,9 @@ func (x *IssueRef) GetPriority() string {
 	return ""
 }
 
-func (x *IssueRef) GetAssignee() string {
+func (x *IssueRef) GetAssigneeAspect() string {
 	if x != nil {
-		return x.Assignee
+		return x.AssigneeAspect
 	}
 	return ""
 }
@@ -1068,20 +1068,20 @@ func (x *LinkRow) GetDirection() string {
 
 // SearchFilter is the structured query shape for SearchIssues.
 type SearchFilter struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Projects      []string               `protobuf:"bytes,1,rep,name=projects,proto3" json:"projects,omitempty"`
-	Types         []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`
-	Statuses      []string               `protobuf:"bytes,3,rep,name=statuses,proto3" json:"statuses,omitempty"`
-	Priorities    []string               `protobuf:"bytes,4,rep,name=priorities,proto3" json:"priorities,omitempty"`
-	Assignee      string                 `protobuf:"bytes,5,opt,name=assignee,proto3" json:"assignee,omitempty"`
-	AssigneeTeam  string                 `protobuf:"bytes,6,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
-	Reporter      string                 `protobuf:"bytes,7,opt,name=reporter,proto3" json:"reporter,omitempty"`
-	ParentKey     string                 `protobuf:"bytes,8,opt,name=parent_key,json=parentKey,proto3" json:"parent_key,omitempty"`
-	OrderBy       string                 `protobuf:"bytes,9,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`     // "priority" | "created" | "updated"
-	OrderDir      string                 `protobuf:"bytes,10,opt,name=order_dir,json=orderDir,proto3" json:"order_dir,omitempty"` // "asc" | "desc"
-	Limit         int32                  `protobuf:"varint,11,opt,name=limit,proto3" json:"limit,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Projects       []string               `protobuf:"bytes,1,rep,name=projects,proto3" json:"projects,omitempty"`
+	Types          []string               `protobuf:"bytes,2,rep,name=types,proto3" json:"types,omitempty"`
+	Statuses       []string               `protobuf:"bytes,3,rep,name=statuses,proto3" json:"statuses,omitempty"`
+	Priorities     []string               `protobuf:"bytes,4,rep,name=priorities,proto3" json:"priorities,omitempty"`
+	AssigneeAspect string                 `protobuf:"bytes,5,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
+	AssigneeTeam   string                 `protobuf:"bytes,6,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
+	Reporter       string                 `protobuf:"bytes,7,opt,name=reporter,proto3" json:"reporter,omitempty"`
+	ParentKey      string                 `protobuf:"bytes,8,opt,name=parent_key,json=parentKey,proto3" json:"parent_key,omitempty"`
+	OrderBy        string                 `protobuf:"bytes,9,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`     // "priority" | "created" | "updated"
+	OrderDir       string                 `protobuf:"bytes,10,opt,name=order_dir,json=orderDir,proto3" json:"order_dir,omitempty"` // "asc" | "desc"
+	Limit          int32                  `protobuf:"varint,11,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SearchFilter) Reset() {
@@ -1142,9 +1142,9 @@ func (x *SearchFilter) GetPriorities() []string {
 	return nil
 }
 
-func (x *SearchFilter) GetAssignee() string {
+func (x *SearchFilter) GetAssigneeAspect() string {
 	if x != nil {
-		return x.Assignee
+		return x.AssigneeAspect
 	}
 	return ""
 }
@@ -1201,7 +1201,7 @@ type CreateIssueRequest struct {
 	Priority         string                 `protobuf:"bytes,6,opt,name=priority,proto3" json:"priority,omitempty"`
 	Reporter         string                 `protobuf:"bytes,7,opt,name=reporter,proto3" json:"reporter,omitempty"`
 	ParentKey        string                 `protobuf:"bytes,8,opt,name=parent_key,json=parentKey,proto3" json:"parent_key,omitempty"`
-	Assignee         string                 `protobuf:"bytes,9,opt,name=assignee,proto3" json:"assignee,omitempty"`
+	AssigneeAspect   string                 `protobuf:"bytes,9,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
 	AssigneeTeam     string                 `protobuf:"bytes,10,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
 	ExternalRefs     []*ExternalRef         `protobuf:"bytes,11,rep,name=external_refs,json=externalRefs,proto3" json:"external_refs,omitempty"`
 	unknownFields    protoimpl.UnknownFields
@@ -1294,9 +1294,9 @@ func (x *CreateIssueRequest) GetParentKey() string {
 	return ""
 }
 
-func (x *CreateIssueRequest) GetAssignee() string {
+func (x *CreateIssueRequest) GetAssigneeAspect() string {
 	if x != nil {
-		return x.Assignee
+		return x.AssigneeAspect
 	}
 	return ""
 }
@@ -2992,7 +2992,7 @@ func (x *ListMyIssuesResponse) GetIssues() []*IssueRef {
 
 type ListReadyIssuesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Assignee      string                 `protobuf:"bytes,1,opt,name=assignee,proto3" json:"assignee,omitempty"`
+	Aspect        string                 `protobuf:"bytes,1,opt,name=aspect,proto3" json:"aspect,omitempty"`
 	Skills        []string               `protobuf:"bytes,2,rep,name=skills,proto3" json:"skills,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3028,9 +3028,9 @@ func (*ListReadyIssuesRequest) Descriptor() ([]byte, []int) {
 	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{47}
 }
 
-func (x *ListReadyIssuesRequest) GetAssignee() string {
+func (x *ListReadyIssuesRequest) GetAspect() string {
 	if x != nil {
-		return x.Assignee
+		return x.Aspect
 	}
 	return ""
 }
@@ -4830,7 +4830,7 @@ var File_cwb_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xe0\x04\n" +
+	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xed\x04\n" +
 	"\x05Issue\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x18\n" +
 	"\aproject\x18\x02 \x01(\tR\aproject\x12\x10\n" +
@@ -4842,8 +4842,8 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x12definition_of_done\x18\b \x01(\tR\x10definitionOfDone\x12\x1a\n" +
 	"\bpriority\x18\t \x01(\tR\bpriority\x12'\n" +
 	"\x0fpriority_locked\x18\n" +
-	" \x01(\bR\x0epriorityLocked\x12\x1a\n" +
-	"\bassignee\x18\v \x01(\tR\bassignee\x12#\n" +
+	" \x01(\bR\x0epriorityLocked\x12'\n" +
+	"\x0fassignee_aspect\x18\v \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\f \x01(\tR\fassigneeTeam\x12\x1a\n" +
 	"\breporter\x18\r \x01(\tR\breporter\x12\x1d\n" +
 	"\n" +
@@ -4859,15 +4859,15 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\atracker\x18\x01 \x01(\tR\atracker\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x10\n" +
 	"\x03url\x18\x03 \x01(\tR\x03url\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xac\x02\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xb9\x02\n" +
 	"\bIssueRef\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x18\n" +
 	"\aproject\x18\x02 \x01(\tR\aproject\x12\x12\n" +
 	"\x04type\x18\x03 \x01(\tR\x04type\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\tR\x06status\x12\x18\n" +
 	"\asummary\x18\x05 \x01(\tR\asummary\x12\x1a\n" +
-	"\bpriority\x18\x06 \x01(\tR\bpriority\x12\x1a\n" +
-	"\bassignee\x18\a \x01(\tR\bassignee\x12#\n" +
+	"\bpriority\x18\x06 \x01(\tR\bpriority\x12'\n" +
+	"\x0fassignee_aspect\x18\a \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\b \x01(\tR\fassigneeTeam\x12\x1d\n" +
 	"\n" +
 	"updated_at\x18\t \x01(\tR\tupdatedAt\x122\n" +
@@ -4916,15 +4916,15 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"created_at\x18\x04 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
 	"created_by\x18\x05 \x01(\tR\tcreatedBy\x12\x1c\n" +
-	"\tdirection\x18\x06 \x01(\tR\tdirection\"\xc6\x02\n" +
+	"\tdirection\x18\x06 \x01(\tR\tdirection\"\xd3\x02\n" +
 	"\fSearchFilter\x12\x1a\n" +
 	"\bprojects\x18\x01 \x03(\tR\bprojects\x12\x14\n" +
 	"\x05types\x18\x02 \x03(\tR\x05types\x12\x1a\n" +
 	"\bstatuses\x18\x03 \x03(\tR\bstatuses\x12\x1e\n" +
 	"\n" +
 	"priorities\x18\x04 \x03(\tR\n" +
-	"priorities\x12\x1a\n" +
-	"\bassignee\x18\x05 \x01(\tR\bassignee\x12#\n" +
+	"priorities\x12'\n" +
+	"\x0fassignee_aspect\x18\x05 \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\x06 \x01(\tR\fassigneeTeam\x12\x1a\n" +
 	"\breporter\x18\a \x01(\tR\breporter\x12\x1d\n" +
 	"\n" +
@@ -4932,7 +4932,7 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\border_by\x18\t \x01(\tR\aorderBy\x12\x1b\n" +
 	"\torder_dir\x18\n" +
 	" \x01(\tR\borderDir\x12\x14\n" +
-	"\x05limit\x18\v \x01(\x05R\x05limit\"\xfe\x02\n" +
+	"\x05limit\x18\v \x01(\x05R\x05limit\"\x8b\x03\n" +
 	"\x12CreateIssueRequest\x12\x18\n" +
 	"\aproject\x18\x01 \x01(\tR\aproject\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12\x18\n" +
@@ -4942,8 +4942,8 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\bpriority\x18\x06 \x01(\tR\bpriority\x12\x1a\n" +
 	"\breporter\x18\a \x01(\tR\breporter\x12\x1d\n" +
 	"\n" +
-	"parent_key\x18\b \x01(\tR\tparentKey\x12\x1a\n" +
-	"\bassignee\x18\t \x01(\tR\bassignee\x12#\n" +
+	"parent_key\x18\b \x01(\tR\tparentKey\x12'\n" +
+	"\x0fassignee_aspect\x18\t \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\n" +
 	" \x01(\tR\fassigneeTeam\x128\n" +
 	"\rexternal_refs\x18\v \x03(\v2\x13.cwb.v1.ExternalRefR\fexternalRefs\":\n" +
@@ -5038,9 +5038,9 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x13ListMyIssuesRequest\x12\x16\n" +
 	"\x06aspect\x18\x01 \x01(\tR\x06aspect\"@\n" +
 	"\x14ListMyIssuesResponse\x12(\n" +
-	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"L\n" +
-	"\x16ListReadyIssuesRequest\x12\x1a\n" +
-	"\bassignee\x18\x01 \x01(\tR\bassignee\x12\x16\n" +
+	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"H\n" +
+	"\x16ListReadyIssuesRequest\x12\x16\n" +
+	"\x06aspect\x18\x01 \x01(\tR\x06aspect\x12\x16\n" +
 	"\x06skills\x18\x02 \x03(\tR\x06skills\"C\n" +
 	"\x17ListReadyIssuesResponse\x12(\n" +
 	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"C\n" +
