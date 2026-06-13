@@ -25,43 +25,43 @@ const (
 type StatusCategory int32
 
 const (
-	StatusCategory_STATUS_CATEGORY_UNSPECIFIED StatusCategory = 0
-	StatusCategory_DRAFT                       StatusCategory = 1
-	StatusCategory_READY                       StatusCategory = 2
-	StatusCategory_ACTIVE                      StatusCategory = 3
-	StatusCategory_IN_REVIEW                   StatusCategory = 4
-	StatusCategory_AWAITING_MERGE              StatusCategory = 5
-	StatusCategory_BLOCKED                     StatusCategory = 6
-	StatusCategory_FAILED                      StatusCategory = 7
-	StatusCategory_DONE                        StatusCategory = 8
-	StatusCategory_CANCELLED                   StatusCategory = 9
+	StatusCategory_STATUS_CATEGORY_UNSPECIFIED    StatusCategory = 0
+	StatusCategory_STATUS_CATEGORY_DRAFT          StatusCategory = 1
+	StatusCategory_STATUS_CATEGORY_READY          StatusCategory = 2
+	StatusCategory_STATUS_CATEGORY_ACTIVE         StatusCategory = 3
+	StatusCategory_STATUS_CATEGORY_IN_REVIEW      StatusCategory = 4
+	StatusCategory_STATUS_CATEGORY_AWAITING_MERGE StatusCategory = 5
+	StatusCategory_STATUS_CATEGORY_BLOCKED        StatusCategory = 6
+	StatusCategory_STATUS_CATEGORY_FAILED         StatusCategory = 7
+	StatusCategory_STATUS_CATEGORY_DONE           StatusCategory = 8
+	StatusCategory_STATUS_CATEGORY_CANCELLED      StatusCategory = 9
 )
 
 // Enum value maps for StatusCategory.
 var (
 	StatusCategory_name = map[int32]string{
 		0: "STATUS_CATEGORY_UNSPECIFIED",
-		1: "DRAFT",
-		2: "READY",
-		3: "ACTIVE",
-		4: "IN_REVIEW",
-		5: "AWAITING_MERGE",
-		6: "BLOCKED",
-		7: "FAILED",
-		8: "DONE",
-		9: "CANCELLED",
+		1: "STATUS_CATEGORY_DRAFT",
+		2: "STATUS_CATEGORY_READY",
+		3: "STATUS_CATEGORY_ACTIVE",
+		4: "STATUS_CATEGORY_IN_REVIEW",
+		5: "STATUS_CATEGORY_AWAITING_MERGE",
+		6: "STATUS_CATEGORY_BLOCKED",
+		7: "STATUS_CATEGORY_FAILED",
+		8: "STATUS_CATEGORY_DONE",
+		9: "STATUS_CATEGORY_CANCELLED",
 	}
 	StatusCategory_value = map[string]int32{
-		"STATUS_CATEGORY_UNSPECIFIED": 0,
-		"DRAFT":                       1,
-		"READY":                       2,
-		"ACTIVE":                      3,
-		"IN_REVIEW":                   4,
-		"AWAITING_MERGE":              5,
-		"BLOCKED":                     6,
-		"FAILED":                      7,
-		"DONE":                        8,
-		"CANCELLED":                   9,
+		"STATUS_CATEGORY_UNSPECIFIED":    0,
+		"STATUS_CATEGORY_DRAFT":          1,
+		"STATUS_CATEGORY_READY":          2,
+		"STATUS_CATEGORY_ACTIVE":         3,
+		"STATUS_CATEGORY_IN_REVIEW":      4,
+		"STATUS_CATEGORY_AWAITING_MERGE": 5,
+		"STATUS_CATEGORY_BLOCKED":        6,
+		"STATUS_CATEGORY_FAILED":         7,
+		"STATUS_CATEGORY_DONE":           8,
+		"STATUS_CATEGORY_CANCELLED":      9,
 	}
 )
 
@@ -5107,20 +5107,18 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x12UpdateUserResponse\"#\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x14\n" +
-	"\x12DeleteUserResponse*\xa8\x01\n" +
+	"\x12DeleteUserResponse*\xb8\x02\n" +
 	"\x0eStatusCategory\x12\x1f\n" +
-	"\x1bSTATUS_CATEGORY_UNSPECIFIED\x10\x00\x12\t\n" +
-	"\x05DRAFT\x10\x01\x12\t\n" +
-	"\x05READY\x10\x02\x12\n" +
-	"\n" +
-	"\x06ACTIVE\x10\x03\x12\r\n" +
-	"\tIN_REVIEW\x10\x04\x12\x12\n" +
-	"\x0eAWAITING_MERGE\x10\x05\x12\v\n" +
-	"\aBLOCKED\x10\x06\x12\n" +
-	"\n" +
-	"\x06FAILED\x10\a\x12\b\n" +
-	"\x04DONE\x10\b\x12\r\n" +
-	"\tCANCELLED\x10\t2\x9f\x12\n" +
+	"\x1bSTATUS_CATEGORY_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15STATUS_CATEGORY_DRAFT\x10\x01\x12\x19\n" +
+	"\x15STATUS_CATEGORY_READY\x10\x02\x12\x1a\n" +
+	"\x16STATUS_CATEGORY_ACTIVE\x10\x03\x12\x1d\n" +
+	"\x19STATUS_CATEGORY_IN_REVIEW\x10\x04\x12\"\n" +
+	"\x1eSTATUS_CATEGORY_AWAITING_MERGE\x10\x05\x12\x1b\n" +
+	"\x17STATUS_CATEGORY_BLOCKED\x10\x06\x12\x1a\n" +
+	"\x16STATUS_CATEGORY_FAILED\x10\a\x12\x18\n" +
+	"\x14STATUS_CATEGORY_DONE\x10\b\x12\x1d\n" +
+	"\x19STATUS_CATEGORY_CANCELLED\x10\t2\x9f\x12\n" +
 	"\fIssueService\x12_\n" +
 	"\bGetIssue\x12\x17.cwb.v1.GetIssueRequest\x1a\x18.cwb.v1.GetIssueResponse\" \x82\xd3\xe4\x93\x02\x1ab\x05issue\x12\x11/api/issues/{key}\x12d\n" +
 	"\vUpdateIssue\x12\x1a.cwb.v1.UpdateIssueRequest\x1a\x1b.cwb.v1.UpdateIssueResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*2\x11/api/issues/{key}\x12{\n" +
