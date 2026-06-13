@@ -178,6 +178,90 @@ func local_request_IssueService_TransitionIssue_0(ctx context.Context, marshaler
 	return msg, metadata, err
 }
 
+func request_IssueService_SetProjectWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client IssueServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SetProjectWorkflowRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	val, ok := pathParams["project"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "project")
+	}
+	protoReq.Project, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "project", err)
+	}
+	msg, err := client.SetProjectWorkflow(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_IssueService_SetProjectWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, server IssueServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SetProjectWorkflowRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["project"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "project")
+	}
+	protoReq.Project, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "project", err)
+	}
+	msg, err := server.SetProjectWorkflow(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_IssueService_GetProjectWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, client IssueServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetProjectWorkflowRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	val, ok := pathParams["project"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "project")
+	}
+	protoReq.Project, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "project", err)
+	}
+	msg, err := client.GetProjectWorkflow(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_IssueService_GetProjectWorkflow_0(ctx context.Context, marshaler runtime.Marshaler, server IssueServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetProjectWorkflowRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["project"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "project")
+	}
+	protoReq.Project, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "project", err)
+	}
+	msg, err := server.GetProjectWorkflow(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_IssueService_AssignIssue_0(ctx context.Context, marshaler runtime.Marshaler, client IssueServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq AssignIssueRequest
@@ -1448,6 +1532,46 @@ func RegisterIssueServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		}
 		forward_IssueService_TransitionIssue_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_IssueService_SetProjectWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cwb.v1.IssueService/SetProjectWorkflow", runtime.WithHTTPPathPattern("/api/issues/{project}/workflow"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_IssueService_SetProjectWorkflow_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_IssueService_SetProjectWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_IssueService_GetProjectWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/cwb.v1.IssueService/GetProjectWorkflow", runtime.WithHTTPPathPattern("/api/issues/{project}/workflow"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_IssueService_GetProjectWorkflow_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_IssueService_GetProjectWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, response_IssueService_GetProjectWorkflow_0{resp.(*GetProjectWorkflowResponse)}, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_IssueService_AssignIssue_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -2209,6 +2333,40 @@ func RegisterIssueServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		}
 		forward_IssueService_TransitionIssue_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_IssueService_SetProjectWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cwb.v1.IssueService/SetProjectWorkflow", runtime.WithHTTPPathPattern("/api/issues/{project}/workflow"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_IssueService_SetProjectWorkflow_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_IssueService_SetProjectWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_IssueService_GetProjectWorkflow_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/cwb.v1.IssueService/GetProjectWorkflow", runtime.WithHTTPPathPattern("/api/issues/{project}/workflow"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_IssueService_GetProjectWorkflow_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_IssueService_GetProjectWorkflow_0(annotatedContext, mux, outboundMarshaler, w, req, response_IssueService_GetProjectWorkflow_0{resp.(*GetProjectWorkflowResponse)}, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_IssueService_AssignIssue_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -2493,6 +2651,15 @@ func (m response_IssueService_GetIssue_0) XXX_ResponseBody() interface{} {
 	return response.Issue
 }
 
+type response_IssueService_GetProjectWorkflow_0 struct {
+	*GetProjectWorkflowResponse
+}
+
+func (m response_IssueService_GetProjectWorkflow_0) XXX_ResponseBody() interface{} {
+	response := m.GetProjectWorkflowResponse
+	return response.Workflow
+}
+
 type response_IssueService_ClaimIssue_0 struct {
 	*ClaimIssueResponse
 }
@@ -2512,47 +2679,51 @@ func (m response_IssueService_CreateIssue_0) XXX_ResponseBody() interface{} {
 }
 
 var (
-	pattern_IssueService_GetIssue_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "issues", "key"}, ""))
-	pattern_IssueService_UpdateIssue_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "issues", "key"}, ""))
-	pattern_IssueService_TransitionIssue_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "transition"}, ""))
-	pattern_IssueService_AssignIssue_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "assign"}, ""))
-	pattern_IssueService_CommentIssue_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "comments"}, ""))
-	pattern_IssueService_ListComments_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "comments"}, ""))
-	pattern_IssueService_ClaimIssue_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "claim"}, ""))
-	pattern_IssueService_AddWatcher_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
-	pattern_IssueService_ListWatchers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
-	pattern_IssueService_RemoveWatcher_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
-	pattern_IssueService_AddLink_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
-	pattern_IssueService_ListLinks_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
-	pattern_IssueService_RemoveLink_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
-	pattern_IssueService_CreateIssue_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "issues"}, ""))
-	pattern_IssueService_ListMyIssues_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "my"}, ""))
-	pattern_IssueService_ListReadyIssues_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "ready"}, ""))
-	pattern_IssueService_SearchIssues_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "search"}, ""))
-	pattern_IssueService_SearchIssuesText_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "issues", "search", "text"}, ""))
-	pattern_IssueService_ListUpdates_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "updates"}, ""))
+	pattern_IssueService_GetIssue_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "issues", "key"}, ""))
+	pattern_IssueService_UpdateIssue_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "issues", "key"}, ""))
+	pattern_IssueService_TransitionIssue_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "transition"}, ""))
+	pattern_IssueService_SetProjectWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "project", "workflow"}, ""))
+	pattern_IssueService_GetProjectWorkflow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "project", "workflow"}, ""))
+	pattern_IssueService_AssignIssue_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "assign"}, ""))
+	pattern_IssueService_CommentIssue_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "comments"}, ""))
+	pattern_IssueService_ListComments_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "comments"}, ""))
+	pattern_IssueService_ClaimIssue_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "claim"}, ""))
+	pattern_IssueService_AddWatcher_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
+	pattern_IssueService_ListWatchers_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
+	pattern_IssueService_RemoveWatcher_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "watchers"}, ""))
+	pattern_IssueService_AddLink_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
+	pattern_IssueService_ListLinks_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
+	pattern_IssueService_RemoveLink_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "issues", "key", "links"}, ""))
+	pattern_IssueService_CreateIssue_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "issues"}, ""))
+	pattern_IssueService_ListMyIssues_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "my"}, ""))
+	pattern_IssueService_ListReadyIssues_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "ready"}, ""))
+	pattern_IssueService_SearchIssues_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "search"}, ""))
+	pattern_IssueService_SearchIssuesText_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "issues", "search", "text"}, ""))
+	pattern_IssueService_ListUpdates_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "issues", "updates"}, ""))
 )
 
 var (
-	forward_IssueService_GetIssue_0         = runtime.ForwardResponseMessage
-	forward_IssueService_UpdateIssue_0      = runtime.ForwardResponseMessage
-	forward_IssueService_TransitionIssue_0  = runtime.ForwardResponseMessage
-	forward_IssueService_AssignIssue_0      = runtime.ForwardResponseMessage
-	forward_IssueService_CommentIssue_0     = runtime.ForwardResponseMessage
-	forward_IssueService_ListComments_0     = runtime.ForwardResponseMessage
-	forward_IssueService_ClaimIssue_0       = runtime.ForwardResponseMessage
-	forward_IssueService_AddWatcher_0       = runtime.ForwardResponseMessage
-	forward_IssueService_ListWatchers_0     = runtime.ForwardResponseMessage
-	forward_IssueService_RemoveWatcher_0    = runtime.ForwardResponseMessage
-	forward_IssueService_AddLink_0          = runtime.ForwardResponseMessage
-	forward_IssueService_ListLinks_0        = runtime.ForwardResponseMessage
-	forward_IssueService_RemoveLink_0       = runtime.ForwardResponseMessage
-	forward_IssueService_CreateIssue_0      = runtime.ForwardResponseMessage
-	forward_IssueService_ListMyIssues_0     = runtime.ForwardResponseMessage
-	forward_IssueService_ListReadyIssues_0  = runtime.ForwardResponseMessage
-	forward_IssueService_SearchIssues_0     = runtime.ForwardResponseMessage
-	forward_IssueService_SearchIssuesText_0 = runtime.ForwardResponseMessage
-	forward_IssueService_ListUpdates_0      = runtime.ForwardResponseMessage
+	forward_IssueService_GetIssue_0           = runtime.ForwardResponseMessage
+	forward_IssueService_UpdateIssue_0        = runtime.ForwardResponseMessage
+	forward_IssueService_TransitionIssue_0    = runtime.ForwardResponseMessage
+	forward_IssueService_SetProjectWorkflow_0 = runtime.ForwardResponseMessage
+	forward_IssueService_GetProjectWorkflow_0 = runtime.ForwardResponseMessage
+	forward_IssueService_AssignIssue_0        = runtime.ForwardResponseMessage
+	forward_IssueService_CommentIssue_0       = runtime.ForwardResponseMessage
+	forward_IssueService_ListComments_0       = runtime.ForwardResponseMessage
+	forward_IssueService_ClaimIssue_0         = runtime.ForwardResponseMessage
+	forward_IssueService_AddWatcher_0         = runtime.ForwardResponseMessage
+	forward_IssueService_ListWatchers_0       = runtime.ForwardResponseMessage
+	forward_IssueService_RemoveWatcher_0      = runtime.ForwardResponseMessage
+	forward_IssueService_AddLink_0            = runtime.ForwardResponseMessage
+	forward_IssueService_ListLinks_0          = runtime.ForwardResponseMessage
+	forward_IssueService_RemoveLink_0         = runtime.ForwardResponseMessage
+	forward_IssueService_CreateIssue_0        = runtime.ForwardResponseMessage
+	forward_IssueService_ListMyIssues_0       = runtime.ForwardResponseMessage
+	forward_IssueService_ListReadyIssues_0    = runtime.ForwardResponseMessage
+	forward_IssueService_SearchIssues_0       = runtime.ForwardResponseMessage
+	forward_IssueService_SearchIssuesText_0   = runtime.ForwardResponseMessage
+	forward_IssueService_ListUpdates_0        = runtime.ForwardResponseMessage
 )
 
 // RegisterProjectServiceHandlerFromEndpoint is same as RegisterProjectServiceHandler but

@@ -22,6 +22,76 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type StatusCategory int32
+
+const (
+	StatusCategory_STATUS_CATEGORY_UNSPECIFIED    StatusCategory = 0
+	StatusCategory_STATUS_CATEGORY_DRAFT          StatusCategory = 1
+	StatusCategory_STATUS_CATEGORY_READY          StatusCategory = 2
+	StatusCategory_STATUS_CATEGORY_ACTIVE         StatusCategory = 3
+	StatusCategory_STATUS_CATEGORY_IN_REVIEW      StatusCategory = 4
+	StatusCategory_STATUS_CATEGORY_AWAITING_MERGE StatusCategory = 5
+	StatusCategory_STATUS_CATEGORY_BLOCKED        StatusCategory = 6
+	StatusCategory_STATUS_CATEGORY_FAILED         StatusCategory = 7
+	StatusCategory_STATUS_CATEGORY_DONE           StatusCategory = 8
+	StatusCategory_STATUS_CATEGORY_CANCELLED      StatusCategory = 9
+)
+
+// Enum value maps for StatusCategory.
+var (
+	StatusCategory_name = map[int32]string{
+		0: "STATUS_CATEGORY_UNSPECIFIED",
+		1: "STATUS_CATEGORY_DRAFT",
+		2: "STATUS_CATEGORY_READY",
+		3: "STATUS_CATEGORY_ACTIVE",
+		4: "STATUS_CATEGORY_IN_REVIEW",
+		5: "STATUS_CATEGORY_AWAITING_MERGE",
+		6: "STATUS_CATEGORY_BLOCKED",
+		7: "STATUS_CATEGORY_FAILED",
+		8: "STATUS_CATEGORY_DONE",
+		9: "STATUS_CATEGORY_CANCELLED",
+	}
+	StatusCategory_value = map[string]int32{
+		"STATUS_CATEGORY_UNSPECIFIED":    0,
+		"STATUS_CATEGORY_DRAFT":          1,
+		"STATUS_CATEGORY_READY":          2,
+		"STATUS_CATEGORY_ACTIVE":         3,
+		"STATUS_CATEGORY_IN_REVIEW":      4,
+		"STATUS_CATEGORY_AWAITING_MERGE": 5,
+		"STATUS_CATEGORY_BLOCKED":        6,
+		"STATUS_CATEGORY_FAILED":         7,
+		"STATUS_CATEGORY_DONE":           8,
+		"STATUS_CATEGORY_CANCELLED":      9,
+	}
+)
+
+func (x StatusCategory) Enum() *StatusCategory {
+	p := new(StatusCategory)
+	*p = x
+	return p
+}
+
+func (x StatusCategory) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (StatusCategory) Descriptor() protoreflect.EnumDescriptor {
+	return file_cwb_v1_ledger_proto_enumTypes[0].Descriptor()
+}
+
+func (StatusCategory) Type() protoreflect.EnumType {
+	return &file_cwb_v1_ledger_proto_enumTypes[0]
+}
+
+func (x StatusCategory) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use StatusCategory.Descriptor instead.
+func (StatusCategory) EnumDescriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{0}
+}
+
 // Issue is the full issue row. Field names match the grpc-gateway JSON output
 // (snake_case proto names, UseProtoNames=true). The REST server currently
 // marshals Go struct fields (PascalCase); the gRPC server will use these names.
@@ -44,6 +114,7 @@ type Issue struct {
 	ExternalRefs     []*ExternalRef         `protobuf:"bytes,15,rep,name=external_refs,json=externalRefs,proto3" json:"external_refs,omitempty"`
 	CreatedAt        string                 `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt        string                 `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Category         StatusCategory         `protobuf:"varint,18,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -197,6 +268,13 @@ func (x *Issue) GetUpdatedAt() string {
 	return ""
 }
 
+func (x *Issue) GetCategory() StatusCategory {
+	if x != nil {
+		return x.Category
+	}
+	return StatusCategory_STATUS_CATEGORY_UNSPECIFIED
+}
+
 // ExternalRef points at a ticket in an external tracker.
 // JSON keys match ExternalRef struct json tags in issues.go.
 type ExternalRef struct {
@@ -279,6 +357,7 @@ type IssueRef struct {
 	AssigneeAspect string                 `protobuf:"bytes,7,opt,name=assignee_aspect,json=assigneeAspect,proto3" json:"assignee_aspect,omitempty"`
 	AssigneeTeam   string                 `protobuf:"bytes,8,opt,name=assignee_team,json=assigneeTeam,proto3" json:"assignee_team,omitempty"`
 	UpdatedAt      string                 `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Category       StatusCategory         `protobuf:"varint,10,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -376,6 +455,177 @@ func (x *IssueRef) GetUpdatedAt() string {
 	return ""
 }
 
+func (x *IssueRef) GetCategory() StatusCategory {
+	if x != nil {
+		return x.Category
+	}
+	return StatusCategory_STATUS_CATEGORY_UNSPECIFIED
+}
+
+type WorkflowState struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Category      StatusCategory         `protobuf:"varint,2,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
+	DodGate       bool                   `protobuf:"varint,3,opt,name=dod_gate,json=dodGate,proto3" json:"dod_gate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WorkflowState) Reset() {
+	*x = WorkflowState{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkflowState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkflowState) ProtoMessage() {}
+
+func (x *WorkflowState) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkflowState.ProtoReflect.Descriptor instead.
+func (*WorkflowState) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *WorkflowState) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *WorkflowState) GetCategory() StatusCategory {
+	if x != nil {
+		return x.Category
+	}
+	return StatusCategory_STATUS_CATEGORY_UNSPECIFIED
+}
+
+func (x *WorkflowState) GetDodGate() bool {
+	if x != nil {
+		return x.DodGate
+	}
+	return false
+}
+
+type WorkflowTransition struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	From          string                 `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
+	To            []string               `protobuf:"bytes,2,rep,name=to,proto3" json:"to,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WorkflowTransition) Reset() {
+	*x = WorkflowTransition{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkflowTransition) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkflowTransition) ProtoMessage() {}
+
+func (x *WorkflowTransition) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkflowTransition.ProtoReflect.Descriptor instead.
+func (*WorkflowTransition) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *WorkflowTransition) GetFrom() string {
+	if x != nil {
+		return x.From
+	}
+	return ""
+}
+
+func (x *WorkflowTransition) GetTo() []string {
+	if x != nil {
+		return x.To
+	}
+	return nil
+}
+
+type Workflow struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	States        []*WorkflowState       `protobuf:"bytes,1,rep,name=states,proto3" json:"states,omitempty"`
+	Transitions   []*WorkflowTransition  `protobuf:"bytes,2,rep,name=transitions,proto3" json:"transitions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Workflow) Reset() {
+	*x = Workflow{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Workflow) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Workflow) ProtoMessage() {}
+
+func (x *Workflow) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Workflow.ProtoReflect.Descriptor instead.
+func (*Workflow) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Workflow) GetStates() []*WorkflowState {
+	if x != nil {
+		return x.States
+	}
+	return nil
+}
+
+func (x *Workflow) GetTransitions() []*WorkflowTransition {
+	if x != nil {
+		return x.Transitions
+	}
+	return nil
+}
+
 // Project is a top-level issue container.
 type Project struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -391,7 +641,7 @@ type Project struct {
 
 func (x *Project) Reset() {
 	*x = Project{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[3]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +653,7 @@ func (x *Project) String() string {
 func (*Project) ProtoMessage() {}
 
 func (x *Project) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[3]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +666,7 @@ func (x *Project) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Project.ProtoReflect.Descriptor instead.
 func (*Project) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{3}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Project) GetKey() string {
@@ -472,7 +722,7 @@ type Organisation struct {
 
 func (x *Organisation) Reset() {
 	*x = Organisation{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[4]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -484,7 +734,7 @@ func (x *Organisation) String() string {
 func (*Organisation) ProtoMessage() {}
 
 func (x *Organisation) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[4]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -497,7 +747,7 @@ func (x *Organisation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Organisation.ProtoReflect.Descriptor instead.
 func (*Organisation) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{4}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Organisation) GetSlug() string {
@@ -525,7 +775,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[5]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -537,7 +787,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[5]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -550,7 +800,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{5}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *User) GetId() string {
@@ -579,7 +829,7 @@ type OrgMember struct {
 
 func (x *OrgMember) Reset() {
 	*x = OrgMember{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[6]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -591,7 +841,7 @@ func (x *OrgMember) String() string {
 func (*OrgMember) ProtoMessage() {}
 
 func (x *OrgMember) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[6]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -604,7 +854,7 @@ func (x *OrgMember) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrgMember.ProtoReflect.Descriptor instead.
 func (*OrgMember) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{6}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *OrgMember) GetOrg() string {
@@ -645,7 +895,7 @@ type Event struct {
 
 func (x *Event) Reset() {
 	*x = Event{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[7]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -657,7 +907,7 @@ func (x *Event) String() string {
 func (*Event) ProtoMessage() {}
 
 func (x *Event) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[7]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,7 +920,7 @@ func (x *Event) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Event.ProtoReflect.Descriptor instead.
 func (*Event) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{7}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Event) GetId() int64 {
@@ -738,7 +988,7 @@ type LinkRow struct {
 
 func (x *LinkRow) Reset() {
 	*x = LinkRow{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[8]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -750,7 +1000,7 @@ func (x *LinkRow) String() string {
 func (*LinkRow) ProtoMessage() {}
 
 func (x *LinkRow) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[8]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -763,7 +1013,7 @@ func (x *LinkRow) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LinkRow.ProtoReflect.Descriptor instead.
 func (*LinkRow) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{8}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *LinkRow) GetFromKey() string {
@@ -828,7 +1078,7 @@ type SearchFilter struct {
 
 func (x *SearchFilter) Reset() {
 	*x = SearchFilter{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[9]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -840,7 +1090,7 @@ func (x *SearchFilter) String() string {
 func (*SearchFilter) ProtoMessage() {}
 
 func (x *SearchFilter) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[9]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -853,7 +1103,7 @@ func (x *SearchFilter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchFilter.ProtoReflect.Descriptor instead.
 func (*SearchFilter) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{9}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *SearchFilter) GetProjects() []string {
@@ -952,7 +1202,7 @@ type CreateIssueRequest struct {
 
 func (x *CreateIssueRequest) Reset() {
 	*x = CreateIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[10]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -964,7 +1214,7 @@ func (x *CreateIssueRequest) String() string {
 func (*CreateIssueRequest) ProtoMessage() {}
 
 func (x *CreateIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[10]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -977,7 +1227,7 @@ func (x *CreateIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateIssueRequest.ProtoReflect.Descriptor instead.
 func (*CreateIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{10}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateIssueRequest) GetProject() string {
@@ -1069,7 +1319,7 @@ type CreateIssueResponse struct {
 
 func (x *CreateIssueResponse) Reset() {
 	*x = CreateIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[11]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1081,7 +1331,7 @@ func (x *CreateIssueResponse) String() string {
 func (*CreateIssueResponse) ProtoMessage() {}
 
 func (x *CreateIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[11]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1094,7 +1344,7 @@ func (x *CreateIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateIssueResponse.ProtoReflect.Descriptor instead.
 func (*CreateIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{11}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CreateIssueResponse) GetIssue() *Issue {
@@ -1114,7 +1364,7 @@ type GetIssueRequest struct {
 
 func (x *GetIssueRequest) Reset() {
 	*x = GetIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[12]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1126,7 +1376,7 @@ func (x *GetIssueRequest) String() string {
 func (*GetIssueRequest) ProtoMessage() {}
 
 func (x *GetIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[12]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1139,7 +1389,7 @@ func (x *GetIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetIssueRequest.ProtoReflect.Descriptor instead.
 func (*GetIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{12}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetIssueRequest) GetKey() string {
@@ -1166,7 +1416,7 @@ type GetIssueResponse struct {
 
 func (x *GetIssueResponse) Reset() {
 	*x = GetIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[13]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1178,7 +1428,7 @@ func (x *GetIssueResponse) String() string {
 func (*GetIssueResponse) ProtoMessage() {}
 
 func (x *GetIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[13]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1191,7 +1441,7 @@ func (x *GetIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetIssueResponse.ProtoReflect.Descriptor instead.
 func (*GetIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{13}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetIssueResponse) GetIssue() *Issue {
@@ -1218,7 +1468,7 @@ type UpdateIssueRequest struct {
 
 func (x *UpdateIssueRequest) Reset() {
 	*x = UpdateIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[14]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1230,7 +1480,7 @@ func (x *UpdateIssueRequest) String() string {
 func (*UpdateIssueRequest) ProtoMessage() {}
 
 func (x *UpdateIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[14]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1243,7 +1493,7 @@ func (x *UpdateIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateIssueRequest.ProtoReflect.Descriptor instead.
 func (*UpdateIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{14}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateIssueRequest) GetKey() string {
@@ -1311,7 +1561,7 @@ type UpdateIssueResponse struct {
 
 func (x *UpdateIssueResponse) Reset() {
 	*x = UpdateIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[15]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1323,7 +1573,7 @@ func (x *UpdateIssueResponse) String() string {
 func (*UpdateIssueResponse) ProtoMessage() {}
 
 func (x *UpdateIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[15]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1336,7 +1586,7 @@ func (x *UpdateIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateIssueResponse.ProtoReflect.Descriptor instead.
 func (*UpdateIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{15}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{18}
 }
 
 type TransitionIssueRequest struct {
@@ -1350,7 +1600,7 @@ type TransitionIssueRequest struct {
 
 func (x *TransitionIssueRequest) Reset() {
 	*x = TransitionIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[16]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1362,7 +1612,7 @@ func (x *TransitionIssueRequest) String() string {
 func (*TransitionIssueRequest) ProtoMessage() {}
 
 func (x *TransitionIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[16]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1375,7 +1625,7 @@ func (x *TransitionIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransitionIssueRequest.ProtoReflect.Descriptor instead.
 func (*TransitionIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{16}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *TransitionIssueRequest) GetKey() string {
@@ -1408,7 +1658,7 @@ type TransitionIssueResponse struct {
 
 func (x *TransitionIssueResponse) Reset() {
 	*x = TransitionIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[17]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1420,7 +1670,7 @@ func (x *TransitionIssueResponse) String() string {
 func (*TransitionIssueResponse) ProtoMessage() {}
 
 func (x *TransitionIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[17]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1433,7 +1683,184 @@ func (x *TransitionIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransitionIssueResponse.ProtoReflect.Descriptor instead.
 func (*TransitionIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{17}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{20}
+}
+
+type SetProjectWorkflowRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Project       string                 `protobuf:"bytes,1,opt,name=project,proto3" json:"project,omitempty"`
+	Workflow      *Workflow              `protobuf:"bytes,2,opt,name=workflow,proto3" json:"workflow,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetProjectWorkflowRequest) Reset() {
+	*x = SetProjectWorkflowRequest{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetProjectWorkflowRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetProjectWorkflowRequest) ProtoMessage() {}
+
+func (x *SetProjectWorkflowRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetProjectWorkflowRequest.ProtoReflect.Descriptor instead.
+func (*SetProjectWorkflowRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *SetProjectWorkflowRequest) GetProject() string {
+	if x != nil {
+		return x.Project
+	}
+	return ""
+}
+
+func (x *SetProjectWorkflowRequest) GetWorkflow() *Workflow {
+	if x != nil {
+		return x.Workflow
+	}
+	return nil
+}
+
+// SetProjectWorkflow returns HTTP 200 with no body.
+type SetProjectWorkflowResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetProjectWorkflowResponse) Reset() {
+	*x = SetProjectWorkflowResponse{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetProjectWorkflowResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetProjectWorkflowResponse) ProtoMessage() {}
+
+func (x *SetProjectWorkflowResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetProjectWorkflowResponse.ProtoReflect.Descriptor instead.
+func (*SetProjectWorkflowResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{22}
+}
+
+type GetProjectWorkflowRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Project       string                 `protobuf:"bytes,1,opt,name=project,proto3" json:"project,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProjectWorkflowRequest) Reset() {
+	*x = GetProjectWorkflowRequest{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProjectWorkflowRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProjectWorkflowRequest) ProtoMessage() {}
+
+func (x *GetProjectWorkflowRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProjectWorkflowRequest.ProtoReflect.Descriptor instead.
+func (*GetProjectWorkflowRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetProjectWorkflowRequest) GetProject() string {
+	if x != nil {
+		return x.Project
+	}
+	return ""
+}
+
+type GetProjectWorkflowResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Workflow      *Workflow              `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProjectWorkflowResponse) Reset() {
+	*x = GetProjectWorkflowResponse{}
+	mi := &file_cwb_v1_ledger_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProjectWorkflowResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProjectWorkflowResponse) ProtoMessage() {}
+
+func (x *GetProjectWorkflowResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_ledger_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProjectWorkflowResponse.ProtoReflect.Descriptor instead.
+func (*GetProjectWorkflowResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *GetProjectWorkflowResponse) GetWorkflow() *Workflow {
+	if x != nil {
+		return x.Workflow
+	}
+	return nil
 }
 
 type AssignIssueRequest struct {
@@ -1448,7 +1875,7 @@ type AssignIssueRequest struct {
 
 func (x *AssignIssueRequest) Reset() {
 	*x = AssignIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[18]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1460,7 +1887,7 @@ func (x *AssignIssueRequest) String() string {
 func (*AssignIssueRequest) ProtoMessage() {}
 
 func (x *AssignIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[18]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1473,7 +1900,7 @@ func (x *AssignIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignIssueRequest.ProtoReflect.Descriptor instead.
 func (*AssignIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{18}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *AssignIssueRequest) GetKey() string {
@@ -1513,7 +1940,7 @@ type AssignIssueResponse struct {
 
 func (x *AssignIssueResponse) Reset() {
 	*x = AssignIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[19]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1525,7 +1952,7 @@ func (x *AssignIssueResponse) String() string {
 func (*AssignIssueResponse) ProtoMessage() {}
 
 func (x *AssignIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[19]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1538,7 +1965,7 @@ func (x *AssignIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignIssueResponse.ProtoReflect.Descriptor instead.
 func (*AssignIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{19}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{26}
 }
 
 type CommentIssueRequest struct {
@@ -1552,7 +1979,7 @@ type CommentIssueRequest struct {
 
 func (x *CommentIssueRequest) Reset() {
 	*x = CommentIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[20]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1564,7 +1991,7 @@ func (x *CommentIssueRequest) String() string {
 func (*CommentIssueRequest) ProtoMessage() {}
 
 func (x *CommentIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[20]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1577,7 +2004,7 @@ func (x *CommentIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommentIssueRequest.ProtoReflect.Descriptor instead.
 func (*CommentIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{20}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CommentIssueRequest) GetKey() string {
@@ -1610,7 +2037,7 @@ type CommentIssueResponse struct {
 
 func (x *CommentIssueResponse) Reset() {
 	*x = CommentIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[21]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1622,7 +2049,7 @@ func (x *CommentIssueResponse) String() string {
 func (*CommentIssueResponse) ProtoMessage() {}
 
 func (x *CommentIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[21]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1635,7 +2062,7 @@ func (x *CommentIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommentIssueResponse.ProtoReflect.Descriptor instead.
 func (*CommentIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{21}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{28}
 }
 
 // ListCommentsRequest fetches the comment events on an issue's timeline.
@@ -1649,7 +2076,7 @@ type ListCommentsRequest struct {
 
 func (x *ListCommentsRequest) Reset() {
 	*x = ListCommentsRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[22]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1661,7 +2088,7 @@ func (x *ListCommentsRequest) String() string {
 func (*ListCommentsRequest) ProtoMessage() {}
 
 func (x *ListCommentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[22]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1674,7 +2101,7 @@ func (x *ListCommentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommentsRequest.ProtoReflect.Descriptor instead.
 func (*ListCommentsRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{22}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *ListCommentsRequest) GetKey() string {
@@ -1694,7 +2121,7 @@ type ListCommentsResponse struct {
 
 func (x *ListCommentsResponse) Reset() {
 	*x = ListCommentsResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[23]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1706,7 +2133,7 @@ func (x *ListCommentsResponse) String() string {
 func (*ListCommentsResponse) ProtoMessage() {}
 
 func (x *ListCommentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[23]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1719,7 +2146,7 @@ func (x *ListCommentsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCommentsResponse.ProtoReflect.Descriptor instead.
 func (*ListCommentsResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{23}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ListCommentsResponse) GetComments() []*Event {
@@ -1739,7 +2166,7 @@ type ClaimIssueRequest struct {
 
 func (x *ClaimIssueRequest) Reset() {
 	*x = ClaimIssueRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[24]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1751,7 +2178,7 @@ func (x *ClaimIssueRequest) String() string {
 func (*ClaimIssueRequest) ProtoMessage() {}
 
 func (x *ClaimIssueRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[24]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1764,7 +2191,7 @@ func (x *ClaimIssueRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimIssueRequest.ProtoReflect.Descriptor instead.
 func (*ClaimIssueRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{24}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ClaimIssueRequest) GetKey() string {
@@ -1792,7 +2219,7 @@ type ClaimIssueResponse struct {
 
 func (x *ClaimIssueResponse) Reset() {
 	*x = ClaimIssueResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[25]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1804,7 +2231,7 @@ func (x *ClaimIssueResponse) String() string {
 func (*ClaimIssueResponse) ProtoMessage() {}
 
 func (x *ClaimIssueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[25]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1817,7 +2244,7 @@ func (x *ClaimIssueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimIssueResponse.ProtoReflect.Descriptor instead.
 func (*ClaimIssueResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{25}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ClaimIssueResponse) GetIssue() *Issue {
@@ -1838,7 +2265,7 @@ type AddWatcherRequest struct {
 
 func (x *AddWatcherRequest) Reset() {
 	*x = AddWatcherRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[26]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1850,7 +2277,7 @@ func (x *AddWatcherRequest) String() string {
 func (*AddWatcherRequest) ProtoMessage() {}
 
 func (x *AddWatcherRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[26]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1863,7 +2290,7 @@ func (x *AddWatcherRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddWatcherRequest.ProtoReflect.Descriptor instead.
 func (*AddWatcherRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{26}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *AddWatcherRequest) GetKey() string {
@@ -1896,7 +2323,7 @@ type AddWatcherResponse struct {
 
 func (x *AddWatcherResponse) Reset() {
 	*x = AddWatcherResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[27]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1908,7 +2335,7 @@ func (x *AddWatcherResponse) String() string {
 func (*AddWatcherResponse) ProtoMessage() {}
 
 func (x *AddWatcherResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[27]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1921,7 +2348,7 @@ func (x *AddWatcherResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddWatcherResponse.ProtoReflect.Descriptor instead.
 func (*AddWatcherResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{27}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{34}
 }
 
 type ListWatchersRequest struct {
@@ -1933,7 +2360,7 @@ type ListWatchersRequest struct {
 
 func (x *ListWatchersRequest) Reset() {
 	*x = ListWatchersRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[28]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1945,7 +2372,7 @@ func (x *ListWatchersRequest) String() string {
 func (*ListWatchersRequest) ProtoMessage() {}
 
 func (x *ListWatchersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[28]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1958,7 +2385,7 @@ func (x *ListWatchersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWatchersRequest.ProtoReflect.Descriptor instead.
 func (*ListWatchersRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{28}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ListWatchersRequest) GetKey() string {
@@ -1979,7 +2406,7 @@ type ListWatchersResponse struct {
 
 func (x *ListWatchersResponse) Reset() {
 	*x = ListWatchersResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[29]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1991,7 +2418,7 @@ func (x *ListWatchersResponse) String() string {
 func (*ListWatchersResponse) ProtoMessage() {}
 
 func (x *ListWatchersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[29]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2004,7 +2431,7 @@ func (x *ListWatchersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWatchersResponse.ProtoReflect.Descriptor instead.
 func (*ListWatchersResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{29}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ListWatchersResponse) GetWatchers() []string {
@@ -2025,7 +2452,7 @@ type RemoveWatcherRequest struct {
 
 func (x *RemoveWatcherRequest) Reset() {
 	*x = RemoveWatcherRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[30]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2037,7 +2464,7 @@ func (x *RemoveWatcherRequest) String() string {
 func (*RemoveWatcherRequest) ProtoMessage() {}
 
 func (x *RemoveWatcherRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[30]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2050,7 +2477,7 @@ func (x *RemoveWatcherRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveWatcherRequest.ProtoReflect.Descriptor instead.
 func (*RemoveWatcherRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{30}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *RemoveWatcherRequest) GetKey() string {
@@ -2083,7 +2510,7 @@ type RemoveWatcherResponse struct {
 
 func (x *RemoveWatcherResponse) Reset() {
 	*x = RemoveWatcherResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[31]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2095,7 +2522,7 @@ func (x *RemoveWatcherResponse) String() string {
 func (*RemoveWatcherResponse) ProtoMessage() {}
 
 func (x *RemoveWatcherResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[31]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2108,7 +2535,7 @@ func (x *RemoveWatcherResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveWatcherResponse.ProtoReflect.Descriptor instead.
 func (*RemoveWatcherResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{31}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{38}
 }
 
 type AddLinkRequest struct {
@@ -2123,7 +2550,7 @@ type AddLinkRequest struct {
 
 func (x *AddLinkRequest) Reset() {
 	*x = AddLinkRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[32]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2135,7 +2562,7 @@ func (x *AddLinkRequest) String() string {
 func (*AddLinkRequest) ProtoMessage() {}
 
 func (x *AddLinkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[32]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2148,7 +2575,7 @@ func (x *AddLinkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddLinkRequest.ProtoReflect.Descriptor instead.
 func (*AddLinkRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{32}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *AddLinkRequest) GetKey() string {
@@ -2191,7 +2618,7 @@ type AddLinkResponse struct {
 
 func (x *AddLinkResponse) Reset() {
 	*x = AddLinkResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[33]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2203,7 +2630,7 @@ func (x *AddLinkResponse) String() string {
 func (*AddLinkResponse) ProtoMessage() {}
 
 func (x *AddLinkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[33]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2216,7 +2643,7 @@ func (x *AddLinkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddLinkResponse.ProtoReflect.Descriptor instead.
 func (*AddLinkResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{33}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *AddLinkResponse) GetFromKey() string {
@@ -2249,7 +2676,7 @@ type ListLinksRequest struct {
 
 func (x *ListLinksRequest) Reset() {
 	*x = ListLinksRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[34]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2261,7 +2688,7 @@ func (x *ListLinksRequest) String() string {
 func (*ListLinksRequest) ProtoMessage() {}
 
 func (x *ListLinksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[34]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2274,7 +2701,7 @@ func (x *ListLinksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLinksRequest.ProtoReflect.Descriptor instead.
 func (*ListLinksRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{34}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *ListLinksRequest) GetKey() string {
@@ -2294,7 +2721,7 @@ type ListLinksResponse struct {
 
 func (x *ListLinksResponse) Reset() {
 	*x = ListLinksResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[35]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2306,7 +2733,7 @@ func (x *ListLinksResponse) String() string {
 func (*ListLinksResponse) ProtoMessage() {}
 
 func (x *ListLinksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[35]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2319,7 +2746,7 @@ func (x *ListLinksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLinksResponse.ProtoReflect.Descriptor instead.
 func (*ListLinksResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{35}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *ListLinksResponse) GetLinks() []*LinkRow {
@@ -2341,7 +2768,7 @@ type RemoveLinkRequest struct {
 
 func (x *RemoveLinkRequest) Reset() {
 	*x = RemoveLinkRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[36]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2353,7 +2780,7 @@ func (x *RemoveLinkRequest) String() string {
 func (*RemoveLinkRequest) ProtoMessage() {}
 
 func (x *RemoveLinkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[36]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2366,7 +2793,7 @@ func (x *RemoveLinkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveLinkRequest.ProtoReflect.Descriptor instead.
 func (*RemoveLinkRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{36}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *RemoveLinkRequest) GetKey() string {
@@ -2410,7 +2837,7 @@ type RemoveLinkResponse struct {
 
 func (x *RemoveLinkResponse) Reset() {
 	*x = RemoveLinkResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[37]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2422,7 +2849,7 @@ func (x *RemoveLinkResponse) String() string {
 func (*RemoveLinkResponse) ProtoMessage() {}
 
 func (x *RemoveLinkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[37]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2435,7 +2862,7 @@ func (x *RemoveLinkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveLinkResponse.ProtoReflect.Descriptor instead.
 func (*RemoveLinkResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{37}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *RemoveLinkResponse) GetFromKey() string {
@@ -2475,7 +2902,7 @@ type ListMyIssuesRequest struct {
 
 func (x *ListMyIssuesRequest) Reset() {
 	*x = ListMyIssuesRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[38]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2487,7 +2914,7 @@ func (x *ListMyIssuesRequest) String() string {
 func (*ListMyIssuesRequest) ProtoMessage() {}
 
 func (x *ListMyIssuesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[38]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2500,7 +2927,7 @@ func (x *ListMyIssuesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyIssuesRequest.ProtoReflect.Descriptor instead.
 func (*ListMyIssuesRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{38}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ListMyIssuesRequest) GetAspect() string {
@@ -2520,7 +2947,7 @@ type ListMyIssuesResponse struct {
 
 func (x *ListMyIssuesResponse) Reset() {
 	*x = ListMyIssuesResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[39]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2532,7 +2959,7 @@ func (x *ListMyIssuesResponse) String() string {
 func (*ListMyIssuesResponse) ProtoMessage() {}
 
 func (x *ListMyIssuesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[39]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2545,7 +2972,7 @@ func (x *ListMyIssuesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyIssuesResponse.ProtoReflect.Descriptor instead.
 func (*ListMyIssuesResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{39}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ListMyIssuesResponse) GetIssues() []*IssueRef {
@@ -2564,7 +2991,7 @@ type ListReadyIssuesRequest struct {
 
 func (x *ListReadyIssuesRequest) Reset() {
 	*x = ListReadyIssuesRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[40]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2576,7 +3003,7 @@ func (x *ListReadyIssuesRequest) String() string {
 func (*ListReadyIssuesRequest) ProtoMessage() {}
 
 func (x *ListReadyIssuesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[40]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2589,7 +3016,7 @@ func (x *ListReadyIssuesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListReadyIssuesRequest.ProtoReflect.Descriptor instead.
 func (*ListReadyIssuesRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{40}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ListReadyIssuesRequest) GetAspect() string {
@@ -2609,7 +3036,7 @@ type ListReadyIssuesResponse struct {
 
 func (x *ListReadyIssuesResponse) Reset() {
 	*x = ListReadyIssuesResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[41]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2621,7 +3048,7 @@ func (x *ListReadyIssuesResponse) String() string {
 func (*ListReadyIssuesResponse) ProtoMessage() {}
 
 func (x *ListReadyIssuesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[41]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2634,7 +3061,7 @@ func (x *ListReadyIssuesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListReadyIssuesResponse.ProtoReflect.Descriptor instead.
 func (*ListReadyIssuesResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{41}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListReadyIssuesResponse) GetIssues() []*IssueRef {
@@ -2653,7 +3080,7 @@ type SearchIssuesRequest struct {
 
 func (x *SearchIssuesRequest) Reset() {
 	*x = SearchIssuesRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[42]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2665,7 +3092,7 @@ func (x *SearchIssuesRequest) String() string {
 func (*SearchIssuesRequest) ProtoMessage() {}
 
 func (x *SearchIssuesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[42]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2678,7 +3105,7 @@ func (x *SearchIssuesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchIssuesRequest.ProtoReflect.Descriptor instead.
 func (*SearchIssuesRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{42}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *SearchIssuesRequest) GetFilter() *SearchFilter {
@@ -2698,7 +3125,7 @@ type SearchIssuesResponse struct {
 
 func (x *SearchIssuesResponse) Reset() {
 	*x = SearchIssuesResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[43]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2710,7 +3137,7 @@ func (x *SearchIssuesResponse) String() string {
 func (*SearchIssuesResponse) ProtoMessage() {}
 
 func (x *SearchIssuesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[43]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2723,7 +3150,7 @@ func (x *SearchIssuesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchIssuesResponse.ProtoReflect.Descriptor instead.
 func (*SearchIssuesResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{43}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *SearchIssuesResponse) GetRefs() []*IssueRef {
@@ -2743,7 +3170,7 @@ type SearchIssuesTextRequest struct {
 
 func (x *SearchIssuesTextRequest) Reset() {
 	*x = SearchIssuesTextRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[44]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2755,7 +3182,7 @@ func (x *SearchIssuesTextRequest) String() string {
 func (*SearchIssuesTextRequest) ProtoMessage() {}
 
 func (x *SearchIssuesTextRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[44]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2768,7 +3195,7 @@ func (x *SearchIssuesTextRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchIssuesTextRequest.ProtoReflect.Descriptor instead.
 func (*SearchIssuesTextRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{44}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *SearchIssuesTextRequest) GetQ() string {
@@ -2795,7 +3222,7 @@ type SearchIssuesTextResponse struct {
 
 func (x *SearchIssuesTextResponse) Reset() {
 	*x = SearchIssuesTextResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[45]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2807,7 +3234,7 @@ func (x *SearchIssuesTextResponse) String() string {
 func (*SearchIssuesTextResponse) ProtoMessage() {}
 
 func (x *SearchIssuesTextResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[45]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2820,7 +3247,7 @@ func (x *SearchIssuesTextResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchIssuesTextResponse.ProtoReflect.Descriptor instead.
 func (*SearchIssuesTextResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{45}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *SearchIssuesTextResponse) GetRefs() []*IssueRef {
@@ -2841,7 +3268,7 @@ type ListUpdatesRequest struct {
 
 func (x *ListUpdatesRequest) Reset() {
 	*x = ListUpdatesRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[46]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2853,7 +3280,7 @@ func (x *ListUpdatesRequest) String() string {
 func (*ListUpdatesRequest) ProtoMessage() {}
 
 func (x *ListUpdatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[46]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2866,7 +3293,7 @@ func (x *ListUpdatesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUpdatesRequest.ProtoReflect.Descriptor instead.
 func (*ListUpdatesRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{46}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *ListUpdatesRequest) GetAspect() string {
@@ -2900,7 +3327,7 @@ type ListUpdatesResponse struct {
 
 func (x *ListUpdatesResponse) Reset() {
 	*x = ListUpdatesResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[47]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2912,7 +3339,7 @@ func (x *ListUpdatesResponse) String() string {
 func (*ListUpdatesResponse) ProtoMessage() {}
 
 func (x *ListUpdatesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[47]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2925,7 +3352,7 @@ func (x *ListUpdatesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUpdatesResponse.ProtoReflect.Descriptor instead.
 func (*ListUpdatesResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{47}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *ListUpdatesResponse) GetEvents() []*Event {
@@ -2947,7 +3374,7 @@ type CreateProjectRequest struct {
 
 func (x *CreateProjectRequest) Reset() {
 	*x = CreateProjectRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[48]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2959,7 +3386,7 @@ func (x *CreateProjectRequest) String() string {
 func (*CreateProjectRequest) ProtoMessage() {}
 
 func (x *CreateProjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[48]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2972,7 +3399,7 @@ func (x *CreateProjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProjectRequest.ProtoReflect.Descriptor instead.
 func (*CreateProjectRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{48}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *CreateProjectRequest) GetKey() string {
@@ -3015,7 +3442,7 @@ type CreateProjectResponse struct {
 
 func (x *CreateProjectResponse) Reset() {
 	*x = CreateProjectResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[49]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3027,7 +3454,7 @@ func (x *CreateProjectResponse) String() string {
 func (*CreateProjectResponse) ProtoMessage() {}
 
 func (x *CreateProjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[49]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3040,7 +3467,7 @@ func (x *CreateProjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateProjectResponse.ProtoReflect.Descriptor instead.
 func (*CreateProjectResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{49}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *CreateProjectResponse) GetKey() string {
@@ -3073,7 +3500,7 @@ type ListProjectsRequest struct {
 
 func (x *ListProjectsRequest) Reset() {
 	*x = ListProjectsRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[50]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3085,7 +3512,7 @@ func (x *ListProjectsRequest) String() string {
 func (*ListProjectsRequest) ProtoMessage() {}
 
 func (x *ListProjectsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[50]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3098,7 +3525,7 @@ func (x *ListProjectsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProjectsRequest.ProtoReflect.Descriptor instead.
 func (*ListProjectsRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{50}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *ListProjectsRequest) GetIncludeArchived() bool {
@@ -3118,7 +3545,7 @@ type ListProjectsResponse struct {
 
 func (x *ListProjectsResponse) Reset() {
 	*x = ListProjectsResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[51]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3130,7 +3557,7 @@ func (x *ListProjectsResponse) String() string {
 func (*ListProjectsResponse) ProtoMessage() {}
 
 func (x *ListProjectsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[51]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3143,7 +3570,7 @@ func (x *ListProjectsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProjectsResponse.ProtoReflect.Descriptor instead.
 func (*ListProjectsResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{51}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *ListProjectsResponse) GetProjects() []*Project {
@@ -3161,7 +3588,7 @@ type OrgServicePurgeOrgRequest struct {
 
 func (x *OrgServicePurgeOrgRequest) Reset() {
 	*x = OrgServicePurgeOrgRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[52]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3173,7 +3600,7 @@ func (x *OrgServicePurgeOrgRequest) String() string {
 func (*OrgServicePurgeOrgRequest) ProtoMessage() {}
 
 func (x *OrgServicePurgeOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[52]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3186,7 +3613,7 @@ func (x *OrgServicePurgeOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrgServicePurgeOrgRequest.ProtoReflect.Descriptor instead.
 func (*OrgServicePurgeOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{52}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{59}
 }
 
 // OrgServicePurgeOrgResponse mirrors the live handler: {"purged": "<org>"}.
@@ -3199,7 +3626,7 @@ type OrgServicePurgeOrgResponse struct {
 
 func (x *OrgServicePurgeOrgResponse) Reset() {
 	*x = OrgServicePurgeOrgResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[53]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3211,7 +3638,7 @@ func (x *OrgServicePurgeOrgResponse) String() string {
 func (*OrgServicePurgeOrgResponse) ProtoMessage() {}
 
 func (x *OrgServicePurgeOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[53]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3224,7 +3651,7 @@ func (x *OrgServicePurgeOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrgServicePurgeOrgResponse.ProtoReflect.Descriptor instead.
 func (*OrgServicePurgeOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{53}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *OrgServicePurgeOrgResponse) GetPurged() string {
@@ -3244,7 +3671,7 @@ type CreateOrgRequest struct {
 
 func (x *CreateOrgRequest) Reset() {
 	*x = CreateOrgRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[54]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3256,7 +3683,7 @@ func (x *CreateOrgRequest) String() string {
 func (*CreateOrgRequest) ProtoMessage() {}
 
 func (x *CreateOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[54]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3269,7 +3696,7 @@ func (x *CreateOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOrgRequest.ProtoReflect.Descriptor instead.
 func (*CreateOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{54}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *CreateOrgRequest) GetSlug() string {
@@ -3296,7 +3723,7 @@ type CreateOrgResponse struct {
 
 func (x *CreateOrgResponse) Reset() {
 	*x = CreateOrgResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[55]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3308,7 +3735,7 @@ func (x *CreateOrgResponse) String() string {
 func (*CreateOrgResponse) ProtoMessage() {}
 
 func (x *CreateOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[55]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3321,7 +3748,7 @@ func (x *CreateOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOrgResponse.ProtoReflect.Descriptor instead.
 func (*CreateOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{55}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *CreateOrgResponse) GetOrg() *Organisation {
@@ -3339,7 +3766,7 @@ type ListOrgsRequest struct {
 
 func (x *ListOrgsRequest) Reset() {
 	*x = ListOrgsRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[56]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3351,7 +3778,7 @@ func (x *ListOrgsRequest) String() string {
 func (*ListOrgsRequest) ProtoMessage() {}
 
 func (x *ListOrgsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[56]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3364,7 +3791,7 @@ func (x *ListOrgsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrgsRequest.ProtoReflect.Descriptor instead.
 func (*ListOrgsRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{56}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{63}
 }
 
 // ListOrgsResponse: handler emits a bare array; grpc-gateway wraps as {"orgs": [...]}.
@@ -3377,7 +3804,7 @@ type ListOrgsResponse struct {
 
 func (x *ListOrgsResponse) Reset() {
 	*x = ListOrgsResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[57]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3389,7 +3816,7 @@ func (x *ListOrgsResponse) String() string {
 func (*ListOrgsResponse) ProtoMessage() {}
 
 func (x *ListOrgsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[57]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3402,7 +3829,7 @@ func (x *ListOrgsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrgsResponse.ProtoReflect.Descriptor instead.
 func (*ListOrgsResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{57}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *ListOrgsResponse) GetOrgs() []*Organisation {
@@ -3421,7 +3848,7 @@ type GetOrgRequest struct {
 
 func (x *GetOrgRequest) Reset() {
 	*x = GetOrgRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[58]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3433,7 +3860,7 @@ func (x *GetOrgRequest) String() string {
 func (*GetOrgRequest) ProtoMessage() {}
 
 func (x *GetOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[58]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3446,7 +3873,7 @@ func (x *GetOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrgRequest.ProtoReflect.Descriptor instead.
 func (*GetOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{58}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *GetOrgRequest) GetSlug() string {
@@ -3466,7 +3893,7 @@ type GetOrgResponse struct {
 
 func (x *GetOrgResponse) Reset() {
 	*x = GetOrgResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[59]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3478,7 +3905,7 @@ func (x *GetOrgResponse) String() string {
 func (*GetOrgResponse) ProtoMessage() {}
 
 func (x *GetOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[59]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3491,7 +3918,7 @@ func (x *GetOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrgResponse.ProtoReflect.Descriptor instead.
 func (*GetOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{59}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *GetOrgResponse) GetOrg() *Organisation {
@@ -3511,7 +3938,7 @@ type UpdateOrgRequest struct {
 
 func (x *UpdateOrgRequest) Reset() {
 	*x = UpdateOrgRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[60]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3523,7 +3950,7 @@ func (x *UpdateOrgRequest) String() string {
 func (*UpdateOrgRequest) ProtoMessage() {}
 
 func (x *UpdateOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[60]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3536,7 +3963,7 @@ func (x *UpdateOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOrgRequest.ProtoReflect.Descriptor instead.
 func (*UpdateOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{60}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *UpdateOrgRequest) GetSlug() string {
@@ -3562,7 +3989,7 @@ type UpdateOrgResponse struct {
 
 func (x *UpdateOrgResponse) Reset() {
 	*x = UpdateOrgResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[61]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3574,7 +4001,7 @@ func (x *UpdateOrgResponse) String() string {
 func (*UpdateOrgResponse) ProtoMessage() {}
 
 func (x *UpdateOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[61]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3587,7 +4014,7 @@ func (x *UpdateOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOrgResponse.ProtoReflect.Descriptor instead.
 func (*UpdateOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{61}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{68}
 }
 
 type DeleteOrgRequest struct {
@@ -3599,7 +4026,7 @@ type DeleteOrgRequest struct {
 
 func (x *DeleteOrgRequest) Reset() {
 	*x = DeleteOrgRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[62]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3611,7 +4038,7 @@ func (x *DeleteOrgRequest) String() string {
 func (*DeleteOrgRequest) ProtoMessage() {}
 
 func (x *DeleteOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[62]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3624,7 +4051,7 @@ func (x *DeleteOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteOrgRequest.ProtoReflect.Descriptor instead.
 func (*DeleteOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{62}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *DeleteOrgRequest) GetSlug() string {
@@ -3643,7 +4070,7 @@ type DeleteOrgResponse struct {
 
 func (x *DeleteOrgResponse) Reset() {
 	*x = DeleteOrgResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[63]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3655,7 +4082,7 @@ func (x *DeleteOrgResponse) String() string {
 func (*DeleteOrgResponse) ProtoMessage() {}
 
 func (x *DeleteOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[63]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3668,7 +4095,7 @@ func (x *DeleteOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteOrgResponse.ProtoReflect.Descriptor instead.
 func (*DeleteOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{63}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{70}
 }
 
 type AddMemberRequest struct {
@@ -3682,7 +4109,7 @@ type AddMemberRequest struct {
 
 func (x *AddMemberRequest) Reset() {
 	*x = AddMemberRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[64]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3694,7 +4121,7 @@ func (x *AddMemberRequest) String() string {
 func (*AddMemberRequest) ProtoMessage() {}
 
 func (x *AddMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[64]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3707,7 +4134,7 @@ func (x *AddMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddMemberRequest.ProtoReflect.Descriptor instead.
 func (*AddMemberRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{64}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *AddMemberRequest) GetSlug() string {
@@ -3740,7 +4167,7 @@ type AddMemberResponse struct {
 
 func (x *AddMemberResponse) Reset() {
 	*x = AddMemberResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[65]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3752,7 +4179,7 @@ func (x *AddMemberResponse) String() string {
 func (*AddMemberResponse) ProtoMessage() {}
 
 func (x *AddMemberResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[65]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3765,7 +4192,7 @@ func (x *AddMemberResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddMemberResponse.ProtoReflect.Descriptor instead.
 func (*AddMemberResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{65}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{72}
 }
 
 type ListMembersRequest struct {
@@ -3777,7 +4204,7 @@ type ListMembersRequest struct {
 
 func (x *ListMembersRequest) Reset() {
 	*x = ListMembersRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[66]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3789,7 +4216,7 @@ func (x *ListMembersRequest) String() string {
 func (*ListMembersRequest) ProtoMessage() {}
 
 func (x *ListMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[66]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3802,7 +4229,7 @@ func (x *ListMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMembersRequest.ProtoReflect.Descriptor instead.
 func (*ListMembersRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{66}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *ListMembersRequest) GetSlug() string {
@@ -3822,7 +4249,7 @@ type ListMembersResponse struct {
 
 func (x *ListMembersResponse) Reset() {
 	*x = ListMembersResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[67]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3834,7 +4261,7 @@ func (x *ListMembersResponse) String() string {
 func (*ListMembersResponse) ProtoMessage() {}
 
 func (x *ListMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[67]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3847,7 +4274,7 @@ func (x *ListMembersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMembersResponse.ProtoReflect.Descriptor instead.
 func (*ListMembersResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{67}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *ListMembersResponse) GetMembers() []*OrgMember {
@@ -3867,7 +4294,7 @@ type RemoveMemberRequest struct {
 
 func (x *RemoveMemberRequest) Reset() {
 	*x = RemoveMemberRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[68]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3879,7 +4306,7 @@ func (x *RemoveMemberRequest) String() string {
 func (*RemoveMemberRequest) ProtoMessage() {}
 
 func (x *RemoveMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[68]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3892,7 +4319,7 @@ func (x *RemoveMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveMemberRequest.ProtoReflect.Descriptor instead.
 func (*RemoveMemberRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{68}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *RemoveMemberRequest) GetSlug() string {
@@ -3918,7 +4345,7 @@ type RemoveMemberResponse struct {
 
 func (x *RemoveMemberResponse) Reset() {
 	*x = RemoveMemberResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[69]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3930,7 +4357,7 @@ func (x *RemoveMemberResponse) String() string {
 func (*RemoveMemberResponse) ProtoMessage() {}
 
 func (x *RemoveMemberResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[69]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3943,7 +4370,7 @@ func (x *RemoveMemberResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveMemberResponse.ProtoReflect.Descriptor instead.
 func (*RemoveMemberResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{69}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{76}
 }
 
 type CreateUserRequest struct {
@@ -3956,7 +4383,7 @@ type CreateUserRequest struct {
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[70]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3968,7 +4395,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[70]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3981,7 +4408,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{70}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *CreateUserRequest) GetId() string {
@@ -4008,7 +4435,7 @@ type CreateUserResponse struct {
 
 func (x *CreateUserResponse) Reset() {
 	*x = CreateUserResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[71]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4020,7 +4447,7 @@ func (x *CreateUserResponse) String() string {
 func (*CreateUserResponse) ProtoMessage() {}
 
 func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[71]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4033,7 +4460,7 @@ func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserResponse.ProtoReflect.Descriptor instead.
 func (*CreateUserResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{71}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *CreateUserResponse) GetUser() *User {
@@ -4051,7 +4478,7 @@ type ListUsersRequest struct {
 
 func (x *ListUsersRequest) Reset() {
 	*x = ListUsersRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[72]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4063,7 +4490,7 @@ func (x *ListUsersRequest) String() string {
 func (*ListUsersRequest) ProtoMessage() {}
 
 func (x *ListUsersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[72]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4076,7 +4503,7 @@ func (x *ListUsersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUsersRequest.ProtoReflect.Descriptor instead.
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{72}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{79}
 }
 
 // ListUsersResponse: handler emits a bare array; grpc-gateway wraps as {"users": [...]}.
@@ -4089,7 +4516,7 @@ type ListUsersResponse struct {
 
 func (x *ListUsersResponse) Reset() {
 	*x = ListUsersResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[73]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4101,7 +4528,7 @@ func (x *ListUsersResponse) String() string {
 func (*ListUsersResponse) ProtoMessage() {}
 
 func (x *ListUsersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[73]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4114,7 +4541,7 @@ func (x *ListUsersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUsersResponse.ProtoReflect.Descriptor instead.
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{73}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *ListUsersResponse) GetUsers() []*User {
@@ -4133,7 +4560,7 @@ type GetUserRequest struct {
 
 func (x *GetUserRequest) Reset() {
 	*x = GetUserRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[74]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4145,7 +4572,7 @@ func (x *GetUserRequest) String() string {
 func (*GetUserRequest) ProtoMessage() {}
 
 func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[74]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4158,7 +4585,7 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{74}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *GetUserRequest) GetId() string {
@@ -4178,7 +4605,7 @@ type GetUserResponse struct {
 
 func (x *GetUserResponse) Reset() {
 	*x = GetUserResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[75]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4190,7 +4617,7 @@ func (x *GetUserResponse) String() string {
 func (*GetUserResponse) ProtoMessage() {}
 
 func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[75]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4203,7 +4630,7 @@ func (x *GetUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserResponse.ProtoReflect.Descriptor instead.
 func (*GetUserResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{75}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *GetUserResponse) GetUser() *User {
@@ -4223,7 +4650,7 @@ type UpdateUserRequest struct {
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[76]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4235,7 +4662,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[76]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4248,7 +4675,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{76}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *UpdateUserRequest) GetId() string {
@@ -4274,7 +4701,7 @@ type UpdateUserResponse struct {
 
 func (x *UpdateUserResponse) Reset() {
 	*x = UpdateUserResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[77]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4286,7 +4713,7 @@ func (x *UpdateUserResponse) String() string {
 func (*UpdateUserResponse) ProtoMessage() {}
 
 func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[77]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4299,7 +4726,7 @@ func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserResponse.ProtoReflect.Descriptor instead.
 func (*UpdateUserResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{77}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{84}
 }
 
 type DeleteUserRequest struct {
@@ -4311,7 +4738,7 @@ type DeleteUserRequest struct {
 
 func (x *DeleteUserRequest) Reset() {
 	*x = DeleteUserRequest{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[78]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4323,7 +4750,7 @@ func (x *DeleteUserRequest) String() string {
 func (*DeleteUserRequest) ProtoMessage() {}
 
 func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[78]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4336,7 +4763,7 @@ func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{78}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *DeleteUserRequest) GetId() string {
@@ -4355,7 +4782,7 @@ type DeleteUserResponse struct {
 
 func (x *DeleteUserResponse) Reset() {
 	*x = DeleteUserResponse{}
-	mi := &file_cwb_v1_ledger_proto_msgTypes[79]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4367,7 +4794,7 @@ func (x *DeleteUserResponse) String() string {
 func (*DeleteUserResponse) ProtoMessage() {}
 
 func (x *DeleteUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_ledger_proto_msgTypes[79]
+	mi := &file_cwb_v1_ledger_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4380,14 +4807,14 @@ func (x *DeleteUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserResponse.ProtoReflect.Descriptor instead.
 func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{79}
+	return file_cwb_v1_ledger_proto_rawDescGZIP(), []int{86}
 }
 
 var File_cwb_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xa1\x04\n" +
+	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xd5\x04\n" +
 	"\x05Issue\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x18\n" +
 	"\aproject\x18\x02 \x01(\tR\aproject\x12\x10\n" +
@@ -4409,12 +4836,13 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x10 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x11 \x01(\tR\tupdatedAt\"m\n" +
+	"updated_at\x18\x11 \x01(\tR\tupdatedAt\x122\n" +
+	"\bcategory\x18\x12 \x01(\x0e2\x16.cwb.v1.StatusCategoryR\bcategory\"m\n" +
 	"\vExternalRef\x12\x18\n" +
 	"\atracker\x18\x01 \x01(\tR\atracker\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x10\n" +
 	"\x03url\x18\x03 \x01(\tR\x03url\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"\x85\x02\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xb9\x02\n" +
 	"\bIssueRef\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x18\n" +
 	"\aproject\x18\x02 \x01(\tR\aproject\x12\x12\n" +
@@ -4425,7 +4853,19 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x0fassignee_aspect\x18\a \x01(\tR\x0eassigneeAspect\x12#\n" +
 	"\rassignee_team\x18\b \x01(\tR\fassigneeTeam\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\tR\tupdatedAt\"\xb4\x01\n" +
+	"updated_at\x18\t \x01(\tR\tupdatedAt\x122\n" +
+	"\bcategory\x18\n" +
+	" \x01(\x0e2\x16.cwb.v1.StatusCategoryR\bcategory\"r\n" +
+	"\rWorkflowState\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x122\n" +
+	"\bcategory\x18\x02 \x01(\x0e2\x16.cwb.v1.StatusCategoryR\bcategory\x12\x19\n" +
+	"\bdod_gate\x18\x03 \x01(\bR\adodGate\"8\n" +
+	"\x12WorkflowTransition\x12\x12\n" +
+	"\x04from\x18\x01 \x01(\tR\x04from\x12\x0e\n" +
+	"\x02to\x18\x02 \x03(\tR\x02to\"w\n" +
+	"\bWorkflow\x12-\n" +
+	"\x06states\x18\x01 \x03(\v2\x15.cwb.v1.WorkflowStateR\x06states\x12<\n" +
+	"\vtransitions\x18\x02 \x03(\v2\x1a.cwb.v1.WorkflowTransitionR\vtransitions\"\xb4\x01\n" +
 	"\aProject\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\"\n" +
 	"\forganisation\x18\x02 \x01(\tR\forganisation\x12\x12\n" +
@@ -4512,7 +4952,15 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x14\n" +
 	"\x05actor\x18\x03 \x01(\tR\x05actor\"\x19\n" +
-	"\x17TransitionIssueResponse\"h\n" +
+	"\x17TransitionIssueResponse\"c\n" +
+	"\x19SetProjectWorkflowRequest\x12\x18\n" +
+	"\aproject\x18\x01 \x01(\tR\aproject\x12,\n" +
+	"\bworkflow\x18\x02 \x01(\v2\x10.cwb.v1.WorkflowR\bworkflow\"\x1c\n" +
+	"\x1aSetProjectWorkflowResponse\"5\n" +
+	"\x19GetProjectWorkflowRequest\x12\x18\n" +
+	"\aproject\x18\x01 \x01(\tR\aproject\"J\n" +
+	"\x1aGetProjectWorkflowResponse\x12,\n" +
+	"\bworkflow\x18\x01 \x01(\v2\x10.cwb.v1.WorkflowR\bworkflow\"h\n" +
 	"\x12AssignIssueRequest\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x16\n" +
 	"\x06aspect\x18\x02 \x01(\tR\x06aspect\x12\x12\n" +
@@ -4659,11 +5107,24 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x12UpdateUserResponse\"#\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x14\n" +
-	"\x12DeleteUserResponse2\x86\x10\n" +
+	"\x12DeleteUserResponse*\xb8\x02\n" +
+	"\x0eStatusCategory\x12\x1f\n" +
+	"\x1bSTATUS_CATEGORY_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15STATUS_CATEGORY_DRAFT\x10\x01\x12\x19\n" +
+	"\x15STATUS_CATEGORY_READY\x10\x02\x12\x1a\n" +
+	"\x16STATUS_CATEGORY_ACTIVE\x10\x03\x12\x1d\n" +
+	"\x19STATUS_CATEGORY_IN_REVIEW\x10\x04\x12\"\n" +
+	"\x1eSTATUS_CATEGORY_AWAITING_MERGE\x10\x05\x12\x1b\n" +
+	"\x17STATUS_CATEGORY_BLOCKED\x10\x06\x12\x1a\n" +
+	"\x16STATUS_CATEGORY_FAILED\x10\a\x12\x18\n" +
+	"\x14STATUS_CATEGORY_DONE\x10\b\x12\x1d\n" +
+	"\x19STATUS_CATEGORY_CANCELLED\x10\t2\x9f\x12\n" +
 	"\fIssueService\x12_\n" +
 	"\bGetIssue\x12\x17.cwb.v1.GetIssueRequest\x1a\x18.cwb.v1.GetIssueResponse\" \x82\xd3\xe4\x93\x02\x1ab\x05issue\x12\x11/api/issues/{key}\x12d\n" +
 	"\vUpdateIssue\x12\x1a.cwb.v1.UpdateIssueRequest\x1a\x1b.cwb.v1.UpdateIssueResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*2\x11/api/issues/{key}\x12{\n" +
-	"\x0fTransitionIssue\x12\x1e.cwb.v1.TransitionIssueRequest\x1a\x1f.cwb.v1.TransitionIssueResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/issues/{key}/transition\x12k\n" +
+	"\x0fTransitionIssue\x12\x1e.cwb.v1.TransitionIssueRequest\x1a\x1f.cwb.v1.TransitionIssueResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/issues/{key}/transition\x12\x86\x01\n" +
+	"\x12SetProjectWorkflow\x12!.cwb.v1.SetProjectWorkflowRequest\x1a\".cwb.v1.SetProjectWorkflowResponse\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/issues/{project}/workflow\x12\x8d\x01\n" +
+	"\x12GetProjectWorkflow\x12!.cwb.v1.GetProjectWorkflowRequest\x1a\".cwb.v1.GetProjectWorkflowResponse\"0\x82\xd3\xe4\x93\x02*b\bworkflow\x12\x1e/api/issues/{project}/workflow\x12k\n" +
 	"\vAssignIssue\x12\x1a.cwb.v1.AssignIssueRequest\x1a\x1b.cwb.v1.AssignIssueResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/issues/{key}/assign\x12p\n" +
 	"\fCommentIssue\x12\x1b.cwb.v1.CommentIssueRequest\x1a\x1c.cwb.v1.CommentIssueResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/issues/{key}/comments\x12m\n" +
 	"\fListComments\x12\x1b.cwb.v1.ListCommentsRequest\x1a\x1c.cwb.v1.ListCommentsResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/issues/{key}/comments\x12n\n" +
@@ -4723,187 +5184,207 @@ func file_cwb_v1_ledger_proto_rawDescGZIP() []byte {
 	return file_cwb_v1_ledger_proto_rawDescData
 }
 
-var file_cwb_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 80)
+var file_cwb_v1_ledger_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_cwb_v1_ledger_proto_msgTypes = make([]protoimpl.MessageInfo, 87)
 var file_cwb_v1_ledger_proto_goTypes = []any{
-	(*Issue)(nil),                      // 0: cwb.v1.Issue
-	(*ExternalRef)(nil),                // 1: cwb.v1.ExternalRef
-	(*IssueRef)(nil),                   // 2: cwb.v1.IssueRef
-	(*Project)(nil),                    // 3: cwb.v1.Project
-	(*Organisation)(nil),               // 4: cwb.v1.Organisation
-	(*User)(nil),                       // 5: cwb.v1.User
-	(*OrgMember)(nil),                  // 6: cwb.v1.OrgMember
-	(*Event)(nil),                      // 7: cwb.v1.Event
-	(*LinkRow)(nil),                    // 8: cwb.v1.LinkRow
-	(*SearchFilter)(nil),               // 9: cwb.v1.SearchFilter
-	(*CreateIssueRequest)(nil),         // 10: cwb.v1.CreateIssueRequest
-	(*CreateIssueResponse)(nil),        // 11: cwb.v1.CreateIssueResponse
-	(*GetIssueRequest)(nil),            // 12: cwb.v1.GetIssueRequest
-	(*GetIssueResponse)(nil),           // 13: cwb.v1.GetIssueResponse
-	(*UpdateIssueRequest)(nil),         // 14: cwb.v1.UpdateIssueRequest
-	(*UpdateIssueResponse)(nil),        // 15: cwb.v1.UpdateIssueResponse
-	(*TransitionIssueRequest)(nil),     // 16: cwb.v1.TransitionIssueRequest
-	(*TransitionIssueResponse)(nil),    // 17: cwb.v1.TransitionIssueResponse
-	(*AssignIssueRequest)(nil),         // 18: cwb.v1.AssignIssueRequest
-	(*AssignIssueResponse)(nil),        // 19: cwb.v1.AssignIssueResponse
-	(*CommentIssueRequest)(nil),        // 20: cwb.v1.CommentIssueRequest
-	(*CommentIssueResponse)(nil),       // 21: cwb.v1.CommentIssueResponse
-	(*ListCommentsRequest)(nil),        // 22: cwb.v1.ListCommentsRequest
-	(*ListCommentsResponse)(nil),       // 23: cwb.v1.ListCommentsResponse
-	(*ClaimIssueRequest)(nil),          // 24: cwb.v1.ClaimIssueRequest
-	(*ClaimIssueResponse)(nil),         // 25: cwb.v1.ClaimIssueResponse
-	(*AddWatcherRequest)(nil),          // 26: cwb.v1.AddWatcherRequest
-	(*AddWatcherResponse)(nil),         // 27: cwb.v1.AddWatcherResponse
-	(*ListWatchersRequest)(nil),        // 28: cwb.v1.ListWatchersRequest
-	(*ListWatchersResponse)(nil),       // 29: cwb.v1.ListWatchersResponse
-	(*RemoveWatcherRequest)(nil),       // 30: cwb.v1.RemoveWatcherRequest
-	(*RemoveWatcherResponse)(nil),      // 31: cwb.v1.RemoveWatcherResponse
-	(*AddLinkRequest)(nil),             // 32: cwb.v1.AddLinkRequest
-	(*AddLinkResponse)(nil),            // 33: cwb.v1.AddLinkResponse
-	(*ListLinksRequest)(nil),           // 34: cwb.v1.ListLinksRequest
-	(*ListLinksResponse)(nil),          // 35: cwb.v1.ListLinksResponse
-	(*RemoveLinkRequest)(nil),          // 36: cwb.v1.RemoveLinkRequest
-	(*RemoveLinkResponse)(nil),         // 37: cwb.v1.RemoveLinkResponse
-	(*ListMyIssuesRequest)(nil),        // 38: cwb.v1.ListMyIssuesRequest
-	(*ListMyIssuesResponse)(nil),       // 39: cwb.v1.ListMyIssuesResponse
-	(*ListReadyIssuesRequest)(nil),     // 40: cwb.v1.ListReadyIssuesRequest
-	(*ListReadyIssuesResponse)(nil),    // 41: cwb.v1.ListReadyIssuesResponse
-	(*SearchIssuesRequest)(nil),        // 42: cwb.v1.SearchIssuesRequest
-	(*SearchIssuesResponse)(nil),       // 43: cwb.v1.SearchIssuesResponse
-	(*SearchIssuesTextRequest)(nil),    // 44: cwb.v1.SearchIssuesTextRequest
-	(*SearchIssuesTextResponse)(nil),   // 45: cwb.v1.SearchIssuesTextResponse
-	(*ListUpdatesRequest)(nil),         // 46: cwb.v1.ListUpdatesRequest
-	(*ListUpdatesResponse)(nil),        // 47: cwb.v1.ListUpdatesResponse
-	(*CreateProjectRequest)(nil),       // 48: cwb.v1.CreateProjectRequest
-	(*CreateProjectResponse)(nil),      // 49: cwb.v1.CreateProjectResponse
-	(*ListProjectsRequest)(nil),        // 50: cwb.v1.ListProjectsRequest
-	(*ListProjectsResponse)(nil),       // 51: cwb.v1.ListProjectsResponse
-	(*OrgServicePurgeOrgRequest)(nil),  // 52: cwb.v1.OrgServicePurgeOrgRequest
-	(*OrgServicePurgeOrgResponse)(nil), // 53: cwb.v1.OrgServicePurgeOrgResponse
-	(*CreateOrgRequest)(nil),           // 54: cwb.v1.CreateOrgRequest
-	(*CreateOrgResponse)(nil),          // 55: cwb.v1.CreateOrgResponse
-	(*ListOrgsRequest)(nil),            // 56: cwb.v1.ListOrgsRequest
-	(*ListOrgsResponse)(nil),           // 57: cwb.v1.ListOrgsResponse
-	(*GetOrgRequest)(nil),              // 58: cwb.v1.GetOrgRequest
-	(*GetOrgResponse)(nil),             // 59: cwb.v1.GetOrgResponse
-	(*UpdateOrgRequest)(nil),           // 60: cwb.v1.UpdateOrgRequest
-	(*UpdateOrgResponse)(nil),          // 61: cwb.v1.UpdateOrgResponse
-	(*DeleteOrgRequest)(nil),           // 62: cwb.v1.DeleteOrgRequest
-	(*DeleteOrgResponse)(nil),          // 63: cwb.v1.DeleteOrgResponse
-	(*AddMemberRequest)(nil),           // 64: cwb.v1.AddMemberRequest
-	(*AddMemberResponse)(nil),          // 65: cwb.v1.AddMemberResponse
-	(*ListMembersRequest)(nil),         // 66: cwb.v1.ListMembersRequest
-	(*ListMembersResponse)(nil),        // 67: cwb.v1.ListMembersResponse
-	(*RemoveMemberRequest)(nil),        // 68: cwb.v1.RemoveMemberRequest
-	(*RemoveMemberResponse)(nil),       // 69: cwb.v1.RemoveMemberResponse
-	(*CreateUserRequest)(nil),          // 70: cwb.v1.CreateUserRequest
-	(*CreateUserResponse)(nil),         // 71: cwb.v1.CreateUserResponse
-	(*ListUsersRequest)(nil),           // 72: cwb.v1.ListUsersRequest
-	(*ListUsersResponse)(nil),          // 73: cwb.v1.ListUsersResponse
-	(*GetUserRequest)(nil),             // 74: cwb.v1.GetUserRequest
-	(*GetUserResponse)(nil),            // 75: cwb.v1.GetUserResponse
-	(*UpdateUserRequest)(nil),          // 76: cwb.v1.UpdateUserRequest
-	(*UpdateUserResponse)(nil),         // 77: cwb.v1.UpdateUserResponse
-	(*DeleteUserRequest)(nil),          // 78: cwb.v1.DeleteUserRequest
-	(*DeleteUserResponse)(nil),         // 79: cwb.v1.DeleteUserResponse
+	(StatusCategory)(0),                // 0: cwb.v1.StatusCategory
+	(*Issue)(nil),                      // 1: cwb.v1.Issue
+	(*ExternalRef)(nil),                // 2: cwb.v1.ExternalRef
+	(*IssueRef)(nil),                   // 3: cwb.v1.IssueRef
+	(*WorkflowState)(nil),              // 4: cwb.v1.WorkflowState
+	(*WorkflowTransition)(nil),         // 5: cwb.v1.WorkflowTransition
+	(*Workflow)(nil),                   // 6: cwb.v1.Workflow
+	(*Project)(nil),                    // 7: cwb.v1.Project
+	(*Organisation)(nil),               // 8: cwb.v1.Organisation
+	(*User)(nil),                       // 9: cwb.v1.User
+	(*OrgMember)(nil),                  // 10: cwb.v1.OrgMember
+	(*Event)(nil),                      // 11: cwb.v1.Event
+	(*LinkRow)(nil),                    // 12: cwb.v1.LinkRow
+	(*SearchFilter)(nil),               // 13: cwb.v1.SearchFilter
+	(*CreateIssueRequest)(nil),         // 14: cwb.v1.CreateIssueRequest
+	(*CreateIssueResponse)(nil),        // 15: cwb.v1.CreateIssueResponse
+	(*GetIssueRequest)(nil),            // 16: cwb.v1.GetIssueRequest
+	(*GetIssueResponse)(nil),           // 17: cwb.v1.GetIssueResponse
+	(*UpdateIssueRequest)(nil),         // 18: cwb.v1.UpdateIssueRequest
+	(*UpdateIssueResponse)(nil),        // 19: cwb.v1.UpdateIssueResponse
+	(*TransitionIssueRequest)(nil),     // 20: cwb.v1.TransitionIssueRequest
+	(*TransitionIssueResponse)(nil),    // 21: cwb.v1.TransitionIssueResponse
+	(*SetProjectWorkflowRequest)(nil),  // 22: cwb.v1.SetProjectWorkflowRequest
+	(*SetProjectWorkflowResponse)(nil), // 23: cwb.v1.SetProjectWorkflowResponse
+	(*GetProjectWorkflowRequest)(nil),  // 24: cwb.v1.GetProjectWorkflowRequest
+	(*GetProjectWorkflowResponse)(nil), // 25: cwb.v1.GetProjectWorkflowResponse
+	(*AssignIssueRequest)(nil),         // 26: cwb.v1.AssignIssueRequest
+	(*AssignIssueResponse)(nil),        // 27: cwb.v1.AssignIssueResponse
+	(*CommentIssueRequest)(nil),        // 28: cwb.v1.CommentIssueRequest
+	(*CommentIssueResponse)(nil),       // 29: cwb.v1.CommentIssueResponse
+	(*ListCommentsRequest)(nil),        // 30: cwb.v1.ListCommentsRequest
+	(*ListCommentsResponse)(nil),       // 31: cwb.v1.ListCommentsResponse
+	(*ClaimIssueRequest)(nil),          // 32: cwb.v1.ClaimIssueRequest
+	(*ClaimIssueResponse)(nil),         // 33: cwb.v1.ClaimIssueResponse
+	(*AddWatcherRequest)(nil),          // 34: cwb.v1.AddWatcherRequest
+	(*AddWatcherResponse)(nil),         // 35: cwb.v1.AddWatcherResponse
+	(*ListWatchersRequest)(nil),        // 36: cwb.v1.ListWatchersRequest
+	(*ListWatchersResponse)(nil),       // 37: cwb.v1.ListWatchersResponse
+	(*RemoveWatcherRequest)(nil),       // 38: cwb.v1.RemoveWatcherRequest
+	(*RemoveWatcherResponse)(nil),      // 39: cwb.v1.RemoveWatcherResponse
+	(*AddLinkRequest)(nil),             // 40: cwb.v1.AddLinkRequest
+	(*AddLinkResponse)(nil),            // 41: cwb.v1.AddLinkResponse
+	(*ListLinksRequest)(nil),           // 42: cwb.v1.ListLinksRequest
+	(*ListLinksResponse)(nil),          // 43: cwb.v1.ListLinksResponse
+	(*RemoveLinkRequest)(nil),          // 44: cwb.v1.RemoveLinkRequest
+	(*RemoveLinkResponse)(nil),         // 45: cwb.v1.RemoveLinkResponse
+	(*ListMyIssuesRequest)(nil),        // 46: cwb.v1.ListMyIssuesRequest
+	(*ListMyIssuesResponse)(nil),       // 47: cwb.v1.ListMyIssuesResponse
+	(*ListReadyIssuesRequest)(nil),     // 48: cwb.v1.ListReadyIssuesRequest
+	(*ListReadyIssuesResponse)(nil),    // 49: cwb.v1.ListReadyIssuesResponse
+	(*SearchIssuesRequest)(nil),        // 50: cwb.v1.SearchIssuesRequest
+	(*SearchIssuesResponse)(nil),       // 51: cwb.v1.SearchIssuesResponse
+	(*SearchIssuesTextRequest)(nil),    // 52: cwb.v1.SearchIssuesTextRequest
+	(*SearchIssuesTextResponse)(nil),   // 53: cwb.v1.SearchIssuesTextResponse
+	(*ListUpdatesRequest)(nil),         // 54: cwb.v1.ListUpdatesRequest
+	(*ListUpdatesResponse)(nil),        // 55: cwb.v1.ListUpdatesResponse
+	(*CreateProjectRequest)(nil),       // 56: cwb.v1.CreateProjectRequest
+	(*CreateProjectResponse)(nil),      // 57: cwb.v1.CreateProjectResponse
+	(*ListProjectsRequest)(nil),        // 58: cwb.v1.ListProjectsRequest
+	(*ListProjectsResponse)(nil),       // 59: cwb.v1.ListProjectsResponse
+	(*OrgServicePurgeOrgRequest)(nil),  // 60: cwb.v1.OrgServicePurgeOrgRequest
+	(*OrgServicePurgeOrgResponse)(nil), // 61: cwb.v1.OrgServicePurgeOrgResponse
+	(*CreateOrgRequest)(nil),           // 62: cwb.v1.CreateOrgRequest
+	(*CreateOrgResponse)(nil),          // 63: cwb.v1.CreateOrgResponse
+	(*ListOrgsRequest)(nil),            // 64: cwb.v1.ListOrgsRequest
+	(*ListOrgsResponse)(nil),           // 65: cwb.v1.ListOrgsResponse
+	(*GetOrgRequest)(nil),              // 66: cwb.v1.GetOrgRequest
+	(*GetOrgResponse)(nil),             // 67: cwb.v1.GetOrgResponse
+	(*UpdateOrgRequest)(nil),           // 68: cwb.v1.UpdateOrgRequest
+	(*UpdateOrgResponse)(nil),          // 69: cwb.v1.UpdateOrgResponse
+	(*DeleteOrgRequest)(nil),           // 70: cwb.v1.DeleteOrgRequest
+	(*DeleteOrgResponse)(nil),          // 71: cwb.v1.DeleteOrgResponse
+	(*AddMemberRequest)(nil),           // 72: cwb.v1.AddMemberRequest
+	(*AddMemberResponse)(nil),          // 73: cwb.v1.AddMemberResponse
+	(*ListMembersRequest)(nil),         // 74: cwb.v1.ListMembersRequest
+	(*ListMembersResponse)(nil),        // 75: cwb.v1.ListMembersResponse
+	(*RemoveMemberRequest)(nil),        // 76: cwb.v1.RemoveMemberRequest
+	(*RemoveMemberResponse)(nil),       // 77: cwb.v1.RemoveMemberResponse
+	(*CreateUserRequest)(nil),          // 78: cwb.v1.CreateUserRequest
+	(*CreateUserResponse)(nil),         // 79: cwb.v1.CreateUserResponse
+	(*ListUsersRequest)(nil),           // 80: cwb.v1.ListUsersRequest
+	(*ListUsersResponse)(nil),          // 81: cwb.v1.ListUsersResponse
+	(*GetUserRequest)(nil),             // 82: cwb.v1.GetUserRequest
+	(*GetUserResponse)(nil),            // 83: cwb.v1.GetUserResponse
+	(*UpdateUserRequest)(nil),          // 84: cwb.v1.UpdateUserRequest
+	(*UpdateUserResponse)(nil),         // 85: cwb.v1.UpdateUserResponse
+	(*DeleteUserRequest)(nil),          // 86: cwb.v1.DeleteUserRequest
+	(*DeleteUserResponse)(nil),         // 87: cwb.v1.DeleteUserResponse
 }
 var file_cwb_v1_ledger_proto_depIdxs = []int32{
-	1,  // 0: cwb.v1.Issue.external_refs:type_name -> cwb.v1.ExternalRef
-	1,  // 1: cwb.v1.CreateIssueRequest.external_refs:type_name -> cwb.v1.ExternalRef
-	0,  // 2: cwb.v1.CreateIssueResponse.issue:type_name -> cwb.v1.Issue
-	0,  // 3: cwb.v1.GetIssueResponse.issue:type_name -> cwb.v1.Issue
-	1,  // 4: cwb.v1.UpdateIssueRequest.external_refs:type_name -> cwb.v1.ExternalRef
-	7,  // 5: cwb.v1.ListCommentsResponse.comments:type_name -> cwb.v1.Event
-	0,  // 6: cwb.v1.ClaimIssueResponse.issue:type_name -> cwb.v1.Issue
-	8,  // 7: cwb.v1.ListLinksResponse.links:type_name -> cwb.v1.LinkRow
-	2,  // 8: cwb.v1.ListMyIssuesResponse.issues:type_name -> cwb.v1.IssueRef
-	2,  // 9: cwb.v1.ListReadyIssuesResponse.issues:type_name -> cwb.v1.IssueRef
-	9,  // 10: cwb.v1.SearchIssuesRequest.filter:type_name -> cwb.v1.SearchFilter
-	2,  // 11: cwb.v1.SearchIssuesResponse.refs:type_name -> cwb.v1.IssueRef
-	2,  // 12: cwb.v1.SearchIssuesTextResponse.refs:type_name -> cwb.v1.IssueRef
-	7,  // 13: cwb.v1.ListUpdatesResponse.events:type_name -> cwb.v1.Event
-	3,  // 14: cwb.v1.ListProjectsResponse.projects:type_name -> cwb.v1.Project
-	4,  // 15: cwb.v1.CreateOrgResponse.org:type_name -> cwb.v1.Organisation
-	4,  // 16: cwb.v1.ListOrgsResponse.orgs:type_name -> cwb.v1.Organisation
-	4,  // 17: cwb.v1.GetOrgResponse.org:type_name -> cwb.v1.Organisation
-	6,  // 18: cwb.v1.ListMembersResponse.members:type_name -> cwb.v1.OrgMember
-	5,  // 19: cwb.v1.CreateUserResponse.user:type_name -> cwb.v1.User
-	5,  // 20: cwb.v1.ListUsersResponse.users:type_name -> cwb.v1.User
-	5,  // 21: cwb.v1.GetUserResponse.user:type_name -> cwb.v1.User
-	12, // 22: cwb.v1.IssueService.GetIssue:input_type -> cwb.v1.GetIssueRequest
-	14, // 23: cwb.v1.IssueService.UpdateIssue:input_type -> cwb.v1.UpdateIssueRequest
-	16, // 24: cwb.v1.IssueService.TransitionIssue:input_type -> cwb.v1.TransitionIssueRequest
-	18, // 25: cwb.v1.IssueService.AssignIssue:input_type -> cwb.v1.AssignIssueRequest
-	20, // 26: cwb.v1.IssueService.CommentIssue:input_type -> cwb.v1.CommentIssueRequest
-	22, // 27: cwb.v1.IssueService.ListComments:input_type -> cwb.v1.ListCommentsRequest
-	24, // 28: cwb.v1.IssueService.ClaimIssue:input_type -> cwb.v1.ClaimIssueRequest
-	26, // 29: cwb.v1.IssueService.AddWatcher:input_type -> cwb.v1.AddWatcherRequest
-	28, // 30: cwb.v1.IssueService.ListWatchers:input_type -> cwb.v1.ListWatchersRequest
-	30, // 31: cwb.v1.IssueService.RemoveWatcher:input_type -> cwb.v1.RemoveWatcherRequest
-	32, // 32: cwb.v1.IssueService.AddLink:input_type -> cwb.v1.AddLinkRequest
-	34, // 33: cwb.v1.IssueService.ListLinks:input_type -> cwb.v1.ListLinksRequest
-	36, // 34: cwb.v1.IssueService.RemoveLink:input_type -> cwb.v1.RemoveLinkRequest
-	10, // 35: cwb.v1.IssueService.CreateIssue:input_type -> cwb.v1.CreateIssueRequest
-	38, // 36: cwb.v1.IssueService.ListMyIssues:input_type -> cwb.v1.ListMyIssuesRequest
-	40, // 37: cwb.v1.IssueService.ListReadyIssues:input_type -> cwb.v1.ListReadyIssuesRequest
-	42, // 38: cwb.v1.IssueService.SearchIssues:input_type -> cwb.v1.SearchIssuesRequest
-	44, // 39: cwb.v1.IssueService.SearchIssuesText:input_type -> cwb.v1.SearchIssuesTextRequest
-	46, // 40: cwb.v1.IssueService.ListUpdates:input_type -> cwb.v1.ListUpdatesRequest
-	48, // 41: cwb.v1.ProjectService.CreateProject:input_type -> cwb.v1.CreateProjectRequest
-	50, // 42: cwb.v1.ProjectService.ListProjects:input_type -> cwb.v1.ListProjectsRequest
-	52, // 43: cwb.v1.OrgService.PurgeOrg:input_type -> cwb.v1.OrgServicePurgeOrgRequest
-	54, // 44: cwb.v1.AdminService.CreateOrg:input_type -> cwb.v1.CreateOrgRequest
-	56, // 45: cwb.v1.AdminService.ListOrgs:input_type -> cwb.v1.ListOrgsRequest
-	58, // 46: cwb.v1.AdminService.GetOrg:input_type -> cwb.v1.GetOrgRequest
-	60, // 47: cwb.v1.AdminService.UpdateOrg:input_type -> cwb.v1.UpdateOrgRequest
-	62, // 48: cwb.v1.AdminService.DeleteOrg:input_type -> cwb.v1.DeleteOrgRequest
-	64, // 49: cwb.v1.AdminService.AddMember:input_type -> cwb.v1.AddMemberRequest
-	66, // 50: cwb.v1.AdminService.ListMembers:input_type -> cwb.v1.ListMembersRequest
-	68, // 51: cwb.v1.AdminService.RemoveMember:input_type -> cwb.v1.RemoveMemberRequest
-	70, // 52: cwb.v1.AdminService.CreateUser:input_type -> cwb.v1.CreateUserRequest
-	72, // 53: cwb.v1.AdminService.ListUsers:input_type -> cwb.v1.ListUsersRequest
-	74, // 54: cwb.v1.AdminService.GetUser:input_type -> cwb.v1.GetUserRequest
-	76, // 55: cwb.v1.AdminService.UpdateUser:input_type -> cwb.v1.UpdateUserRequest
-	78, // 56: cwb.v1.AdminService.DeleteUser:input_type -> cwb.v1.DeleteUserRequest
-	13, // 57: cwb.v1.IssueService.GetIssue:output_type -> cwb.v1.GetIssueResponse
-	15, // 58: cwb.v1.IssueService.UpdateIssue:output_type -> cwb.v1.UpdateIssueResponse
-	17, // 59: cwb.v1.IssueService.TransitionIssue:output_type -> cwb.v1.TransitionIssueResponse
-	19, // 60: cwb.v1.IssueService.AssignIssue:output_type -> cwb.v1.AssignIssueResponse
-	21, // 61: cwb.v1.IssueService.CommentIssue:output_type -> cwb.v1.CommentIssueResponse
-	23, // 62: cwb.v1.IssueService.ListComments:output_type -> cwb.v1.ListCommentsResponse
-	25, // 63: cwb.v1.IssueService.ClaimIssue:output_type -> cwb.v1.ClaimIssueResponse
-	27, // 64: cwb.v1.IssueService.AddWatcher:output_type -> cwb.v1.AddWatcherResponse
-	29, // 65: cwb.v1.IssueService.ListWatchers:output_type -> cwb.v1.ListWatchersResponse
-	31, // 66: cwb.v1.IssueService.RemoveWatcher:output_type -> cwb.v1.RemoveWatcherResponse
-	33, // 67: cwb.v1.IssueService.AddLink:output_type -> cwb.v1.AddLinkResponse
-	35, // 68: cwb.v1.IssueService.ListLinks:output_type -> cwb.v1.ListLinksResponse
-	37, // 69: cwb.v1.IssueService.RemoveLink:output_type -> cwb.v1.RemoveLinkResponse
-	11, // 70: cwb.v1.IssueService.CreateIssue:output_type -> cwb.v1.CreateIssueResponse
-	39, // 71: cwb.v1.IssueService.ListMyIssues:output_type -> cwb.v1.ListMyIssuesResponse
-	41, // 72: cwb.v1.IssueService.ListReadyIssues:output_type -> cwb.v1.ListReadyIssuesResponse
-	43, // 73: cwb.v1.IssueService.SearchIssues:output_type -> cwb.v1.SearchIssuesResponse
-	45, // 74: cwb.v1.IssueService.SearchIssuesText:output_type -> cwb.v1.SearchIssuesTextResponse
-	47, // 75: cwb.v1.IssueService.ListUpdates:output_type -> cwb.v1.ListUpdatesResponse
-	49, // 76: cwb.v1.ProjectService.CreateProject:output_type -> cwb.v1.CreateProjectResponse
-	51, // 77: cwb.v1.ProjectService.ListProjects:output_type -> cwb.v1.ListProjectsResponse
-	53, // 78: cwb.v1.OrgService.PurgeOrg:output_type -> cwb.v1.OrgServicePurgeOrgResponse
-	55, // 79: cwb.v1.AdminService.CreateOrg:output_type -> cwb.v1.CreateOrgResponse
-	57, // 80: cwb.v1.AdminService.ListOrgs:output_type -> cwb.v1.ListOrgsResponse
-	59, // 81: cwb.v1.AdminService.GetOrg:output_type -> cwb.v1.GetOrgResponse
-	61, // 82: cwb.v1.AdminService.UpdateOrg:output_type -> cwb.v1.UpdateOrgResponse
-	63, // 83: cwb.v1.AdminService.DeleteOrg:output_type -> cwb.v1.DeleteOrgResponse
-	65, // 84: cwb.v1.AdminService.AddMember:output_type -> cwb.v1.AddMemberResponse
-	67, // 85: cwb.v1.AdminService.ListMembers:output_type -> cwb.v1.ListMembersResponse
-	69, // 86: cwb.v1.AdminService.RemoveMember:output_type -> cwb.v1.RemoveMemberResponse
-	71, // 87: cwb.v1.AdminService.CreateUser:output_type -> cwb.v1.CreateUserResponse
-	73, // 88: cwb.v1.AdminService.ListUsers:output_type -> cwb.v1.ListUsersResponse
-	75, // 89: cwb.v1.AdminService.GetUser:output_type -> cwb.v1.GetUserResponse
-	77, // 90: cwb.v1.AdminService.UpdateUser:output_type -> cwb.v1.UpdateUserResponse
-	79, // 91: cwb.v1.AdminService.DeleteUser:output_type -> cwb.v1.DeleteUserResponse
-	57, // [57:92] is the sub-list for method output_type
-	22, // [22:57] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	2,  // 0: cwb.v1.Issue.external_refs:type_name -> cwb.v1.ExternalRef
+	0,  // 1: cwb.v1.Issue.category:type_name -> cwb.v1.StatusCategory
+	0,  // 2: cwb.v1.IssueRef.category:type_name -> cwb.v1.StatusCategory
+	0,  // 3: cwb.v1.WorkflowState.category:type_name -> cwb.v1.StatusCategory
+	4,  // 4: cwb.v1.Workflow.states:type_name -> cwb.v1.WorkflowState
+	5,  // 5: cwb.v1.Workflow.transitions:type_name -> cwb.v1.WorkflowTransition
+	2,  // 6: cwb.v1.CreateIssueRequest.external_refs:type_name -> cwb.v1.ExternalRef
+	1,  // 7: cwb.v1.CreateIssueResponse.issue:type_name -> cwb.v1.Issue
+	1,  // 8: cwb.v1.GetIssueResponse.issue:type_name -> cwb.v1.Issue
+	2,  // 9: cwb.v1.UpdateIssueRequest.external_refs:type_name -> cwb.v1.ExternalRef
+	6,  // 10: cwb.v1.SetProjectWorkflowRequest.workflow:type_name -> cwb.v1.Workflow
+	6,  // 11: cwb.v1.GetProjectWorkflowResponse.workflow:type_name -> cwb.v1.Workflow
+	11, // 12: cwb.v1.ListCommentsResponse.comments:type_name -> cwb.v1.Event
+	1,  // 13: cwb.v1.ClaimIssueResponse.issue:type_name -> cwb.v1.Issue
+	12, // 14: cwb.v1.ListLinksResponse.links:type_name -> cwb.v1.LinkRow
+	3,  // 15: cwb.v1.ListMyIssuesResponse.issues:type_name -> cwb.v1.IssueRef
+	3,  // 16: cwb.v1.ListReadyIssuesResponse.issues:type_name -> cwb.v1.IssueRef
+	13, // 17: cwb.v1.SearchIssuesRequest.filter:type_name -> cwb.v1.SearchFilter
+	3,  // 18: cwb.v1.SearchIssuesResponse.refs:type_name -> cwb.v1.IssueRef
+	3,  // 19: cwb.v1.SearchIssuesTextResponse.refs:type_name -> cwb.v1.IssueRef
+	11, // 20: cwb.v1.ListUpdatesResponse.events:type_name -> cwb.v1.Event
+	7,  // 21: cwb.v1.ListProjectsResponse.projects:type_name -> cwb.v1.Project
+	8,  // 22: cwb.v1.CreateOrgResponse.org:type_name -> cwb.v1.Organisation
+	8,  // 23: cwb.v1.ListOrgsResponse.orgs:type_name -> cwb.v1.Organisation
+	8,  // 24: cwb.v1.GetOrgResponse.org:type_name -> cwb.v1.Organisation
+	10, // 25: cwb.v1.ListMembersResponse.members:type_name -> cwb.v1.OrgMember
+	9,  // 26: cwb.v1.CreateUserResponse.user:type_name -> cwb.v1.User
+	9,  // 27: cwb.v1.ListUsersResponse.users:type_name -> cwb.v1.User
+	9,  // 28: cwb.v1.GetUserResponse.user:type_name -> cwb.v1.User
+	16, // 29: cwb.v1.IssueService.GetIssue:input_type -> cwb.v1.GetIssueRequest
+	18, // 30: cwb.v1.IssueService.UpdateIssue:input_type -> cwb.v1.UpdateIssueRequest
+	20, // 31: cwb.v1.IssueService.TransitionIssue:input_type -> cwb.v1.TransitionIssueRequest
+	22, // 32: cwb.v1.IssueService.SetProjectWorkflow:input_type -> cwb.v1.SetProjectWorkflowRequest
+	24, // 33: cwb.v1.IssueService.GetProjectWorkflow:input_type -> cwb.v1.GetProjectWorkflowRequest
+	26, // 34: cwb.v1.IssueService.AssignIssue:input_type -> cwb.v1.AssignIssueRequest
+	28, // 35: cwb.v1.IssueService.CommentIssue:input_type -> cwb.v1.CommentIssueRequest
+	30, // 36: cwb.v1.IssueService.ListComments:input_type -> cwb.v1.ListCommentsRequest
+	32, // 37: cwb.v1.IssueService.ClaimIssue:input_type -> cwb.v1.ClaimIssueRequest
+	34, // 38: cwb.v1.IssueService.AddWatcher:input_type -> cwb.v1.AddWatcherRequest
+	36, // 39: cwb.v1.IssueService.ListWatchers:input_type -> cwb.v1.ListWatchersRequest
+	38, // 40: cwb.v1.IssueService.RemoveWatcher:input_type -> cwb.v1.RemoveWatcherRequest
+	40, // 41: cwb.v1.IssueService.AddLink:input_type -> cwb.v1.AddLinkRequest
+	42, // 42: cwb.v1.IssueService.ListLinks:input_type -> cwb.v1.ListLinksRequest
+	44, // 43: cwb.v1.IssueService.RemoveLink:input_type -> cwb.v1.RemoveLinkRequest
+	14, // 44: cwb.v1.IssueService.CreateIssue:input_type -> cwb.v1.CreateIssueRequest
+	46, // 45: cwb.v1.IssueService.ListMyIssues:input_type -> cwb.v1.ListMyIssuesRequest
+	48, // 46: cwb.v1.IssueService.ListReadyIssues:input_type -> cwb.v1.ListReadyIssuesRequest
+	50, // 47: cwb.v1.IssueService.SearchIssues:input_type -> cwb.v1.SearchIssuesRequest
+	52, // 48: cwb.v1.IssueService.SearchIssuesText:input_type -> cwb.v1.SearchIssuesTextRequest
+	54, // 49: cwb.v1.IssueService.ListUpdates:input_type -> cwb.v1.ListUpdatesRequest
+	56, // 50: cwb.v1.ProjectService.CreateProject:input_type -> cwb.v1.CreateProjectRequest
+	58, // 51: cwb.v1.ProjectService.ListProjects:input_type -> cwb.v1.ListProjectsRequest
+	60, // 52: cwb.v1.OrgService.PurgeOrg:input_type -> cwb.v1.OrgServicePurgeOrgRequest
+	62, // 53: cwb.v1.AdminService.CreateOrg:input_type -> cwb.v1.CreateOrgRequest
+	64, // 54: cwb.v1.AdminService.ListOrgs:input_type -> cwb.v1.ListOrgsRequest
+	66, // 55: cwb.v1.AdminService.GetOrg:input_type -> cwb.v1.GetOrgRequest
+	68, // 56: cwb.v1.AdminService.UpdateOrg:input_type -> cwb.v1.UpdateOrgRequest
+	70, // 57: cwb.v1.AdminService.DeleteOrg:input_type -> cwb.v1.DeleteOrgRequest
+	72, // 58: cwb.v1.AdminService.AddMember:input_type -> cwb.v1.AddMemberRequest
+	74, // 59: cwb.v1.AdminService.ListMembers:input_type -> cwb.v1.ListMembersRequest
+	76, // 60: cwb.v1.AdminService.RemoveMember:input_type -> cwb.v1.RemoveMemberRequest
+	78, // 61: cwb.v1.AdminService.CreateUser:input_type -> cwb.v1.CreateUserRequest
+	80, // 62: cwb.v1.AdminService.ListUsers:input_type -> cwb.v1.ListUsersRequest
+	82, // 63: cwb.v1.AdminService.GetUser:input_type -> cwb.v1.GetUserRequest
+	84, // 64: cwb.v1.AdminService.UpdateUser:input_type -> cwb.v1.UpdateUserRequest
+	86, // 65: cwb.v1.AdminService.DeleteUser:input_type -> cwb.v1.DeleteUserRequest
+	17, // 66: cwb.v1.IssueService.GetIssue:output_type -> cwb.v1.GetIssueResponse
+	19, // 67: cwb.v1.IssueService.UpdateIssue:output_type -> cwb.v1.UpdateIssueResponse
+	21, // 68: cwb.v1.IssueService.TransitionIssue:output_type -> cwb.v1.TransitionIssueResponse
+	23, // 69: cwb.v1.IssueService.SetProjectWorkflow:output_type -> cwb.v1.SetProjectWorkflowResponse
+	25, // 70: cwb.v1.IssueService.GetProjectWorkflow:output_type -> cwb.v1.GetProjectWorkflowResponse
+	27, // 71: cwb.v1.IssueService.AssignIssue:output_type -> cwb.v1.AssignIssueResponse
+	29, // 72: cwb.v1.IssueService.CommentIssue:output_type -> cwb.v1.CommentIssueResponse
+	31, // 73: cwb.v1.IssueService.ListComments:output_type -> cwb.v1.ListCommentsResponse
+	33, // 74: cwb.v1.IssueService.ClaimIssue:output_type -> cwb.v1.ClaimIssueResponse
+	35, // 75: cwb.v1.IssueService.AddWatcher:output_type -> cwb.v1.AddWatcherResponse
+	37, // 76: cwb.v1.IssueService.ListWatchers:output_type -> cwb.v1.ListWatchersResponse
+	39, // 77: cwb.v1.IssueService.RemoveWatcher:output_type -> cwb.v1.RemoveWatcherResponse
+	41, // 78: cwb.v1.IssueService.AddLink:output_type -> cwb.v1.AddLinkResponse
+	43, // 79: cwb.v1.IssueService.ListLinks:output_type -> cwb.v1.ListLinksResponse
+	45, // 80: cwb.v1.IssueService.RemoveLink:output_type -> cwb.v1.RemoveLinkResponse
+	15, // 81: cwb.v1.IssueService.CreateIssue:output_type -> cwb.v1.CreateIssueResponse
+	47, // 82: cwb.v1.IssueService.ListMyIssues:output_type -> cwb.v1.ListMyIssuesResponse
+	49, // 83: cwb.v1.IssueService.ListReadyIssues:output_type -> cwb.v1.ListReadyIssuesResponse
+	51, // 84: cwb.v1.IssueService.SearchIssues:output_type -> cwb.v1.SearchIssuesResponse
+	53, // 85: cwb.v1.IssueService.SearchIssuesText:output_type -> cwb.v1.SearchIssuesTextResponse
+	55, // 86: cwb.v1.IssueService.ListUpdates:output_type -> cwb.v1.ListUpdatesResponse
+	57, // 87: cwb.v1.ProjectService.CreateProject:output_type -> cwb.v1.CreateProjectResponse
+	59, // 88: cwb.v1.ProjectService.ListProjects:output_type -> cwb.v1.ListProjectsResponse
+	61, // 89: cwb.v1.OrgService.PurgeOrg:output_type -> cwb.v1.OrgServicePurgeOrgResponse
+	63, // 90: cwb.v1.AdminService.CreateOrg:output_type -> cwb.v1.CreateOrgResponse
+	65, // 91: cwb.v1.AdminService.ListOrgs:output_type -> cwb.v1.ListOrgsResponse
+	67, // 92: cwb.v1.AdminService.GetOrg:output_type -> cwb.v1.GetOrgResponse
+	69, // 93: cwb.v1.AdminService.UpdateOrg:output_type -> cwb.v1.UpdateOrgResponse
+	71, // 94: cwb.v1.AdminService.DeleteOrg:output_type -> cwb.v1.DeleteOrgResponse
+	73, // 95: cwb.v1.AdminService.AddMember:output_type -> cwb.v1.AddMemberResponse
+	75, // 96: cwb.v1.AdminService.ListMembers:output_type -> cwb.v1.ListMembersResponse
+	77, // 97: cwb.v1.AdminService.RemoveMember:output_type -> cwb.v1.RemoveMemberResponse
+	79, // 98: cwb.v1.AdminService.CreateUser:output_type -> cwb.v1.CreateUserResponse
+	81, // 99: cwb.v1.AdminService.ListUsers:output_type -> cwb.v1.ListUsersResponse
+	83, // 100: cwb.v1.AdminService.GetUser:output_type -> cwb.v1.GetUserResponse
+	85, // 101: cwb.v1.AdminService.UpdateUser:output_type -> cwb.v1.UpdateUserResponse
+	87, // 102: cwb.v1.AdminService.DeleteUser:output_type -> cwb.v1.DeleteUserResponse
+	66, // [66:103] is the sub-list for method output_type
+	29, // [29:66] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_cwb_v1_ledger_proto_init() }
@@ -4916,13 +5397,14 @@ func file_cwb_v1_ledger_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_v1_ledger_proto_rawDesc), len(file_cwb_v1_ledger_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   80,
+			NumEnums:      1,
+			NumMessages:   87,
 			NumExtensions: 0,
 			NumServices:   4,
 		},
 		GoTypes:           file_cwb_v1_ledger_proto_goTypes,
 		DependencyIndexes: file_cwb_v1_ledger_proto_depIdxs,
+		EnumInfos:         file_cwb_v1_ledger_proto_enumTypes,
 		MessageInfos:      file_cwb_v1_ledger_proto_msgTypes,
 	}.Build()
 	File_cwb_v1_ledger_proto = out.File
