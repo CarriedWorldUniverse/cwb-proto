@@ -272,6 +272,7 @@ message Issue {
   string created_at = 16;
   string updated_at = 17;
   StatusCategory category = 18;
+  repeated string skills = 19;
 }
 
 // ExternalRef points at a ticket in an external tracker.
@@ -573,6 +574,7 @@ message ListMyIssuesResponse {
 
 message ListReadyIssuesRequest {
   string aspect = 1;
+  repeated string skills = 2;
 }
 
 // ListReadyIssuesResponse: handler emits a bare array; grpc-gateway wraps as {"issues": [...]}.

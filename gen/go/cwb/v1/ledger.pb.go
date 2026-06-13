@@ -115,6 +115,7 @@ type Issue struct {
 	CreatedAt        string                 `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt        string                 `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	Category         StatusCategory         `protobuf:"varint,18,opt,name=category,proto3,enum=cwb.v1.StatusCategory" json:"category,omitempty"`
+	Skills           []string               `protobuf:"bytes,19,rep,name=skills,proto3" json:"skills,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -273,6 +274,13 @@ func (x *Issue) GetCategory() StatusCategory {
 		return x.Category
 	}
 	return StatusCategory_STATUS_CATEGORY_UNSPECIFIED
+}
+
+func (x *Issue) GetSkills() []string {
+	if x != nil {
+		return x.Skills
+	}
+	return nil
 }
 
 // ExternalRef points at a ticket in an external tracker.
@@ -2985,6 +2993,7 @@ func (x *ListMyIssuesResponse) GetIssues() []*IssueRef {
 type ListReadyIssuesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Aspect        string                 `protobuf:"bytes,1,opt,name=aspect,proto3" json:"aspect,omitempty"`
+	Skills        []string               `protobuf:"bytes,2,rep,name=skills,proto3" json:"skills,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3024,6 +3033,13 @@ func (x *ListReadyIssuesRequest) GetAspect() string {
 		return x.Aspect
 	}
 	return ""
+}
+
+func (x *ListReadyIssuesRequest) GetSkills() []string {
+	if x != nil {
+		return x.Skills
+	}
+	return nil
 }
 
 // ListReadyIssuesResponse: handler emits a bare array; grpc-gateway wraps as {"issues": [...]}.
@@ -4814,7 +4830,7 @@ var File_cwb_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xd5\x04\n" +
+	"\x13cwb/v1/ledger.proto\x12\x06cwb.v1\x1a\x1cgoogle/api/annotations.proto\"\xed\x04\n" +
 	"\x05Issue\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x18\n" +
 	"\aproject\x18\x02 \x01(\tR\aproject\x12\x10\n" +
@@ -4837,7 +4853,8 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"created_at\x18\x10 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
 	"updated_at\x18\x11 \x01(\tR\tupdatedAt\x122\n" +
-	"\bcategory\x18\x12 \x01(\x0e2\x16.cwb.v1.StatusCategoryR\bcategory\"m\n" +
+	"\bcategory\x18\x12 \x01(\x0e2\x16.cwb.v1.StatusCategoryR\bcategory\x12\x16\n" +
+	"\x06skills\x18\x13 \x03(\tR\x06skills\"m\n" +
 	"\vExternalRef\x12\x18\n" +
 	"\atracker\x18\x01 \x01(\tR\atracker\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x10\n" +
@@ -5021,9 +5038,10 @@ const file_cwb_v1_ledger_proto_rawDesc = "" +
 	"\x13ListMyIssuesRequest\x12\x16\n" +
 	"\x06aspect\x18\x01 \x01(\tR\x06aspect\"@\n" +
 	"\x14ListMyIssuesResponse\x12(\n" +
-	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"0\n" +
+	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"H\n" +
 	"\x16ListReadyIssuesRequest\x12\x16\n" +
-	"\x06aspect\x18\x01 \x01(\tR\x06aspect\"C\n" +
+	"\x06aspect\x18\x01 \x01(\tR\x06aspect\x12\x16\n" +
+	"\x06skills\x18\x02 \x03(\tR\x06skills\"C\n" +
 	"\x17ListReadyIssuesResponse\x12(\n" +
 	"\x06issues\x18\x01 \x03(\v2\x10.cwb.v1.IssueRefR\x06issues\"C\n" +
 	"\x13SearchIssuesRequest\x12,\n" +
