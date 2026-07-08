@@ -70,6 +70,25 @@ service PullService {
       response_body: "pulls"
     };
   }
+  // RecordPullCheck mirrors POST
+  // /api/orgs/{org}/repos/{slug}/pulls/{id}/checks (scope repo:write). Upserts
+  // by (pull, name): re-recording a check with the same name replaces its
+  // state/summary/evidence_url. response_body:"check".
+  rpc RecordPullCheck(RecordPullCheckRequest) returns (RecordPullCheckResponse) {
+    option (google.api.http) = {
+      post: "/api/orgs/{org}/repos/{slug}/pulls/{id}/checks"
+      body: "*"
+      response_body: "check"
+    };
+  }
+  // ListPullChecks mirrors GET /api/orgs/{org}/repos/{slug}/pulls/{id}/checks
+  // (scope repo:read). response_body:"checks".
+  rpc ListPullChecks(ListPullChecksRequest) returns (ListPullChecksResponse) {
+    option (google.api.http) = {
+      get: "/api/orgs/{org}/repos/{slug}/pulls/{id}/checks"
+      response_body: "checks"
+    };
+  }
 }
 
 // OrgService — cross-pillar org purge (NEX-402). Org-bound by construction: the
@@ -169,6 +188,42 @@ message MergeResult {
 }
 message MergePullResponse {
   MergeResult result = 1;
+}
+
+// PullCheck is a recorded check verdict on a pull (e.g. CI, review, security).
+// `state` is one of "pass"|"fail"|"pending". Re-recording the same `name` on
+// the same pull upserts (replaces state/summary/evidence_url/recorder/time).
+message PullCheck {
+  string id = 1;
+  string pull_id = 2;
+  string name = 3;
+  string state = 4; // "pass" | "fail" | "pending"
+  string summary = 5;
+  string evidence_url = 6;
+  string recorded_by = 7;
+  string recorded_at = 8; // RFC3339
+}
+
+message RecordPullCheckRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string id = 3; // path; pull id
+  string name = 4; // body
+  string state = 5; // body; "pass" | "fail" | "pending"
+  string summary = 6; // body
+  string evidence_url = 7; // body
+}
+message RecordPullCheckResponse {
+  PullCheck check = 1;
+}
+
+message ListPullChecksRequest {
+  string org = 1; // path
+  string slug = 2; // path
+  string id = 3; // path; pull id
+}
+message ListPullChecksResponse {
+  repeated PullCheck checks = 1;
 }
 
 message PurgeOrgRequest {}
