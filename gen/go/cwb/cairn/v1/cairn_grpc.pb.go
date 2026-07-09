@@ -181,10 +181,12 @@ var RepoService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	PullService_OpenPull_FullMethodName  = "/cwb.cairn.v1.PullService/OpenPull"
-	PullService_GetPull_FullMethodName   = "/cwb.cairn.v1.PullService/GetPull"
-	PullService_MergePull_FullMethodName = "/cwb.cairn.v1.PullService/MergePull"
-	PullService_ListPulls_FullMethodName = "/cwb.cairn.v1.PullService/ListPulls"
+	PullService_OpenPull_FullMethodName        = "/cwb.cairn.v1.PullService/OpenPull"
+	PullService_GetPull_FullMethodName         = "/cwb.cairn.v1.PullService/GetPull"
+	PullService_MergePull_FullMethodName       = "/cwb.cairn.v1.PullService/MergePull"
+	PullService_ListPulls_FullMethodName       = "/cwb.cairn.v1.PullService/ListPulls"
+	PullService_RecordPullCheck_FullMethodName = "/cwb.cairn.v1.PullService/RecordPullCheck"
+	PullService_ListPullChecks_FullMethodName  = "/cwb.cairn.v1.PullService/ListPullChecks"
 )
 
 // PullServiceClient is the client API for PullService service.
@@ -205,6 +207,14 @@ type PullServiceClient interface {
 	// ListPulls lists a repo's pulls (scope repo:read); optional ?state= filter
 	// ("open"|"merged"|"all"; default all). response_body:"pulls".
 	ListPulls(ctx context.Context, in *ListPullsRequest, opts ...grpc.CallOption) (*ListPullsResponse, error)
+	// RecordPullCheck mirrors POST
+	// /api/orgs/{org}/repos/{slug}/pulls/{id}/checks (scope repo:write). Upserts
+	// by (pull, name): re-recording a check with the same name replaces its
+	// state/summary/evidence_url. response_body:"check".
+	RecordPullCheck(ctx context.Context, in *RecordPullCheckRequest, opts ...grpc.CallOption) (*RecordPullCheckResponse, error)
+	// ListPullChecks mirrors GET /api/orgs/{org}/repos/{slug}/pulls/{id}/checks
+	// (scope repo:read). response_body:"checks".
+	ListPullChecks(ctx context.Context, in *ListPullChecksRequest, opts ...grpc.CallOption) (*ListPullChecksResponse, error)
 }
 
 type pullServiceClient struct {
@@ -255,6 +265,26 @@ func (c *pullServiceClient) ListPulls(ctx context.Context, in *ListPullsRequest,
 	return out, nil
 }
 
+func (c *pullServiceClient) RecordPullCheck(ctx context.Context, in *RecordPullCheckRequest, opts ...grpc.CallOption) (*RecordPullCheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RecordPullCheckResponse)
+	err := c.cc.Invoke(ctx, PullService_RecordPullCheck_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pullServiceClient) ListPullChecks(ctx context.Context, in *ListPullChecksRequest, opts ...grpc.CallOption) (*ListPullChecksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPullChecksResponse)
+	err := c.cc.Invoke(ctx, PullService_ListPullChecks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PullServiceServer is the server API for PullService service.
 // All implementations must embed UnimplementedPullServiceServer
 // for forward compatibility.
@@ -273,6 +303,14 @@ type PullServiceServer interface {
 	// ListPulls lists a repo's pulls (scope repo:read); optional ?state= filter
 	// ("open"|"merged"|"all"; default all). response_body:"pulls".
 	ListPulls(context.Context, *ListPullsRequest) (*ListPullsResponse, error)
+	// RecordPullCheck mirrors POST
+	// /api/orgs/{org}/repos/{slug}/pulls/{id}/checks (scope repo:write). Upserts
+	// by (pull, name): re-recording a check with the same name replaces its
+	// state/summary/evidence_url. response_body:"check".
+	RecordPullCheck(context.Context, *RecordPullCheckRequest) (*RecordPullCheckResponse, error)
+	// ListPullChecks mirrors GET /api/orgs/{org}/repos/{slug}/pulls/{id}/checks
+	// (scope repo:read). response_body:"checks".
+	ListPullChecks(context.Context, *ListPullChecksRequest) (*ListPullChecksResponse, error)
 	mustEmbedUnimplementedPullServiceServer()
 }
 
@@ -294,6 +332,12 @@ func (UnimplementedPullServiceServer) MergePull(context.Context, *MergePullReque
 }
 func (UnimplementedPullServiceServer) ListPulls(context.Context, *ListPullsRequest) (*ListPullsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPulls not implemented")
+}
+func (UnimplementedPullServiceServer) RecordPullCheck(context.Context, *RecordPullCheckRequest) (*RecordPullCheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RecordPullCheck not implemented")
+}
+func (UnimplementedPullServiceServer) ListPullChecks(context.Context, *ListPullChecksRequest) (*ListPullChecksResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPullChecks not implemented")
 }
 func (UnimplementedPullServiceServer) mustEmbedUnimplementedPullServiceServer() {}
 func (UnimplementedPullServiceServer) testEmbeddedByValue()                     {}
@@ -388,6 +432,42 @@ func _PullService_ListPulls_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PullService_RecordPullCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecordPullCheckRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PullServiceServer).RecordPullCheck(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PullService_RecordPullCheck_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PullServiceServer).RecordPullCheck(ctx, req.(*RecordPullCheckRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PullService_ListPullChecks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPullChecksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PullServiceServer).ListPullChecks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PullService_ListPullChecks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PullServiceServer).ListPullChecks(ctx, req.(*ListPullChecksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PullService_ServiceDesc is the grpc.ServiceDesc for PullService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -410,6 +490,14 @@ var PullService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPulls",
 			Handler:    _PullService_ListPulls_Handler,
+		},
+		{
+			MethodName: "RecordPullCheck",
+			Handler:    _PullService_RecordPullCheck_Handler,
+		},
+		{
+			MethodName: "ListPullChecks",
+			Handler:    _PullService_ListPullChecks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

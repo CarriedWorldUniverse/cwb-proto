@@ -918,6 +918,349 @@ func (x *MergePullResponse) GetResult() *MergeResult {
 	return nil
 }
 
+// PullCheck is a recorded check verdict on a pull (e.g. CI, review, security).
+// `state` is one of "pass"|"fail"|"pending". Re-recording the same `name` on
+// the same pull upserts (replaces state/summary/evidence_url/recorder/time).
+type PullCheck struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PullId        string                 `protobuf:"bytes,2,opt,name=pull_id,json=pullId,proto3" json:"pull_id,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"` // "pass" | "fail" | "pending"
+	Summary       string                 `protobuf:"bytes,5,opt,name=summary,proto3" json:"summary,omitempty"`
+	EvidenceUrl   string                 `protobuf:"bytes,6,opt,name=evidence_url,json=evidenceUrl,proto3" json:"evidence_url,omitempty"`
+	RecordedBy    string                 `protobuf:"bytes,7,opt,name=recorded_by,json=recordedBy,proto3" json:"recorded_by,omitempty"`
+	RecordedAt    string                 `protobuf:"bytes,8,opt,name=recorded_at,json=recordedAt,proto3" json:"recorded_at,omitempty"` // RFC3339
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PullCheck) Reset() {
+	*x = PullCheck{}
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PullCheck) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PullCheck) ProtoMessage() {}
+
+func (x *PullCheck) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PullCheck.ProtoReflect.Descriptor instead.
+func (*PullCheck) Descriptor() ([]byte, []int) {
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *PullCheck) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PullCheck) GetPullId() string {
+	if x != nil {
+		return x.PullId
+	}
+	return ""
+}
+
+func (x *PullCheck) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PullCheck) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *PullCheck) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+func (x *PullCheck) GetEvidenceUrl() string {
+	if x != nil {
+		return x.EvidenceUrl
+	}
+	return ""
+}
+
+func (x *PullCheck) GetRecordedBy() string {
+	if x != nil {
+		return x.RecordedBy
+	}
+	return ""
+}
+
+func (x *PullCheck) GetRecordedAt() string {
+	if x != nil {
+		return x.RecordedAt
+	}
+	return ""
+}
+
+type RecordPullCheckRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Org           string                 `protobuf:"bytes,1,opt,name=org,proto3" json:"org,omitempty"`                                    // path
+	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`                                  // path
+	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`                                      // path; pull id
+	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                  // body
+	State         string                 `protobuf:"bytes,5,opt,name=state,proto3" json:"state,omitempty"`                                // body; "pass" | "fail" | "pending"
+	Summary       string                 `protobuf:"bytes,6,opt,name=summary,proto3" json:"summary,omitempty"`                            // body
+	EvidenceUrl   string                 `protobuf:"bytes,7,opt,name=evidence_url,json=evidenceUrl,proto3" json:"evidence_url,omitempty"` // body
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecordPullCheckRequest) Reset() {
+	*x = RecordPullCheckRequest{}
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecordPullCheckRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecordPullCheckRequest) ProtoMessage() {}
+
+func (x *RecordPullCheckRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecordPullCheckRequest.ProtoReflect.Descriptor instead.
+func (*RecordPullCheckRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *RecordPullCheckRequest) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+func (x *RecordPullCheckRequest) GetEvidenceUrl() string {
+	if x != nil {
+		return x.EvidenceUrl
+	}
+	return ""
+}
+
+type RecordPullCheckResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Check         *PullCheck             `protobuf:"bytes,1,opt,name=check,proto3" json:"check,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecordPullCheckResponse) Reset() {
+	*x = RecordPullCheckResponse{}
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecordPullCheckResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecordPullCheckResponse) ProtoMessage() {}
+
+func (x *RecordPullCheckResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecordPullCheckResponse.ProtoReflect.Descriptor instead.
+func (*RecordPullCheckResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *RecordPullCheckResponse) GetCheck() *PullCheck {
+	if x != nil {
+		return x.Check
+	}
+	return nil
+}
+
+type ListPullChecksRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Org           string                 `protobuf:"bytes,1,opt,name=org,proto3" json:"org,omitempty"`   // path
+	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"` // path
+	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`     // path; pull id
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPullChecksRequest) Reset() {
+	*x = ListPullChecksRequest{}
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPullChecksRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPullChecksRequest) ProtoMessage() {}
+
+func (x *ListPullChecksRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPullChecksRequest.ProtoReflect.Descriptor instead.
+func (*ListPullChecksRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListPullChecksRequest) GetOrg() string {
+	if x != nil {
+		return x.Org
+	}
+	return ""
+}
+
+func (x *ListPullChecksRequest) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *ListPullChecksRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type ListPullChecksResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checks        []*PullCheck           `protobuf:"bytes,1,rep,name=checks,proto3" json:"checks,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPullChecksResponse) Reset() {
+	*x = ListPullChecksResponse{}
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPullChecksResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPullChecksResponse) ProtoMessage() {}
+
+func (x *ListPullChecksResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPullChecksResponse.ProtoReflect.Descriptor instead.
+func (*ListPullChecksResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ListPullChecksResponse) GetChecks() []*PullCheck {
+	if x != nil {
+		return x.Checks
+	}
+	return nil
+}
+
 type PurgeOrgRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -926,7 +1269,7 @@ type PurgeOrgRequest struct {
 
 func (x *PurgeOrgRequest) Reset() {
 	*x = PurgeOrgRequest{}
-	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[15]
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -938,7 +1281,7 @@ func (x *PurgeOrgRequest) String() string {
 func (*PurgeOrgRequest) ProtoMessage() {}
 
 func (x *PurgeOrgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[15]
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -951,7 +1294,7 @@ func (x *PurgeOrgRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PurgeOrgRequest.ProtoReflect.Descriptor instead.
 func (*PurgeOrgRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{15}
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{20}
 }
 
 // PurgeOrgResponse mirrors the REST shape {"purged": "<org>", "repos": <n>}.
@@ -965,7 +1308,7 @@ type PurgeOrgResponse struct {
 
 func (x *PurgeOrgResponse) Reset() {
 	*x = PurgeOrgResponse{}
-	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[16]
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -977,7 +1320,7 @@ func (x *PurgeOrgResponse) String() string {
 func (*PurgeOrgResponse) ProtoMessage() {}
 
 func (x *PurgeOrgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[16]
+	mi := &file_cwb_cairn_v1_cairn_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -990,7 +1333,7 @@ func (x *PurgeOrgResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PurgeOrgResponse.ProtoReflect.Descriptor instead.
 func (*PurgeOrgResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{16}
+	return file_cwb_cairn_v1_cairn_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *PurgeOrgResponse) GetPurged() string {
@@ -1070,7 +1413,34 @@ const file_cwb_cairn_v1_cairn_proto_rawDesc = "" +
 	"merged_sha\x18\x04 \x01(\tR\tmergedSha\x120\n" +
 	"\x14ledger_comment_error\x18\x05 \x01(\tR\x12ledgerCommentError\"F\n" +
 	"\x11MergePullResponse\x121\n" +
-	"\x06result\x18\x01 \x01(\v2\x19.cwb.cairn.v1.MergeResultR\x06result\"\x11\n" +
+	"\x06result\x18\x01 \x01(\v2\x19.cwb.cairn.v1.MergeResultR\x06result\"\xdd\x01\n" +
+	"\tPullCheck\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\apull_id\x18\x02 \x01(\tR\x06pullId\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x14\n" +
+	"\x05state\x18\x04 \x01(\tR\x05state\x12\x18\n" +
+	"\asummary\x18\x05 \x01(\tR\asummary\x12!\n" +
+	"\fevidence_url\x18\x06 \x01(\tR\vevidenceUrl\x12\x1f\n" +
+	"\vrecorded_by\x18\a \x01(\tR\n" +
+	"recordedBy\x12\x1f\n" +
+	"\vrecorded_at\x18\b \x01(\tR\n" +
+	"recordedAt\"\xb5\x01\n" +
+	"\x16RecordPullCheckRequest\x12\x10\n" +
+	"\x03org\x18\x01 \x01(\tR\x03org\x12\x12\n" +
+	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x14\n" +
+	"\x05state\x18\x05 \x01(\tR\x05state\x12\x18\n" +
+	"\asummary\x18\x06 \x01(\tR\asummary\x12!\n" +
+	"\fevidence_url\x18\a \x01(\tR\vevidenceUrl\"H\n" +
+	"\x17RecordPullCheckResponse\x12-\n" +
+	"\x05check\x18\x01 \x01(\v2\x17.cwb.cairn.v1.PullCheckR\x05check\"M\n" +
+	"\x15ListPullChecksRequest\x12\x10\n" +
+	"\x03org\x18\x01 \x01(\tR\x03org\x12\x12\n" +
+	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\tR\x02id\"I\n" +
+	"\x16ListPullChecksResponse\x12/\n" +
+	"\x06checks\x18\x01 \x03(\v2\x17.cwb.cairn.v1.PullCheckR\x06checks\"\x11\n" +
 	"\x0fPurgeOrgRequest\"@\n" +
 	"\x10PurgeOrgResponse\x12\x16\n" +
 	"\x06purged\x18\x01 \x01(\tR\x06purged\x12\x14\n" +
@@ -1078,12 +1448,14 @@ const file_cwb_cairn_v1_cairn_proto_rawDesc = "" +
 	"\vRepoService\x12w\n" +
 	"\n" +
 	"CreateRepo\x12\x1f.cwb.cairn.v1.CreateRepoRequest\x1a .cwb.cairn.v1.CreateRepoResponse\"&\x82\xd3\xe4\x93\x02 :\x01*b\x04repo\"\x15/api/orgs/{org}/repos\x12r\n" +
-	"\tListRepos\x12\x1e.cwb.cairn.v1.ListReposRequest\x1a\x1f.cwb.cairn.v1.ListReposResponse\"$\x82\xd3\xe4\x93\x02\x1eb\x05repos\x12\x15/api/orgs/{org}/repos2\x9b\x04\n" +
+	"\tListRepos\x12\x1e.cwb.cairn.v1.ListReposRequest\x1a\x1f.cwb.cairn.v1.ListReposResponse\"$\x82\xd3\xe4\x93\x02\x1eb\x05repos\x12\x15/api/orgs/{org}/repos2\xdc\x06\n" +
 	"\vPullService\x12~\n" +
 	"\bOpenPull\x12\x1d.cwb.cairn.v1.OpenPullRequest\x1a\x1e.cwb.cairn.v1.OpenPullResponse\"3\x82\xd3\xe4\x93\x02-:\x01*b\x04pull\"\"/api/orgs/{org}/repos/{slug}/pulls\x12}\n" +
 	"\aGetPull\x12\x1c.cwb.cairn.v1.GetPullRequest\x1a\x1d.cwb.cairn.v1.GetPullResponse\"5\x82\xd3\xe4\x93\x02/b\x04pull\x12'/api/orgs/{org}/repos/{slug}/pulls/{id}\x12\x8b\x01\n" +
 	"\tMergePull\x12\x1e.cwb.cairn.v1.MergePullRequest\x1a\x1f.cwb.cairn.v1.MergePullResponse\"=\x82\xd3\xe4\x93\x027b\x06result\"-/api/orgs/{org}/repos/{slug}/pulls/{id}/merge\x12\x7f\n" +
-	"\tListPulls\x12\x1e.cwb.cairn.v1.ListPullsRequest\x1a\x1f.cwb.cairn.v1.ListPullsResponse\"1\x82\xd3\xe4\x93\x02+b\x05pulls\x12\"/api/orgs/{org}/repos/{slug}/pulls2i\n" +
+	"\tListPulls\x12\x1e.cwb.cairn.v1.ListPullsRequest\x1a\x1f.cwb.cairn.v1.ListPullsResponse\"1\x82\xd3\xe4\x93\x02+b\x05pulls\x12\"/api/orgs/{org}/repos/{slug}/pulls\x12\xa0\x01\n" +
+	"\x0fRecordPullCheck\x12$.cwb.cairn.v1.RecordPullCheckRequest\x1a%.cwb.cairn.v1.RecordPullCheckResponse\"@\x82\xd3\xe4\x93\x02::\x01*b\x05check\"./api/orgs/{org}/repos/{slug}/pulls/{id}/checks\x12\x9b\x01\n" +
+	"\x0eListPullChecks\x12#.cwb.cairn.v1.ListPullChecksRequest\x1a$.cwb.cairn.v1.ListPullChecksResponse\">\x82\xd3\xe4\x93\x028b\x06checks\x12./api/orgs/{org}/repos/{slug}/pulls/{id}/checks2i\n" +
 	"\n" +
 	"OrgService\x12[\n" +
 	"\bPurgeOrg\x12\x1d.cwb.cairn.v1.PurgeOrgRequest\x1a\x1e.cwb.cairn.v1.PurgeOrgResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
@@ -1103,25 +1475,30 @@ func file_cwb_cairn_v1_cairn_proto_rawDescGZIP() []byte {
 	return file_cwb_cairn_v1_cairn_proto_rawDescData
 }
 
-var file_cwb_cairn_v1_cairn_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_cwb_cairn_v1_cairn_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_cwb_cairn_v1_cairn_proto_goTypes = []any{
-	(*Repo)(nil),               // 0: cwb.cairn.v1.Repo
-	(*CreateRepoRequest)(nil),  // 1: cwb.cairn.v1.CreateRepoRequest
-	(*CreateRepoResponse)(nil), // 2: cwb.cairn.v1.CreateRepoResponse
-	(*ListReposRequest)(nil),   // 3: cwb.cairn.v1.ListReposRequest
-	(*ListReposResponse)(nil),  // 4: cwb.cairn.v1.ListReposResponse
-	(*Pull)(nil),               // 5: cwb.cairn.v1.Pull
-	(*OpenPullRequest)(nil),    // 6: cwb.cairn.v1.OpenPullRequest
-	(*OpenPullResponse)(nil),   // 7: cwb.cairn.v1.OpenPullResponse
-	(*ListPullsRequest)(nil),   // 8: cwb.cairn.v1.ListPullsRequest
-	(*ListPullsResponse)(nil),  // 9: cwb.cairn.v1.ListPullsResponse
-	(*GetPullRequest)(nil),     // 10: cwb.cairn.v1.GetPullRequest
-	(*GetPullResponse)(nil),    // 11: cwb.cairn.v1.GetPullResponse
-	(*MergePullRequest)(nil),   // 12: cwb.cairn.v1.MergePullRequest
-	(*MergeResult)(nil),        // 13: cwb.cairn.v1.MergeResult
-	(*MergePullResponse)(nil),  // 14: cwb.cairn.v1.MergePullResponse
-	(*PurgeOrgRequest)(nil),    // 15: cwb.cairn.v1.PurgeOrgRequest
-	(*PurgeOrgResponse)(nil),   // 16: cwb.cairn.v1.PurgeOrgResponse
+	(*Repo)(nil),                    // 0: cwb.cairn.v1.Repo
+	(*CreateRepoRequest)(nil),       // 1: cwb.cairn.v1.CreateRepoRequest
+	(*CreateRepoResponse)(nil),      // 2: cwb.cairn.v1.CreateRepoResponse
+	(*ListReposRequest)(nil),        // 3: cwb.cairn.v1.ListReposRequest
+	(*ListReposResponse)(nil),       // 4: cwb.cairn.v1.ListReposResponse
+	(*Pull)(nil),                    // 5: cwb.cairn.v1.Pull
+	(*OpenPullRequest)(nil),         // 6: cwb.cairn.v1.OpenPullRequest
+	(*OpenPullResponse)(nil),        // 7: cwb.cairn.v1.OpenPullResponse
+	(*ListPullsRequest)(nil),        // 8: cwb.cairn.v1.ListPullsRequest
+	(*ListPullsResponse)(nil),       // 9: cwb.cairn.v1.ListPullsResponse
+	(*GetPullRequest)(nil),          // 10: cwb.cairn.v1.GetPullRequest
+	(*GetPullResponse)(nil),         // 11: cwb.cairn.v1.GetPullResponse
+	(*MergePullRequest)(nil),        // 12: cwb.cairn.v1.MergePullRequest
+	(*MergeResult)(nil),             // 13: cwb.cairn.v1.MergeResult
+	(*MergePullResponse)(nil),       // 14: cwb.cairn.v1.MergePullResponse
+	(*PullCheck)(nil),               // 15: cwb.cairn.v1.PullCheck
+	(*RecordPullCheckRequest)(nil),  // 16: cwb.cairn.v1.RecordPullCheckRequest
+	(*RecordPullCheckResponse)(nil), // 17: cwb.cairn.v1.RecordPullCheckResponse
+	(*ListPullChecksRequest)(nil),   // 18: cwb.cairn.v1.ListPullChecksRequest
+	(*ListPullChecksResponse)(nil),  // 19: cwb.cairn.v1.ListPullChecksResponse
+	(*PurgeOrgRequest)(nil),         // 20: cwb.cairn.v1.PurgeOrgRequest
+	(*PurgeOrgResponse)(nil),        // 21: cwb.cairn.v1.PurgeOrgResponse
 }
 var file_cwb_cairn_v1_cairn_proto_depIdxs = []int32{
 	0,  // 0: cwb.cairn.v1.CreateRepoResponse.repo:type_name -> cwb.cairn.v1.Repo
@@ -1130,25 +1507,31 @@ var file_cwb_cairn_v1_cairn_proto_depIdxs = []int32{
 	5,  // 3: cwb.cairn.v1.ListPullsResponse.pulls:type_name -> cwb.cairn.v1.Pull
 	5,  // 4: cwb.cairn.v1.GetPullResponse.pull:type_name -> cwb.cairn.v1.Pull
 	13, // 5: cwb.cairn.v1.MergePullResponse.result:type_name -> cwb.cairn.v1.MergeResult
-	1,  // 6: cwb.cairn.v1.RepoService.CreateRepo:input_type -> cwb.cairn.v1.CreateRepoRequest
-	3,  // 7: cwb.cairn.v1.RepoService.ListRepos:input_type -> cwb.cairn.v1.ListReposRequest
-	6,  // 8: cwb.cairn.v1.PullService.OpenPull:input_type -> cwb.cairn.v1.OpenPullRequest
-	10, // 9: cwb.cairn.v1.PullService.GetPull:input_type -> cwb.cairn.v1.GetPullRequest
-	12, // 10: cwb.cairn.v1.PullService.MergePull:input_type -> cwb.cairn.v1.MergePullRequest
-	8,  // 11: cwb.cairn.v1.PullService.ListPulls:input_type -> cwb.cairn.v1.ListPullsRequest
-	15, // 12: cwb.cairn.v1.OrgService.PurgeOrg:input_type -> cwb.cairn.v1.PurgeOrgRequest
-	2,  // 13: cwb.cairn.v1.RepoService.CreateRepo:output_type -> cwb.cairn.v1.CreateRepoResponse
-	4,  // 14: cwb.cairn.v1.RepoService.ListRepos:output_type -> cwb.cairn.v1.ListReposResponse
-	7,  // 15: cwb.cairn.v1.PullService.OpenPull:output_type -> cwb.cairn.v1.OpenPullResponse
-	11, // 16: cwb.cairn.v1.PullService.GetPull:output_type -> cwb.cairn.v1.GetPullResponse
-	14, // 17: cwb.cairn.v1.PullService.MergePull:output_type -> cwb.cairn.v1.MergePullResponse
-	9,  // 18: cwb.cairn.v1.PullService.ListPulls:output_type -> cwb.cairn.v1.ListPullsResponse
-	16, // 19: cwb.cairn.v1.OrgService.PurgeOrg:output_type -> cwb.cairn.v1.PurgeOrgResponse
-	13, // [13:20] is the sub-list for method output_type
-	6,  // [6:13] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	15, // 6: cwb.cairn.v1.RecordPullCheckResponse.check:type_name -> cwb.cairn.v1.PullCheck
+	15, // 7: cwb.cairn.v1.ListPullChecksResponse.checks:type_name -> cwb.cairn.v1.PullCheck
+	1,  // 8: cwb.cairn.v1.RepoService.CreateRepo:input_type -> cwb.cairn.v1.CreateRepoRequest
+	3,  // 9: cwb.cairn.v1.RepoService.ListRepos:input_type -> cwb.cairn.v1.ListReposRequest
+	6,  // 10: cwb.cairn.v1.PullService.OpenPull:input_type -> cwb.cairn.v1.OpenPullRequest
+	10, // 11: cwb.cairn.v1.PullService.GetPull:input_type -> cwb.cairn.v1.GetPullRequest
+	12, // 12: cwb.cairn.v1.PullService.MergePull:input_type -> cwb.cairn.v1.MergePullRequest
+	8,  // 13: cwb.cairn.v1.PullService.ListPulls:input_type -> cwb.cairn.v1.ListPullsRequest
+	16, // 14: cwb.cairn.v1.PullService.RecordPullCheck:input_type -> cwb.cairn.v1.RecordPullCheckRequest
+	18, // 15: cwb.cairn.v1.PullService.ListPullChecks:input_type -> cwb.cairn.v1.ListPullChecksRequest
+	20, // 16: cwb.cairn.v1.OrgService.PurgeOrg:input_type -> cwb.cairn.v1.PurgeOrgRequest
+	2,  // 17: cwb.cairn.v1.RepoService.CreateRepo:output_type -> cwb.cairn.v1.CreateRepoResponse
+	4,  // 18: cwb.cairn.v1.RepoService.ListRepos:output_type -> cwb.cairn.v1.ListReposResponse
+	7,  // 19: cwb.cairn.v1.PullService.OpenPull:output_type -> cwb.cairn.v1.OpenPullResponse
+	11, // 20: cwb.cairn.v1.PullService.GetPull:output_type -> cwb.cairn.v1.GetPullResponse
+	14, // 21: cwb.cairn.v1.PullService.MergePull:output_type -> cwb.cairn.v1.MergePullResponse
+	9,  // 22: cwb.cairn.v1.PullService.ListPulls:output_type -> cwb.cairn.v1.ListPullsResponse
+	17, // 23: cwb.cairn.v1.PullService.RecordPullCheck:output_type -> cwb.cairn.v1.RecordPullCheckResponse
+	19, // 24: cwb.cairn.v1.PullService.ListPullChecks:output_type -> cwb.cairn.v1.ListPullChecksResponse
+	21, // 25: cwb.cairn.v1.OrgService.PurgeOrg:output_type -> cwb.cairn.v1.PurgeOrgResponse
+	17, // [17:26] is the sub-list for method output_type
+	8,  // [8:17] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_cwb_cairn_v1_cairn_proto_init() }
@@ -1162,7 +1545,7 @@ func file_cwb_cairn_v1_cairn_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_cairn_v1_cairn_proto_rawDesc), len(file_cwb_cairn_v1_cairn_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   3,
 		},
