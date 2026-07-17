@@ -96,10 +96,11 @@ type Config struct {
 
 // Identify derives the caller's Claims from ctx per cfg.Mode. It returns
 // the derived Claims, the effective scopes (identical to Claims.Scopes,
-// returned separately to mirror the (claims, scopes, ok) shape of
-// services' prior identityFromMD helpers so adoption is mechanical), and
-// an error which is one of the sentinel errors above (or wraps one) on
-// failure.
+// returned separately so the (claims, scopes, _) prefix lines up with
+// services' prior identityFromMD helpers and adoption is mechanical), and
+// an error on failure — one of the sentinel errors above, some of which
+// are returned wrapped (fmt.Errorf("%w: ...")) with context and so must be
+// matched with errors.Is, not ==.
 func Identify(ctx context.Context, cfg Config) (*Claims, []string, error) {
 	switch cfg.Mode {
 	case "metadata":

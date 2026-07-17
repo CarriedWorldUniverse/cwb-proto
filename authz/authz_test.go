@@ -419,6 +419,10 @@ func TestIdentifyCertMode(t *testing.T) {
 			Orgs:   []string{"orgA"},
 			Scopes: []string{"cred:read"},
 		},
+		"granted-wild": {
+			Orgs:   []string{"*"},
+			Scopes: []string{"cred:read"},
+		},
 	}
 	proxies := map[string]bool{"proxy": true}
 	cfg := authz.Config{Mode: "cert", Grants: grants, TrustedProxies: proxies}
@@ -428,6 +432,7 @@ func TestIdentifyCertMode(t *testing.T) {
 
 	certGrantedMulti := ca.leaf(t, "granted-multi", false)
 	certGrantedSingle := ca.leaf(t, "granted-single", false)
+	certGrantedWild := ca.leaf(t, "granted-wild", false)
 	certUnknown := ca.leaf(t, "totally-unknown", false)
 	certProxy := ca.leaf(t, "proxy", false)
 
@@ -465,6 +470,39 @@ func TestIdentifyCertMode(t *testing.T) {
 		out := callIdentify(t, conn, nil)
 		if out.Err != "ErrNoIdentity" {
 			t.Fatalf("got %q, want ErrNoIdentity", out.Err)
+		}
+	})
+
+	t.Run("wildcard-org grant without cwb-org is ambiguous", func(t *testing.T) {
+		// A "*" grant means "any org", so the caller must say which — an
+		// unqualified request can't resolve to a single org.
+		conn := dialMTLS(t, ca, dial, certGrantedWild)
+		out := callIdentify(t, conn, nil)
+		if out.Err != "ErrNoIdentity" {
+			t.Fatalf("got %q, want ErrNoIdentity", out.Err)
+		}
+	})
+
+	t.Run("wildcard-org grant honors any asserted cwb-org", func(t *testing.T) {
+		conn := dialMTLS(t, ca, dial, certGrantedWild)
+		md := metadata.Pairs("cwb-org", "any-tenant-xyz")
+		out := callIdentify(t, conn, md)
+		if out.Err != "" {
+			t.Fatalf("unexpected error: %s", out.Err)
+		}
+		if out.Sub != "granted-wild" || out.Org != "any-tenant-xyz" {
+			t.Fatalf("unexpected claims: %#v", out)
+		}
+	})
+
+	t.Run("literal * as asserted cwb-org is not a wildcard bypass", func(t *testing.T) {
+		// Guards the security-validator's probe: a caller asserting the
+		// literal "*" must not get wildcard access from a concrete-org grant.
+		conn := dialMTLS(t, ca, dial, certGrantedSingle)
+		md := metadata.Pairs("cwb-org", "*")
+		out := callIdentify(t, conn, md)
+		if out.Err != "ErrMismatch" {
+			t.Fatalf("got %q, want ErrMismatch", out.Err)
 		}
 	})
 
