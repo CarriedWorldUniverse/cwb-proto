@@ -23,8 +23,11 @@ option go_package = "github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwb
 // M1 serves kind="git": a GitBundle (username/password/host) keyed by host
 // (name = the git host, e.g. "github.com"). M2 adds kind="oauth": an
 // OAuthBundle (client credentials + refresh token) keyed by a logical service
-// name (e.g. "google-workspace"). Every Fetch — success or denial — is
-// audited; the brokered-use audit trail is custodian's whole point.
+// name (e.g. "google-workspace"). M3 adds kind="secret": a SecretBundle (one
+// opaque value — API key, token, webhook URL, password — plus non-secret
+// hints) keyed by a logical name (e.g. "openrouter"). Every Fetch — success
+// or denial — is audited; the brokered-use audit trail is custodian's whole
+// point.
 
 // =============================================================================
 // Shared messages
@@ -48,6 +51,15 @@ message OAuthBundle {
   string refresh_token = 3; // refresh token; NEVER log, never in List
   string token_uri = 4; // token endpoint URI (e.g. https://oauth2.googleapis.com/token)
   string scope = 5; // space-separated OAuth scopes (optional, informational)
+}
+
+// SecretBundle is a single opaque secret (API key, bearer token, webhook URL,
+// password, …) with optional non-secret hints. value is secret material —
+// NEVER returned by List/metadata paths or logged — only by Fetch over mTLS.
+message SecretBundle {
+  string value = 1; // the secret; NEVER log, never in List
+  string host = 2; // optional hint: the service/API host it belongs to (e.g. api.anthropic.com)
+  string username = 3; // optional hint: header/account/usage (e.g. "x-api-key", "bearer")
 }
 
 // CredentialMeta describes a stored credential WITHOUT its secret material —
@@ -76,6 +88,11 @@ service CredentialService {
   // ListCredentials lists credential metadata in the caller's org — NEVER
   // secret material. Requires cred:read.
   rpc ListCredentials(ListCredentialsRequest) returns (ListCredentialsResponse);
+
+  // DeleteCredential removes the credential for (kind, name) in the caller's
+  // org. Requires cred:write. Idempotent — deleting a missing credential
+  // returns deleted=false, not an error. Every delete is audited.
+  rpc DeleteCredential(DeleteCredentialRequest) returns (DeleteCredentialResponse);
 }
 
 message FetchRequest {
@@ -85,8 +102,8 @@ message FetchRequest {
   // metadata — identity here never overrides them, and org is never read
   // from the request body.
   string identity = 1;
-  string kind = 2; // "git" or "oauth"
-  string name = 3; // for git, the host (e.g. "github.com"); for oauth, a logical service name
+  string kind = 2; // "git", "oauth", or "secret"
+  string name = 3; // for git, the host (e.g. "github.com"); for oauth/secret, a logical service name
 }
 
 // FetchResponse carries the decrypted bundle for the requested kind.
@@ -96,15 +113,17 @@ message FetchResponse {
   oneof bundle {
     GitBundle git_bundle = 3;
     OAuthBundle oauth_bundle = 4;
+    SecretBundle secret_bundle = 5;
   }
 }
 
 message SetCredentialRequest {
-  string kind = 1; // "git" or "oauth"
-  string name = 2; // for git, the host; for oauth, a logical service name
+  string kind = 1; // "git", "oauth", or "secret"
+  string name = 2; // for git, the host; for oauth/secret, a logical service name
   oneof bundle {
     GitBundle git_bundle = 3;
     OAuthBundle oauth_bundle = 4;
+    SecretBundle secret_bundle = 5;
   }
 }
 
@@ -121,4 +140,15 @@ message ListCredentialsRequest {
 // ListCredentialsResponse: metadata only, no secret material.
 message ListCredentialsResponse {
   repeated CredentialMeta items = 1;
+}
+
+message DeleteCredentialRequest {
+  string kind = 1; // "git", "oauth", or "secret"
+  string name = 2;
+}
+
+// DeleteCredentialResponse reports whether a credential row was removed.
+// deleted=false means there was nothing at (kind, name) — not an error.
+message DeleteCredentialResponse {
+  bool deleted = 1;
 }

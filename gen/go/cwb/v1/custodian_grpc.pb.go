@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CredentialService_Fetch_FullMethodName           = "/cwb.v1.CredentialService/Fetch"
-	CredentialService_SetCredential_FullMethodName   = "/cwb.v1.CredentialService/SetCredential"
-	CredentialService_ListCredentials_FullMethodName = "/cwb.v1.CredentialService/ListCredentials"
+	CredentialService_Fetch_FullMethodName            = "/cwb.v1.CredentialService/Fetch"
+	CredentialService_SetCredential_FullMethodName    = "/cwb.v1.CredentialService/SetCredential"
+	CredentialService_ListCredentials_FullMethodName  = "/cwb.v1.CredentialService/ListCredentials"
+	CredentialService_DeleteCredential_FullMethodName = "/cwb.v1.CredentialService/DeleteCredential"
 )
 
 // CredentialServiceClient is the client API for CredentialService service.
@@ -37,6 +38,10 @@ type CredentialServiceClient interface {
 	// ListCredentials lists credential metadata in the caller's org — NEVER
 	// secret material. Requires cred:read.
 	ListCredentials(ctx context.Context, in *ListCredentialsRequest, opts ...grpc.CallOption) (*ListCredentialsResponse, error)
+	// DeleteCredential removes the credential for (kind, name) in the caller's
+	// org. Requires cred:write. Idempotent — deleting a missing credential
+	// returns deleted=false, not an error. Every delete is audited.
+	DeleteCredential(ctx context.Context, in *DeleteCredentialRequest, opts ...grpc.CallOption) (*DeleteCredentialResponse, error)
 }
 
 type credentialServiceClient struct {
@@ -77,6 +82,16 @@ func (c *credentialServiceClient) ListCredentials(ctx context.Context, in *ListC
 	return out, nil
 }
 
+func (c *credentialServiceClient) DeleteCredential(ctx context.Context, in *DeleteCredentialRequest, opts ...grpc.CallOption) (*DeleteCredentialResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteCredentialResponse)
+	err := c.cc.Invoke(ctx, CredentialService_DeleteCredential_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CredentialServiceServer is the server API for CredentialService service.
 // All implementations must embed UnimplementedCredentialServiceServer
 // for forward compatibility.
@@ -90,6 +105,10 @@ type CredentialServiceServer interface {
 	// ListCredentials lists credential metadata in the caller's org — NEVER
 	// secret material. Requires cred:read.
 	ListCredentials(context.Context, *ListCredentialsRequest) (*ListCredentialsResponse, error)
+	// DeleteCredential removes the credential for (kind, name) in the caller's
+	// org. Requires cred:write. Idempotent — deleting a missing credential
+	// returns deleted=false, not an error. Every delete is audited.
+	DeleteCredential(context.Context, *DeleteCredentialRequest) (*DeleteCredentialResponse, error)
 	mustEmbedUnimplementedCredentialServiceServer()
 }
 
@@ -108,6 +127,9 @@ func (UnimplementedCredentialServiceServer) SetCredential(context.Context, *SetC
 }
 func (UnimplementedCredentialServiceServer) ListCredentials(context.Context, *ListCredentialsRequest) (*ListCredentialsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCredentials not implemented")
+}
+func (UnimplementedCredentialServiceServer) DeleteCredential(context.Context, *DeleteCredentialRequest) (*DeleteCredentialResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteCredential not implemented")
 }
 func (UnimplementedCredentialServiceServer) mustEmbedUnimplementedCredentialServiceServer() {}
 func (UnimplementedCredentialServiceServer) testEmbeddedByValue()                           {}
@@ -184,6 +206,24 @@ func _CredentialService_ListCredentials_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CredentialService_DeleteCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCredentialRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CredentialServiceServer).DeleteCredential(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CredentialService_DeleteCredential_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CredentialServiceServer).DeleteCredential(ctx, req.(*DeleteCredentialRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CredentialService_ServiceDesc is the grpc.ServiceDesc for CredentialService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,6 +242,10 @@ var CredentialService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCredentials",
 			Handler:    _CredentialService_ListCredentials_Handler,
+		},
+		{
+			MethodName: "DeleteCredential",
+			Handler:    _CredentialService_DeleteCredential_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
