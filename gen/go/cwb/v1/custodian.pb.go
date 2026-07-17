@@ -163,6 +163,69 @@ func (x *OAuthBundle) GetScope() string {
 	return ""
 }
 
+// SecretBundle is a single opaque secret (API key, bearer token, webhook URL,
+// password, …) with optional non-secret hints. value is secret material —
+// NEVER returned by List/metadata paths or logged — only by Fetch over mTLS.
+type SecretBundle struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`       // the secret; NEVER log, never in List
+	Host          string                 `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`         // optional hint: the service/API host it belongs to (e.g. api.anthropic.com)
+	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"` // optional hint: header/account/usage (e.g. "x-api-key", "bearer")
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SecretBundle) Reset() {
+	*x = SecretBundle{}
+	mi := &file_cwb_v1_custodian_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SecretBundle) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SecretBundle) ProtoMessage() {}
+
+func (x *SecretBundle) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_custodian_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SecretBundle.ProtoReflect.Descriptor instead.
+func (*SecretBundle) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SecretBundle) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *SecretBundle) GetHost() string {
+	if x != nil {
+		return x.Host
+	}
+	return ""
+}
+
+func (x *SecretBundle) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
 // CredentialMeta describes a stored credential WITHOUT its secret material —
 // used by ListCredentials.
 type CredentialMeta struct {
@@ -178,7 +241,7 @@ type CredentialMeta struct {
 
 func (x *CredentialMeta) Reset() {
 	*x = CredentialMeta{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[2]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -190,7 +253,7 @@ func (x *CredentialMeta) String() string {
 func (*CredentialMeta) ProtoMessage() {}
 
 func (x *CredentialMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[2]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -203,7 +266,7 @@ func (x *CredentialMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CredentialMeta.ProtoReflect.Descriptor instead.
 func (*CredentialMeta) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{2}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CredentialMeta) GetKind() string {
@@ -249,15 +312,15 @@ type FetchRequest struct {
 	// metadata — identity here never overrides them, and org is never read
 	// from the request body.
 	Identity      string `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
-	Kind          string `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"` // "git" or "oauth"
-	Name          string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"` // for git, the host (e.g. "github.com"); for oauth, a logical service name
+	Kind          string `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"` // "git", "oauth", or "secret"
+	Name          string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"` // for git, the host (e.g. "github.com"); for oauth/secret, a logical service name
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FetchRequest) Reset() {
 	*x = FetchRequest{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[3]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -269,7 +332,7 @@ func (x *FetchRequest) String() string {
 func (*FetchRequest) ProtoMessage() {}
 
 func (x *FetchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[3]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -282,7 +345,7 @@ func (x *FetchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchRequest.ProtoReflect.Descriptor instead.
 func (*FetchRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{3}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *FetchRequest) GetIdentity() string {
@@ -315,6 +378,7 @@ type FetchResponse struct {
 	//
 	//	*FetchResponse_GitBundle
 	//	*FetchResponse_OauthBundle
+	//	*FetchResponse_SecretBundle
 	Bundle        isFetchResponse_Bundle `protobuf_oneof:"bundle"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -322,7 +386,7 @@ type FetchResponse struct {
 
 func (x *FetchResponse) Reset() {
 	*x = FetchResponse{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[4]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -334,7 +398,7 @@ func (x *FetchResponse) String() string {
 func (*FetchResponse) ProtoMessage() {}
 
 func (x *FetchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[4]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -347,7 +411,7 @@ func (x *FetchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchResponse.ProtoReflect.Descriptor instead.
 func (*FetchResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{4}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *FetchResponse) GetKind() string {
@@ -389,6 +453,15 @@ func (x *FetchResponse) GetOauthBundle() *OAuthBundle {
 	return nil
 }
 
+func (x *FetchResponse) GetSecretBundle() *SecretBundle {
+	if x != nil {
+		if x, ok := x.Bundle.(*FetchResponse_SecretBundle); ok {
+			return x.SecretBundle
+		}
+	}
+	return nil
+}
+
 type isFetchResponse_Bundle interface {
 	isFetchResponse_Bundle()
 }
@@ -401,18 +474,25 @@ type FetchResponse_OauthBundle struct {
 	OauthBundle *OAuthBundle `protobuf:"bytes,4,opt,name=oauth_bundle,json=oauthBundle,proto3,oneof"`
 }
 
+type FetchResponse_SecretBundle struct {
+	SecretBundle *SecretBundle `protobuf:"bytes,5,opt,name=secret_bundle,json=secretBundle,proto3,oneof"`
+}
+
 func (*FetchResponse_GitBundle) isFetchResponse_Bundle() {}
 
 func (*FetchResponse_OauthBundle) isFetchResponse_Bundle() {}
 
+func (*FetchResponse_SecretBundle) isFetchResponse_Bundle() {}
+
 type SetCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	Kind  string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"` // "git" or "oauth"
-	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // for git, the host; for oauth, a logical service name
+	Kind  string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"` // "git", "oauth", or "secret"
+	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // for git, the host; for oauth/secret, a logical service name
 	// Types that are valid to be assigned to Bundle:
 	//
 	//	*SetCredentialRequest_GitBundle
 	//	*SetCredentialRequest_OauthBundle
+	//	*SetCredentialRequest_SecretBundle
 	Bundle        isSetCredentialRequest_Bundle `protobuf_oneof:"bundle"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -420,7 +500,7 @@ type SetCredentialRequest struct {
 
 func (x *SetCredentialRequest) Reset() {
 	*x = SetCredentialRequest{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[5]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -432,7 +512,7 @@ func (x *SetCredentialRequest) String() string {
 func (*SetCredentialRequest) ProtoMessage() {}
 
 func (x *SetCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[5]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -445,7 +525,7 @@ func (x *SetCredentialRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetCredentialRequest.ProtoReflect.Descriptor instead.
 func (*SetCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{5}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SetCredentialRequest) GetKind() string {
@@ -487,6 +567,15 @@ func (x *SetCredentialRequest) GetOauthBundle() *OAuthBundle {
 	return nil
 }
 
+func (x *SetCredentialRequest) GetSecretBundle() *SecretBundle {
+	if x != nil {
+		if x, ok := x.Bundle.(*SetCredentialRequest_SecretBundle); ok {
+			return x.SecretBundle
+		}
+	}
+	return nil
+}
+
 type isSetCredentialRequest_Bundle interface {
 	isSetCredentialRequest_Bundle()
 }
@@ -499,9 +588,15 @@ type SetCredentialRequest_OauthBundle struct {
 	OauthBundle *OAuthBundle `protobuf:"bytes,4,opt,name=oauth_bundle,json=oauthBundle,proto3,oneof"`
 }
 
+type SetCredentialRequest_SecretBundle struct {
+	SecretBundle *SecretBundle `protobuf:"bytes,5,opt,name=secret_bundle,json=secretBundle,proto3,oneof"`
+}
+
 func (*SetCredentialRequest_GitBundle) isSetCredentialRequest_Bundle() {}
 
 func (*SetCredentialRequest_OauthBundle) isSetCredentialRequest_Bundle() {}
+
+func (*SetCredentialRequest_SecretBundle) isSetCredentialRequest_Bundle() {}
 
 // SetCredentialResponse returns metadata only (never echoes the secret).
 type SetCredentialResponse struct {
@@ -513,7 +608,7 @@ type SetCredentialResponse struct {
 
 func (x *SetCredentialResponse) Reset() {
 	*x = SetCredentialResponse{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[6]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -525,7 +620,7 @@ func (x *SetCredentialResponse) String() string {
 func (*SetCredentialResponse) ProtoMessage() {}
 
 func (x *SetCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[6]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -538,7 +633,7 @@ func (x *SetCredentialResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetCredentialResponse.ProtoReflect.Descriptor instead.
 func (*SetCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{6}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SetCredentialResponse) GetItem() *CredentialMeta {
@@ -558,7 +653,7 @@ type ListCredentialsRequest struct {
 
 func (x *ListCredentialsRequest) Reset() {
 	*x = ListCredentialsRequest{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[7]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -570,7 +665,7 @@ func (x *ListCredentialsRequest) String() string {
 func (*ListCredentialsRequest) ProtoMessage() {}
 
 func (x *ListCredentialsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[7]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -583,7 +678,7 @@ func (x *ListCredentialsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCredentialsRequest.ProtoReflect.Descriptor instead.
 func (*ListCredentialsRequest) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{7}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListCredentialsRequest) GetKind() string {
@@ -603,7 +698,7 @@ type ListCredentialsResponse struct {
 
 func (x *ListCredentialsResponse) Reset() {
 	*x = ListCredentialsResponse{}
-	mi := &file_cwb_v1_custodian_proto_msgTypes[8]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -615,7 +710,7 @@ func (x *ListCredentialsResponse) String() string {
 func (*ListCredentialsResponse) ProtoMessage() {}
 
 func (x *ListCredentialsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cwb_v1_custodian_proto_msgTypes[8]
+	mi := &file_cwb_v1_custodian_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -628,7 +723,7 @@ func (x *ListCredentialsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCredentialsResponse.ProtoReflect.Descriptor instead.
 func (*ListCredentialsResponse) Descriptor() ([]byte, []int) {
-	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{8}
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListCredentialsResponse) GetItems() []*CredentialMeta {
@@ -636,6 +731,104 @@ func (x *ListCredentialsResponse) GetItems() []*CredentialMeta {
 		return x.Items
 	}
 	return nil
+}
+
+type DeleteCredentialRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Kind          string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"` // "git", "oauth", or "secret"
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteCredentialRequest) Reset() {
+	*x = DeleteCredentialRequest{}
+	mi := &file_cwb_v1_custodian_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteCredentialRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteCredentialRequest) ProtoMessage() {}
+
+func (x *DeleteCredentialRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_custodian_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteCredentialRequest.ProtoReflect.Descriptor instead.
+func (*DeleteCredentialRequest) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DeleteCredentialRequest) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *DeleteCredentialRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+// DeleteCredentialResponse reports whether a credential row was removed.
+// deleted=false means there was nothing at (kind, name) — not an error.
+type DeleteCredentialResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Deleted       bool                   `protobuf:"varint,1,opt,name=deleted,proto3" json:"deleted,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteCredentialResponse) Reset() {
+	*x = DeleteCredentialResponse{}
+	mi := &file_cwb_v1_custodian_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteCredentialResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteCredentialResponse) ProtoMessage() {}
+
+func (x *DeleteCredentialResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cwb_v1_custodian_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteCredentialResponse.ProtoReflect.Descriptor instead.
+func (*DeleteCredentialResponse) Descriptor() ([]byte, []int) {
+	return file_cwb_v1_custodian_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DeleteCredentialResponse) GetDeleted() bool {
+	if x != nil {
+		return x.Deleted
+	}
+	return false
 }
 
 var File_cwb_v1_custodian_proto protoreflect.FileDescriptor
@@ -652,7 +845,11 @@ const file_cwb_v1_custodian_proto_rawDesc = "" +
 	"\rclient_secret\x18\x02 \x01(\tR\fclientSecret\x12#\n" +
 	"\rrefresh_token\x18\x03 \x01(\tR\frefreshToken\x12\x1b\n" +
 	"\ttoken_uri\x18\x04 \x01(\tR\btokenUri\x12\x14\n" +
-	"\x05scope\x18\x05 \x01(\tR\x05scope\"\x8e\x01\n" +
+	"\x05scope\x18\x05 \x01(\tR\x05scope\"T\n" +
+	"\fSecretBundle\x12\x14\n" +
+	"\x05value\x18\x01 \x01(\tR\x05value\x12\x12\n" +
+	"\x04host\x18\x02 \x01(\tR\x04host\x12\x1a\n" +
+	"\busername\x18\x03 \x01(\tR\busername\"\x8e\x01\n" +
 	"\x0eCredentialMeta\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1d\n" +
@@ -664,31 +861,39 @@ const file_cwb_v1_custodian_proto_rawDesc = "" +
 	"\fFetchRequest\x12\x1a\n" +
 	"\bidentity\x18\x01 \x01(\tR\bidentity\x12\x12\n" +
 	"\x04kind\x18\x02 \x01(\tR\x04kind\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"\xaf\x01\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"\xec\x01\n" +
 	"\rFetchResponse\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x122\n" +
 	"\n" +
 	"git_bundle\x18\x03 \x01(\v2\x11.cwb.v1.GitBundleH\x00R\tgitBundle\x128\n" +
-	"\foauth_bundle\x18\x04 \x01(\v2\x13.cwb.v1.OAuthBundleH\x00R\voauthBundleB\b\n" +
-	"\x06bundle\"\xb6\x01\n" +
+	"\foauth_bundle\x18\x04 \x01(\v2\x13.cwb.v1.OAuthBundleH\x00R\voauthBundle\x12;\n" +
+	"\rsecret_bundle\x18\x05 \x01(\v2\x14.cwb.v1.SecretBundleH\x00R\fsecretBundleB\b\n" +
+	"\x06bundle\"\xf3\x01\n" +
 	"\x14SetCredentialRequest\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x122\n" +
 	"\n" +
 	"git_bundle\x18\x03 \x01(\v2\x11.cwb.v1.GitBundleH\x00R\tgitBundle\x128\n" +
-	"\foauth_bundle\x18\x04 \x01(\v2\x13.cwb.v1.OAuthBundleH\x00R\voauthBundleB\b\n" +
+	"\foauth_bundle\x18\x04 \x01(\v2\x13.cwb.v1.OAuthBundleH\x00R\voauthBundle\x12;\n" +
+	"\rsecret_bundle\x18\x05 \x01(\v2\x14.cwb.v1.SecretBundleH\x00R\fsecretBundleB\b\n" +
 	"\x06bundle\"C\n" +
 	"\x15SetCredentialResponse\x12*\n" +
 	"\x04item\x18\x01 \x01(\v2\x16.cwb.v1.CredentialMetaR\x04item\",\n" +
 	"\x16ListCredentialsRequest\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\"G\n" +
 	"\x17ListCredentialsResponse\x12,\n" +
-	"\x05items\x18\x01 \x03(\v2\x16.cwb.v1.CredentialMetaR\x05items2\xeb\x01\n" +
+	"\x05items\x18\x01 \x03(\v2\x16.cwb.v1.CredentialMetaR\x05items\"A\n" +
+	"\x17DeleteCredentialRequest\x12\x12\n" +
+	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"4\n" +
+	"\x18DeleteCredentialResponse\x12\x18\n" +
+	"\adeleted\x18\x01 \x01(\bR\adeleted2\xc2\x02\n" +
 	"\x11CredentialService\x124\n" +
 	"\x05Fetch\x12\x14.cwb.v1.FetchRequest\x1a\x15.cwb.v1.FetchResponse\x12L\n" +
 	"\rSetCredential\x12\x1c.cwb.v1.SetCredentialRequest\x1a\x1d.cwb.v1.SetCredentialResponse\x12R\n" +
-	"\x0fListCredentials\x12\x1e.cwb.v1.ListCredentialsRequest\x1a\x1f.cwb.v1.ListCredentialsResponseB\x94\x01\n" +
+	"\x0fListCredentials\x12\x1e.cwb.v1.ListCredentialsRequest\x1a\x1f.cwb.v1.ListCredentialsResponse\x12U\n" +
+	"\x10DeleteCredential\x12\x1f.cwb.v1.DeleteCredentialRequest\x1a .cwb.v1.DeleteCredentialResponseB\x94\x01\n" +
 	"\n" +
 	"com.cwb.v1B\x0eCustodianProtoP\x01Z=github.com/CarriedWorldUniverse/cwb-proto/gen/go/cwb/v1;cwbv1\xa2\x02\x03CXX\xaa\x02\x06Cwb.V1\xca\x02\x06Cwb\\V1\xe2\x02\x12Cwb\\V1\\GPBMetadata\xea\x02\aCwb::V1b\x06proto3"
 
@@ -704,36 +909,43 @@ func file_cwb_v1_custodian_proto_rawDescGZIP() []byte {
 	return file_cwb_v1_custodian_proto_rawDescData
 }
 
-var file_cwb_v1_custodian_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_cwb_v1_custodian_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_cwb_v1_custodian_proto_goTypes = []any{
-	(*GitBundle)(nil),               // 0: cwb.v1.GitBundle
-	(*OAuthBundle)(nil),             // 1: cwb.v1.OAuthBundle
-	(*CredentialMeta)(nil),          // 2: cwb.v1.CredentialMeta
-	(*FetchRequest)(nil),            // 3: cwb.v1.FetchRequest
-	(*FetchResponse)(nil),           // 4: cwb.v1.FetchResponse
-	(*SetCredentialRequest)(nil),    // 5: cwb.v1.SetCredentialRequest
-	(*SetCredentialResponse)(nil),   // 6: cwb.v1.SetCredentialResponse
-	(*ListCredentialsRequest)(nil),  // 7: cwb.v1.ListCredentialsRequest
-	(*ListCredentialsResponse)(nil), // 8: cwb.v1.ListCredentialsResponse
+	(*GitBundle)(nil),                // 0: cwb.v1.GitBundle
+	(*OAuthBundle)(nil),              // 1: cwb.v1.OAuthBundle
+	(*SecretBundle)(nil),             // 2: cwb.v1.SecretBundle
+	(*CredentialMeta)(nil),           // 3: cwb.v1.CredentialMeta
+	(*FetchRequest)(nil),             // 4: cwb.v1.FetchRequest
+	(*FetchResponse)(nil),            // 5: cwb.v1.FetchResponse
+	(*SetCredentialRequest)(nil),     // 6: cwb.v1.SetCredentialRequest
+	(*SetCredentialResponse)(nil),    // 7: cwb.v1.SetCredentialResponse
+	(*ListCredentialsRequest)(nil),   // 8: cwb.v1.ListCredentialsRequest
+	(*ListCredentialsResponse)(nil),  // 9: cwb.v1.ListCredentialsResponse
+	(*DeleteCredentialRequest)(nil),  // 10: cwb.v1.DeleteCredentialRequest
+	(*DeleteCredentialResponse)(nil), // 11: cwb.v1.DeleteCredentialResponse
 }
 var file_cwb_v1_custodian_proto_depIdxs = []int32{
-	0, // 0: cwb.v1.FetchResponse.git_bundle:type_name -> cwb.v1.GitBundle
-	1, // 1: cwb.v1.FetchResponse.oauth_bundle:type_name -> cwb.v1.OAuthBundle
-	0, // 2: cwb.v1.SetCredentialRequest.git_bundle:type_name -> cwb.v1.GitBundle
-	1, // 3: cwb.v1.SetCredentialRequest.oauth_bundle:type_name -> cwb.v1.OAuthBundle
-	2, // 4: cwb.v1.SetCredentialResponse.item:type_name -> cwb.v1.CredentialMeta
-	2, // 5: cwb.v1.ListCredentialsResponse.items:type_name -> cwb.v1.CredentialMeta
-	3, // 6: cwb.v1.CredentialService.Fetch:input_type -> cwb.v1.FetchRequest
-	5, // 7: cwb.v1.CredentialService.SetCredential:input_type -> cwb.v1.SetCredentialRequest
-	7, // 8: cwb.v1.CredentialService.ListCredentials:input_type -> cwb.v1.ListCredentialsRequest
-	4, // 9: cwb.v1.CredentialService.Fetch:output_type -> cwb.v1.FetchResponse
-	6, // 10: cwb.v1.CredentialService.SetCredential:output_type -> cwb.v1.SetCredentialResponse
-	8, // 11: cwb.v1.CredentialService.ListCredentials:output_type -> cwb.v1.ListCredentialsResponse
-	9, // [9:12] is the sub-list for method output_type
-	6, // [6:9] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0,  // 0: cwb.v1.FetchResponse.git_bundle:type_name -> cwb.v1.GitBundle
+	1,  // 1: cwb.v1.FetchResponse.oauth_bundle:type_name -> cwb.v1.OAuthBundle
+	2,  // 2: cwb.v1.FetchResponse.secret_bundle:type_name -> cwb.v1.SecretBundle
+	0,  // 3: cwb.v1.SetCredentialRequest.git_bundle:type_name -> cwb.v1.GitBundle
+	1,  // 4: cwb.v1.SetCredentialRequest.oauth_bundle:type_name -> cwb.v1.OAuthBundle
+	2,  // 5: cwb.v1.SetCredentialRequest.secret_bundle:type_name -> cwb.v1.SecretBundle
+	3,  // 6: cwb.v1.SetCredentialResponse.item:type_name -> cwb.v1.CredentialMeta
+	3,  // 7: cwb.v1.ListCredentialsResponse.items:type_name -> cwb.v1.CredentialMeta
+	4,  // 8: cwb.v1.CredentialService.Fetch:input_type -> cwb.v1.FetchRequest
+	6,  // 9: cwb.v1.CredentialService.SetCredential:input_type -> cwb.v1.SetCredentialRequest
+	8,  // 10: cwb.v1.CredentialService.ListCredentials:input_type -> cwb.v1.ListCredentialsRequest
+	10, // 11: cwb.v1.CredentialService.DeleteCredential:input_type -> cwb.v1.DeleteCredentialRequest
+	5,  // 12: cwb.v1.CredentialService.Fetch:output_type -> cwb.v1.FetchResponse
+	7,  // 13: cwb.v1.CredentialService.SetCredential:output_type -> cwb.v1.SetCredentialResponse
+	9,  // 14: cwb.v1.CredentialService.ListCredentials:output_type -> cwb.v1.ListCredentialsResponse
+	11, // 15: cwb.v1.CredentialService.DeleteCredential:output_type -> cwb.v1.DeleteCredentialResponse
+	12, // [12:16] is the sub-list for method output_type
+	8,  // [8:12] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_cwb_v1_custodian_proto_init() }
@@ -741,13 +953,15 @@ func file_cwb_v1_custodian_proto_init() {
 	if File_cwb_v1_custodian_proto != nil {
 		return
 	}
-	file_cwb_v1_custodian_proto_msgTypes[4].OneofWrappers = []any{
+	file_cwb_v1_custodian_proto_msgTypes[5].OneofWrappers = []any{
 		(*FetchResponse_GitBundle)(nil),
 		(*FetchResponse_OauthBundle)(nil),
+		(*FetchResponse_SecretBundle)(nil),
 	}
-	file_cwb_v1_custodian_proto_msgTypes[5].OneofWrappers = []any{
+	file_cwb_v1_custodian_proto_msgTypes[6].OneofWrappers = []any{
 		(*SetCredentialRequest_GitBundle)(nil),
 		(*SetCredentialRequest_OauthBundle)(nil),
+		(*SetCredentialRequest_SecretBundle)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -755,7 +969,7 @@ func file_cwb_v1_custodian_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cwb_v1_custodian_proto_rawDesc), len(file_cwb_v1_custodian_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
