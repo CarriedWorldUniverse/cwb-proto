@@ -209,6 +209,15 @@ func resolveScopes(md metadata.MD, grant Grant) ([]string, error) {
 	return requested, nil
 }
 
+// PeerCommonName returns the CommonName of the verified peer certificate on
+// the connection, or ErrNoPeerCert when the transport has no verified client
+// cert (plaintext, or TLS without client verification). Services use it to
+// attribute denial audits to the proven identity; authorization decisions
+// belong to Identify.
+func PeerCommonName(ctx context.Context) (string, error) {
+	return peerCommonName(ctx)
+}
+
 func peerCommonName(ctx context.Context) (string, error) {
 	p, ok := peer.FromContext(ctx)
 	if !ok || p.AuthInfo == nil {
